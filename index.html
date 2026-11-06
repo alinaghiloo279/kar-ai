@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#092b20">
+<title>KAR AI | اکوسیستم هوشمند کسب‌وکار</title>
+<style>
+:root{
+  --bg:#071b15;
+  --panel:#102820;
+  --panel2:#16352a;
+  --green:#a3e635;
+  --gold:#d9b66d;
+  --text:#f1f5f2;
+  --muted:#9db2a6;
+  --border:rgba(255,255,255,.09);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Tahoma,Arial,sans-serif;
+  line-height:1.8;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:flex}
+.sidebar{
+  width:250px;
+  background:#0b241b;
+  border-left:1px solid var(--border);
+  padding:24px 16px;
+  position:fixed;
+  right:0;top:0;bottom:0;
+  overflow-y:auto;
+  z-index:5;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  padding:8px 10px 25px;
+  border-bottom:1px solid var(--border);
+}
+.brand-icon{
+  width:44px;height:44px;border-radius:14px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,#a3e635,#397b35);
+  color:#092016;font-size:22px;font-weight:bold;
+}
+.brand strong{font-size:21px;letter-spacing:1px}
+.brand small{display:block;color:var(--muted);font-size:10px}
+.nav-title{color:#789487;font-size:11px;margin:24px 12px 8px}
+.nav button{
+  display:flex;align-items:center;gap:12px;
+  width:100%;border:0;background:transparent;
+  color:#b9c9c0;text-align:right;padding:11px 13px;
+  border-radius:10px;margin:4px 0;font-size:13px;
+}
+.nav button:hover,.nav button.active{
+  background:#1b3c2c;color:var(--green);
+}
+.main{width:calc(100% - 250px);margin-right:250px;padding:25px 30px}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;margin-bottom:28px;flex-wrap:wrap;
+}
+.topbar h1{font-size:22px;margin:0}
+.topbar p{font-size:12px;color:var(--muted);margin:3px 0}
+.top-actions{display:flex;align-items:center;gap:10px}
+.role-select,.search{
+  background:var(--panel);color:var(--text);
+  border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;font-size:12px;
+}
+.btn{
+  border:0;border-radius:10px;padding:10px 16px;
+  background:var(--green);color:#102417;font-weight:bold;
+}
+.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.btn.gold{background:var(--gold);color:#201b0e}
+.hero{
+  padding:30px;border-radius:20px;
+  background:linear-gradient(115deg,#17432e,#10291f 65%,#263b24);
+  border:1px solid rgba(163,230,53,.18);
+  position:relative;overflow:hidden;margin-bottom:22px;
+}
+.hero:after{
+  content:"K";position:absolute;left:35px;top:-65px;
+  font-size:230px;font-weight:bold;color:rgba(255,255,255,.035);
+}
+.hero h2{font-size:25px;margin:0 0 8px}
+.hero p{color:#c1d2c7;font-size:13px;max-width:600px}
+.hero .btn{margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+.card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:15px;padding:18px;
+}
+.stat-label{color:var(--muted);font-size:12px}
+.stat-value{font-size:25px;font-weight:bold;margin:8px 0}
+.stat-note{font-size:11px;color:var(--green)}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin:25px 0 14px;
+}
+.section-head h3{font-size:16px;margin:0}
+.domains{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.domain{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:15px;padding:18px;transition:.2s;
+}
+.domain:hover{border-color:var(--green);transform:translateY(-3px)}
+.domain-icon{font-size:25px;margin-bottom:8px}
+.domain h4{margin:0 0 5px;font-size:15px}
+.domain p{font-size:11px;color:var(--muted);margin:0 0 12px}
+.domain button{
+  background:transparent;border:0;color:var(--green);
+  padding:0;font-size:12px;
+}
+.content-panel{display:none}
+.content-panel.active{display:block}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:13px 10px;text-align:right;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:normal}
+.status{color:var(--green);font-size:11px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}
+.field input,.field select{
+  width:100%;background:#091f17;border:1px solid var(--border);
+  color:var(--text);border-radius:9px;padding:11px;
+}
+.field.full{grid-column:1/-1}
+.notice{
+  padding:13px;border-radius:10px;background:#26351f;
+  color:#d9e9bb;font-size:12px;margin:15px 0;
+}
+.mobile-menu{display:none}
+footer{color:#728b7d;text-align:center;font-size:10px;padding:30px}
+@media(max-width:1000px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .domains{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+  .sidebar{width:250px;transform:translateX(100%);transition:.25s}
+  .sidebar.open{transform:translateX(0)}
+  .main{width:100%;margin:0;padding:17px}
+  .mobile-menu{display:inline-block}
+  .topbar h1{font-size:18px}
+  .hero{padding:22px}
+  .hero h2{font-size:20px}
+  .domains{grid-template-columns:1fr 1fr;gap:9px}
+  .domain{padding:13px}
+  .grid{gap:9px}
+  .card{padding:13px}
+  .stat-value{font-size:20px}
+  .form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-icon">K</div>
+    <div><strong>KAR AI</strong><small>اکوسیستم هوشمند کسب‌وکار</small></div>
+  </div>
+  <div class="nav">
+    <div class="nav-title">مدیریت مرکزی</div>
+    <button class="active" onclick="showPage('dashboard',this)">▦ داشبورد اصلی</button>
+    <button onclick="showPage('domains',this)">◈ حوزه‌های فعالیت</button>
+    <button onclick="showPage('businesses',this)">▣ کسب‌وکارها</button>
+    <button onclick="showPage('partners',this)">♙ همکاران</button>
+    <button onclick="showPage('users',this)">♧ کاربران</button>
+    <div class="nav-title">عملیات</div>
+    <button onclick="showPage('requests',this)">▤ درخواست‌ها</button>
+    <button onclick="showPage('wallet',this)">◉ کیف پول و اعتبار</button>
+    <button onclick="showPage('reports',this)">▥ گزارش‌ها</button>
+    <button onclick="showPage('settings',this)">⚙ تنظیمات</button>
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div>
+    <button class="btn secondary mobile-menu" onclick="toggleMenu()">☰</button>
+    <h1 id="pageTitle">داشبورد مرکزی KAR AI</h1>
+    <p>مدیریت یکپارچه خدمات، کسب‌وکارها و کاربران</p>
+  </div>
+  <div class="top-actions">
+    <select class="role-select" id="roleSelect" onchange="changeRole()">
+      <option value="مدیر کل">نمایش مدیر کل</option>
+      <option value="همکار">نمایش همکار</option>
+      <option value="مدیر کسب‌وکار">نمایش مدیر کسب‌وکار</option>
+      <option value="کاربر">نمایش کاربر</option>
+    </select>
+  </div>
+</header>
+
+<section class="content-panel active" id="dashboard">
+  <div class="hero">
+    <h2>به اکوسیستم هوشمند KAR AI خوش آمدید</h2>
+    <p>یک بستر یکپارچه برای اتصال مردم، کسب‌وکارها، متخصصان و ارائه‌دهندگان خدمات در سراسر ایران.</p>
+    <button class="btn" onclick="showPage('domains')">مشاهده حوزه‌های فعالیت ←</button>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="stat-label">حوزه‌های فعالیت</div><div class="stat-value">۶</div><div class="stat-note">ساختار اکوسیستم</div></div>
+    <div class="card"><div class="stat-label">کسب‌وکارهای نمونه</div><div class="stat-value">۱۲۸</div><div class="stat-note">اطلاعات نمایشی</div></div>
+    <div class="card"><div class="stat-label">همکاران نمونه</div><div class="stat-value">۴۶</div><div class="stat-note">اطلاعات نمایشی</div></div>
+    <div class="card"><div class="stat-label">درخواست‌های نمونه</div><div class="stat-value">۳۶۲</div><div class="stat-note">اطلاعات نمایشی</div></div>
+  </div>
+  <div class="section-head"><h3>حوزه‌های اصلی اکوسیستم</h3><button class="btn secondary" onclick="showPage('domains')">مشاهده همه</button></div>
+  <div class="domains">
+    <div class="domain"><div class="domain-icon">🌱</div><h4>ایران کشاورزی</h4><p>خدمات و زنجیره کسب‌وکارهای کشاورزی</p><button onclick="openDomain('ایران کشاورزی')">ورود به حوزه ←</button></div>
+    <div class="domain"><div class="domain-icon">🏭</div><h4>ایران صنعت</h4><p>صنایع، تولیدکنندگان و خدمات تخصصی</p><button onclick="openDomain('ایران صنعت')">ورود به حوزه ←</button></div>
+    <div class="domain"><div class="domain-icon">🛒</div><h4>ایران تجارت</h4><p>تجارت، تأمین و ارتباطات تجاری</p><button onclick="openDomain('ایران تجارت')">ورود به حوزه ←</button></div>
+    <div class="domain"><div class="domain-icon">🚚</div><h4>ایران حمل‌ونقل</h4><p>حمل کالا و خدمات لجستیکی</p><button onclick="openDomain('ایران حمل‌ونقل')">ورود به حوزه ←</button></div>
+    <div class="domain"><div class="domain-icon">🧰</div><h4>ایران خدمات</h4><p>خدمات عمومی و تخصصی</p><button onclick="openDomain('ایران خدمات')">ورود به حوزه ←</button></div>
+    <div class="domain"><div class="domain-icon">🏪</div><h4>ایران بازار</h4><p>بازار عرضه و تقاضای محصولات</p><button onclick="openDomain('ایران بازار')">ورود به حوزه ←</button></div>
+  </div>
+</section>
+<section class="content-panel" id="domains">
+  <div class="section-head"><h3>شش حوزه اصلی فعالیت KAR AI</h3></div>
+  <div class="domains">
+    <div class="domain"><div class="domain-icon">🌱</div><h4>ایران کشاورزی</h4><p>خدمات، نهاده‌ها، تجهیزات و متخصصان کشاورزی</p></div>
+    <div class="domain"><div class="domain-icon">🏭</div><h4>ایران صنعت</h4><p>تولید، تأمین تجهیزات و خدمات صنعتی</p></div>
+    <div class="domain"><div class="domain-icon">🛒</div><h4>ایران تجارت</h4><p>تأمین‌کنندگان و ارتباطات تجاری</p></div>
+    <div class="domain"><div class="domain-icon">🚚</div><h4>ایران حمل‌ونقل</h4><p>حمل بار و خدمات لجستیکی</p></div>
+    <div class="domain"><div class="domain-icon">🧰</div><h4>ایران خدمات</h4><p>ارائه‌دهندگان خدمات تخصصی و عمومی</p></div>
+    <div class="domain"><div class="domain-icon">🏪</div><h4>ایران بازار</h4><p>عرضه و تقاضای کالا و محصولات</p></div>
+  </div>
+</section>
+
+<section class="content-panel" id="businesses">
+  <div class="section-head">
+    <h3>مدیریت کسب‌وکارها</h3>
+    <button class="btn" onclick="showPage('newBusiness')">+ ثبت کسب‌وکار</button>
+  </div>
+  <div class="card table-wrap">
+    <table>
+      <thead><tr><th>نام کسب‌وکار</th><th>حوزه</th><th>نوع</th><th>وضعیت</th></tr></thead>
+      <tbody id="businessTable">
+        <tr><td>نمونه خدمات کشاورزی</td><td>ایران کشاورزی</td><td>مستقل</td><td class="status">فعال</td></tr>
+        <tr><td>نمونه خدمات صنعتی</td><td>ایران صنعت</td><td>اختصاصی KAR AI</td><td class="status">فعال</td></tr>
+        <tr><td>نمونه حمل‌ونقل</td><td>ایران حمل‌ونقل</td><td>مستقل</td><td class="status">در انتظار بررسی</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="notice">اطلاعات این جدول فعلاً نمونه و نمایشی است.</div>
+</section>
+
+<section class="content-panel" id="newBusiness">
+  <div class="section-head"><h3>ثبت کسب‌وکار جدید</h3></div>
+  <div class="card">
+    <form id="businessForm" class="form-grid">
+      <div class="field"><label>نام کسب‌وکار</label><input id="businessName" required placeholder="نام مجموعه"></div>
+      <div class="field"><label>حوزه فعالیت</label>
+        <select id="businessDomain">
+          <option>ایران کشاورزی</option><option>ایران صنعت</option>
+          <option>ایران تجارت</option><option>ایران حمل‌ونقل</option>
+          <option>ایران خدمات</option><option>ایران بازار</option>
+        </select>
+      </div>
+      <div class="field"><label>نوع کسب‌وکار</label>
+        <select id="businessType"><option>مستقل</option><option>اختصاصی KAR AI</option></select>
+      </div>
+      <div class="field"><label>استان</label><input id="businessProvince" placeholder="نام استان"></div>
+      <div class="field full"><button class="btn" type="submit">ثبت آزمایشی کسب‌وکار</button></div>
+    </form>
+    <div class="notice">ثبت در این نسخه فقط داخل مرورگر انجام می‌شود و هنوز در پایگاه داده ذخیره نمی‌شود.</div>
+  </div>
+</section>
+
+<section class="content-panel" id="partners">
+  <div class="section-head"><h3>مدیریت همکاران</h3></div>
+  <div class="grid">
+    <div class="card"><div class="stat-label">همکاران فعال</div><div class="stat-value">۳۸</div></div>
+    <div class="card"><div class="stat-label">در انتظار تأیید</div><div class="stat-value">۸</div></div>
+  </div>
+  <div class="card table-wrap">
+    <table>
+      <thead><tr><th>نام همکار</th><th>حوزه</th><th>استان</th><th>وضعیت</th></tr></thead>
+      <tbody>
+        <tr><td>همکار نمونه ۱</td><td>کشاورزی</td><td>آذربایجان غربی</td><td class="status">فعال</td></tr>
+        <tr><td>همکار نمونه ۲</td><td>صنعت</td><td>تهران</td><td class="status">در انتظار تأیید</td></tr>
+        <tr><td>همکار نمونه ۳</td><td>خدمات</td><td>فارس</td><td class="status">فعال</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="content-panel" id="users">
+  <div class="section-head"><h3>مدیریت کاربران</h3></div>
+  <div class="grid">
+    <div class="card"><div class="stat-label">کاربران ثبت‌شده نمونه</div><div class="stat-value">۲۴۸۰</div></div>
+    <div class="card"><div class="stat-label">کاربران فعال نمونه</div><div class="stat-value">۱۹۲۰</div></div>
+  </div>
+  <div class="card">
+    <p>در این بخش در نسخه نهایی امکان مشاهده پروفایل، وضعیت حساب، سوابق فعالیت و مدیریت دسترسی کاربران قرار می‌گیرد.</p>
+  </div>
+</section>
+<section class="content-panel" id="requests">
+  <div class="section-head"><h3>مدیریت درخواست‌ها</h3></div>
+  <div class="grid">
+    <div class="card"><div class="stat-label">درخواست‌های جدید</div><div class="stat-value">۲۴</div></div>
+    <div class="card"><div class="stat-label">در حال انجام</div><div class="stat-value">۵۸</div></div>
+    <div class="card"><div class="stat-label">تکمیل‌شده</div><div class="stat-value">۲۸۰</div></div>
+    <div class="card"><div class="stat-label">نیازمند بررسی</div><div class="stat-value">۷</div></div>
+  </div>
+  <div class="card table-wrap">
+    <table>
+      <thead><tr><th>شماره درخواست</th><th>عنوان</th><th>حوزه</th><th>وضعیت</th></tr></thead>
+      <tbody>
+        <tr><td>KR-1001</td><td>درخواست خدمات نمونه</td><td>کشاورزی</td><td class="status">در حال بررسی</td></tr>
+        <tr><td>KR-1002</td><td>درخواست تأمین کالا</td><td>تجارت</td><td class="status">در حال انجام</td></tr>
+        <tr><td>KR-1003</td><td>درخواست حمل بار</td><td>حمل‌ونقل</td><td class="status">تکمیل‌شده</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="content-panel" id="wallet">
+  <div class="section-head"><h3>کیف پول و مدیریت اعتبار</h3></div>
+  <div class="grid">
+    <div class="card"><div class="stat-label">موجودی نمونه اکوسیستم</div><div class="stat-value">۸۵۰ میلیون</div><div class="stat-note">تومان</div></div>
+    <div class="card"><div class="stat-label">تراکنش‌های نمونه</div><div class="stat-value">۱٬۲۸۰</div><div class="stat-note">تراکنش ثبت‌شده نمایشی</div></div>
+  </div>
+  <div class="card">
+    <h3>انتقال اعتبار بین کاربران</h3>
+    <div class="notice">در طراحی نهایی، انتقال اعتبار با سقف مجاز، کنترل امنیتی و ثبت کامل سوابق تراکنش انجام می‌شود. اعتبار کیف پول بدون تاریخ انقضا خواهد بود.</div>
+    <div class="form-grid">
+      <div class="field"><label>شناسه فرستنده</label><input placeholder="شناسه کاربر"></div>
+      <div class="field"><label>شناسه گیرنده</label><input placeholder="شناسه کاربر"></div>
+      <div class="field"><label>مبلغ انتقال (تومان)</label><input type="number" placeholder="مبلغ"></div>
+      <div class="field"><label>توضیحات</label><input placeholder="شرح تراکنش"></div>
+    </div>
+    <button class="btn secondary" style="margin-top:15px" onclick="alert('انتقال واقعی اعتبار هنوز فعال نیست.')">نمایش عملیات انتقال</button>
+  </div>
+  <div class="section-head"><h3>آخرین تراکنش‌های نمونه</h3></div>
+  <div class="card table-wrap">
+    <table>
+      <thead><tr><th>شناسه</th><th>نوع</th><th>مبلغ</th><th>وضعیت</th></tr></thead>
+      <tbody>
+        <tr><td>TX-1001</td><td>افزایش اعتبار</td><td>۵۰۰٬۰۰۰ تومان</td><td class="status">موفق</td></tr>
+        <tr><td>TX-1002</td><td>انتقال اعتبار</td><td>۲۰۰٬۰۰۰ تومان</td><td class="status">موفق</td></tr>
+        <tr><td>TX-1003</td><td>پرداخت خدمات</td><td>۱٬۰۰۰٬۰۰۰ تومان</td><td class="status">موفق</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="content-panel" id="reports">
+  <div class="section-head"><h3>گزارش‌های مدیریتی</h3></div>
+  <div class="grid">
+    <div class="card"><div class="stat-label">رشد کاربران نمونه</div><div class="stat-value">۱۸٪</div></div>
+    <div class="card"><div class="stat-label">رشد کسب‌وکارها</div><div class="stat-value">۱۲٪</div></div>
+    <div class="card"><div class="stat-label">نرخ تکمیل درخواست‌ها</div><div class="stat-value">۸۶٪</div></div>
+    <div class="card"><div class="stat-label">حوزه‌های فعال</div><div class="stat-value">۶</div></div>
+  </div>
+  <div class="card">
+    <h3>گزارش عملکرد اکوسیستم</h3>
+    <p>در نسخه متصل به پایگاه داده، این قسمت گزارش‌های واقعی کاربران، درآمد، تراکنش‌ها، کسب‌وکارها و عملکرد همکاران را نمایش خواهد داد.</p>
+  </div>
+</section>
+
+<section class="content-panel" id="settings">
+  <div class="section-head"><h3>تنظیمات سامانه</h3></div>
+  <div class="card">
+    <h3>مشخصات اکوسیستم</h3>
+    <div class="form-grid">
+      <div class="field"><label>نام سامانه</label><input value="KAR AI" readonly></div>
+      <div class="field"><label>دامنه</label><input value="kar-ai.ir" readonly></div>
+      <div class="field"><label>زبان پیش‌فرض</label><input value="فارسی" readonly></div>
+      <div class="field"><label>منطقه فعالیت</label><input value="سراسر ایران" readonly></div>
+    </div>
+    <div class="notice">تنظیمات امنیتی، دسترسی‌ها، پیامک، درگاه پرداخت و اتصال پایگاه داده پس از اتصال بک‌اند فعال خواهند شد.</div>
+  </div>
+</section>
+
+<footer>
+  KAR AI — اکوسیستم هوشمند کسب‌وکار و خدمات
+  <br>نسخه اولیه رابط کاربری
+</footer>
+</main>
+</div>
+
+<script>
+function showPage(page,button){
+  document.querySelectorAll('.content-panel').forEach(function(item){
+    item.classList.remove('active');
+  });
+
+  const target=document.getElementById(page);
+  if(target) target.classList.add('active');
+
+  document.querySelectorAll('.nav button').forEach(function(item){
+    item.classList.remove('active');
+  });
+
+  if(button) button.classList.add('active');
+
+  const titles={
+    dashboard:'داشبورد مرکزی KAR AI',
+    domains:'حوزه‌های فعالیت',
+    businesses:'مدیریت کسب‌وکارها',
+    newBusiness:'ثبت کسب‌وکار جدید',
+    partners:'مدیریت همکاران',
+    users:'مدیریت کاربران',
+    requests:'مدیریت درخواست‌ها',
+    wallet:'کیف پول و اعتبار',
+    reports:'گزارش‌های مدیریتی',
+    settings:'تنظیمات سامانه'
+  };
+
+  document.getElementById('pageTitle').textContent=titles[page]||'KAR AI';
+  document.getElementById('sidebar').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleMenu(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function openDomain(name){
+  showPage('domains');
+  alert('حوزه انتخاب‌شده: '+name);
+}
+
+function changeRole(){
+  const role=document.getElementById('roleSelect').value;
+  alert('حالت نمایشی نقش: '+role+
+  '\nاین انتخاب فعلاً فقط برای پیش‌نمایش رابط کاربری است.');
+}
+
+document.getElementById('businessForm').addEventListener('submit',function(e){
+  e.preventDefault();
+
+  const name=document.getElementById('businessName').value.trim();
+  const domain=document.getElementById('businessDomain').value;
+  const type=document.getElementById('businessType').value;
+  const province=document.getElementById('businessProvince').value.trim();
+
+  if(!name){
+    alert('لطفاً نام کسب‌وکار را وارد کنید.');
+    return;
+  }
+
+  const row=document.createElement('tr');
+
+  [name,domain,type+' - '+province,'ثبت آزمایشی'].forEach(function(value){
+    const cell=document.createElement('td');
+    cell.textContent=value;
+    row.appendChild(cell);
+  });
+
+  row.lastChild.className='status';
+
+  document.getElementById('businessTable').appendChild(row);
+
+  this.reset();
+  alert('کسب‌وکار به‌صورت آزمایشی به جدول اضافه شد.');
+  showPage('businesses');
+});
+
+document.addEventListener('click',function(e){
+  const sidebar=document.getElementById('sidebar');
+  const menuButton=e.target.closest('.mobile-menu');
+
+  if(window.innerWidth<=700 &&
+     sidebar.classList.contains('open') &&
+     !sidebar.contains(e.target) &&
+     !menuButton){
+    sidebar.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
