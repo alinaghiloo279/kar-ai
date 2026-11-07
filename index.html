@@ -234,7 +234,7 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
     </svg>
   </div>
 
-  <!-- نوار افقی با عنوان -->
+  <!-- نوار افقی -->
   <div class="featured-section">
     <div class="featured-title">⭐ خدمات پرطرفدار</div>
     <div class="featured-strip-wrapper">
@@ -242,7 +242,7 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
     </div>
   </div>
 
-  <!-- گرید 12 آیکون (بدون کارت) -->
+  <!-- گرید 12 آیکون -->
   <div class="branches-grid" id="branchGrid"></div>
 
   <button class="fab-chat" id="fabChat">◈</button>
@@ -279,15 +279,26 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
 "use strict";
 
 /* =========================================
-   IRAN AI V11.5 — FULL DATA + PROACTIVE AI LOGIC
+   IRAN AI V12.0 — PART 2: FULL DATA (NO COMPRESSION)
+   Central Assistant + 12 Branches (68 Forms)
 ========================================= */
 
-// ---------------- 1. FULL DATABASE (68 FORMS) ----------------
 const CENTRAL_ASSISTANT = {
-  id: "central", name: "دستیار Iran AI", avatar: "◈",
-  greeting: "سلام! من دستیار هوش مصنوعی Iran AI هستم. چه کمکی می‌توانم بکنم؟",
-  systemPrompt: `تو دستیار مرکزی هوش مصنوعی Iran AI هستی.`,
-  suggestions: []
+  id: "central",
+  name: "دستیار Iran AI",
+  avatar: "◈",
+  greeting: "سلام! من دستیار هوش مصنوعی Iran AI هستم. می‌توانم در انتخاب شاخه مناسب، نحوه ثبت درخواست، کیف پول و همکاری به‌عنوان همکار راهنمایی‌تان کنم. چه کمکی می‌توانم بکنم؟",
+  systemPrompt: `تو دستیار مرکزی هوش مصنوعی پلتفرم Iran AI هستی.
+پلتفرم Iran AI یک اکوسیستم جامع خدمات هوشمند با ۱۲ شاخه تخصصی است. یک حساب کاربری و یک کیف پول مشترک دارد.
+شاخه‌ها: کشاورزی، حمل‌ونقل، ساختمان، آموزش، سلامت، آگهی، حسابداری، مشاوره قضایی، گردشگری، پرداخت، مکانیک و تولید.
+وظایف تو: راهنمایی کاربر برای انتخاب شاخه، توضیح نحوه ثبت درخواست، هدایت به دستیار تخصصی شاخه.
+محدودیت‌ها: هرگز قیمت دقیق اعلام نکن، ادعای انجام خدمت نکن، اطلاعات شخصی درخواست نکن.`,
+  suggestions: [
+    { label: "چطور درخواست ثبت کنم؟", answer: "برای ثبت درخواست ۳ گام ساده: ۱) شاخه موردنظر را انتخاب کنید. ۲) دسته خدمت را انتخاب کنید تا فرم باز شود. ۳) فرم را پر کنید و ثبت کنید." },
+    { label: "چه شاخه‌ای مناسب من است؟", answer: "بستگی به نیاز شما دارد. ما ۱۲ شاخه داریم: کشاورزی، حمل‌ونقل، ساختمان، آموزش، سلامت، آگهی، حسابداری، حقوقی، گردشگری، بانک، مکانیک و تولید. اگر بگویید دنبال چه هستید، دقیق‌تر راهنمایی می‌کنم." },
+    { label: "کیف پول چطور کار می‌کند؟", answer: "Iran AI یک کیف پول مشترک بین همه شاخه‌ها دارد. شارژ از درگاه مجاز، بدون تاریخ انقضا، و قابل انتقال بین کاربران است." },
+    { label: "چطور همکار شوم؟", answer: "از دکمه «همکاری با ما» در هدر درخواست دهید. تیم Iran AI پس از بررسی، مدارک را تأیید و پروفایل شما را فعال می‌کند." }
+  ]
 };
 
 const BRANCHES_DATA = {
@@ -348,13 +359,13 @@ const BRANCHES_DATA = {
         { id: "location", label: "محل تحویل", type: "text", required: true }
       ]}
     },
-    assistant: { name: "دستیار ایران کشاورز", avatar: "🚜", greeting: "سلام! من دستیار تخصصی ایران کشاورز هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار ایران کشاورز", avatar: "🚜", greeting: "سلام! من دستیار تخصصی ایران کشاورز هستم. در مورد سم‌پاشی، ادوات و مشاوره مزرعه راهنمایی می‌کنم.", systemPrompt: `تو دستیار تخصصی ایران کشاورز هستی.`, suggestions: [] }
   },
 
   iran_transport: {
     slug: "iran_transport", title: "ایران حمل‌ونقل", icon: "🚚",
     shortDescription: "درخواست حمل بار و جابه‌جایی",
-    description: "از حمل بار و وانت و کامیون گرفته تا اسباب‌کشی و حمل بین‌شهری.",
+    description: "از حمل بار و وانت و کامیون گرفته تا اسباب‌کشی، حمل ماشین‌آلات و حمل بین‌شهری.",
     categories: ["حمل بار", "وانت و کامیون", "حمل ماشین‌آلات", "بار برگشتی", "اسباب‌کشی", "حمل بین‌شهری", "پیگیری بار"],
     formsByCategoryIndex: {
       0: { title: "حمل بار عمومی", intro: "مبدأ، مقصد و مشخصات بار.", fields: [
@@ -599,12 +610,23 @@ const BRANCHES_DATA = {
     assistant: { name: "دستیار ایران تولید", avatar: "🏭", greeting: "سلام! من دستیار ایران تولید هستم.", systemPrompt: ``, suggestions: [] }
   }
 };
+</script>
+<script>
+"use strict";
 
+/* =========================================
+   IRAN AI V12.0 — PART 3: LOGIC & PROACTIVE AI
+========================================= */
 
-// ---------------- 2. STATE & LOGIC (PROACTIVE AI) ----------------
+// ---------------- 1. STATE & CONFIG ----------------
 const appState = {
-  lang: "fa", isMuted: false, user: { name: "مهمان", isGuest: true },
-  onboardingStep: 0, currentBranch: null, currentCategory: null, currentForm: null
+  lang: "fa", 
+  isMuted: false,
+  user: { name: "مهمان", isGuest: true },
+  onboardingStep: 0, // 0: Start, 1: Name, 2: Last, 3: Mobile, 4: Done
+  currentBranch: null,
+  currentCategory: null,
+  currentForm: null
 };
 
 const LANGUAGES = {
@@ -615,49 +637,61 @@ const LANGUAGES = {
   en: { code: "en-US", label: "English", hello: "Hello! I am the Iran AI assistant. What is your first name?" }
 };
 
+// تبدیل اعداد فارسی به انگلیسی برای درک بهتر هوش مصنوعی
 function normalizeDigits(str) {
   if (typeof str !== "string") return "";
-  return str.replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+  return str
+    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
 }
 
-// --- Voice Engine ---
+// ---------------- 2. VOICE ENGINE (STT & TTS) ----------------
 const synth = window.speechSynthesis;
 let recognition = null;
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
-  recognition.continuous = false; recognition.interimResults = false;
+  recognition.continuous = false; 
+  recognition.interimResults = false;
 }
 
 function speak(text) {
   if (appState.isMuted || !synth) return;
-  synth.cancel();
+  synth.cancel(); // قطع صدای قبلی
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = LANGUAGES[appState.lang].code;
   utterance.rate = 1.0;
   synth.speak(utterance);
 }
 
+// تزریق خودکار دکمه میکروفون به کادرهای ورود
 function injectMicButtons() {
   const style = document.createElement('style');
-  style.innerHTML = `.mic-btn { background: #F8F9FA; border: 1px solid var(--border-color); color: var(--text-muted); width: 46px; height: 46px; border-radius: 12px; font-size: 18px; display: grid; place-items: center; transition: 0.3s; cursor: pointer; } .mic-btn.recording { background: #ff5252; color: white; border-color: #ff5252; animation: pulse 1.5s infinite; }`;
+  style.innerHTML = `.mic-btn { background: #F8F9FA; border: 1px solid var(--border-color); color: var(--text-muted); width: 46px; height: 46px; border-radius: 12px; font-size: 18px; display: grid; place-items: center; transition: 0.3s; cursor: pointer; } .mic-btn.recording { background: #ff5252; color: white; border-color: #ff5252; animation: pulse 1.5s infinite; } @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,82,82,0.5); } 70% { box-shadow: 0 0 0 10px rgba(255,82,82,0); } 100% { box-shadow: 0 0 0 0 rgba(255,82,82,0); } }`;
   document.head.appendChild(style);
 
   const onbForm = document.querySelector('.auth-form .input-group');
   if (onbForm && !document.getElementById('micBtnOnb')) {
-    const btn = document.createElement('button'); btn.id = 'micBtnOnb'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
-    btn.onclick = () => startListening('onboardingInput'); onbForm.insertBefore(btn, onbForm.firstChild);
+    const btn = document.createElement('button');
+    btn.id = 'micBtnOnb'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
+    btn.onclick = () => startListening('onboardingInput');
+    onbForm.insertBefore(btn, onbForm.firstChild);
   }
+
   const dashForm = document.querySelector('.chat-input-area');
   if (dashForm && !document.getElementById('micBtnDash')) {
-    const btn = document.createElement('button'); btn.id = 'micBtnDash'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
-    btn.onclick = () => startListening('dashChatInput'); dashForm.insertBefore(btn, dashForm.firstChild);
+    const btn = document.createElement('button');
+    btn.id = 'micBtnDash'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
+    btn.onclick = () => startListening('dashChatInput');
+    dashForm.insertBefore(btn, dashForm.firstChild);
   }
 }
 
 function startListening(inputId) {
-  if (!recognition) return alert("مرورگر شما از میکروفون پشتیبانی نمی‌کند.");
-  recognition.lang = LANGUAGES[appState.lang].code; recognition.start();
+  if (!recognition) return alert("مرورگر شما از میکروفون پشتیبانی نمی‌کند. لطفاً از کروم استفاده کنید.");
+  
+  recognition.lang = LANGUAGES[appState.lang].code;
+  recognition.start();
   const micBtn = document.getElementById(inputId === "onboardingInput" ? "micBtnOnb" : "micBtnDash");
   if(micBtn) micBtn.classList.add("recording");
   
@@ -665,47 +699,72 @@ function startListening(inputId) {
     const transcript = event.results[0][0].transcript;
     document.getElementById(inputId).value = transcript;
     if(micBtn) micBtn.classList.remove("recording");
-    if(inputId === "onboardingInput") handleOnboardingInput(); else handleDashboardChat();
+    if(inputId === "onboardingInput") handleOnboardingInput();
+    else if(inputId === "dashChatInput") handleDashboardChat();
   };
+
   recognition.onerror = function() { if(micBtn) micBtn.classList.remove("recording"); };
   recognition.onend = function() { if(micBtn) micBtn.classList.remove("recording"); };
 }
 
-// --- Onboarding ---
+// ---------------- 3. ONBOARDING (LOGIN) ----------------
 const onbChat = document.getElementById("onboardingChat");
 const onbInput = document.getElementById("onboardingInput");
 
 function renderLangSelector() {
-  const wrapper = document.getElementById("langSelector"); wrapper.innerHTML = "";
+  const wrapper = document.getElementById("langSelector");
+  wrapper.innerHTML = "";
   Object.keys(LANGUAGES).forEach(key => {
     const btn = document.createElement("button");
-    btn.className = `lang-btn ${appState.lang === key ? 'active' : ''}`; btn.textContent = LANGUAGES[key].label;
+    btn.className = `lang-btn ${appState.lang === key ? 'active' : ''}`;
+    btn.textContent = LANGUAGES[key].label;
     btn.style.cssText = `padding: 6px 14px; border-radius: 20px; font-size: 12px; border: 1px solid var(--border-color); background:${appState.lang === key ? 'var(--gold-main)' : '#fff'}; color:${appState.lang === key ? '#fff' : 'var(--text-muted)'}; cursor:pointer;`;
-    btn.onclick = () => { appState.lang = key; renderLangSelector(); document.getElementById("initialGreeting").textContent = LANGUAGES[key].hello; speak(LANGUAGES[key].hello); };
+    btn.onclick = () => {
+      appState.lang = key;
+      renderLangSelector();
+      document.getElementById("initialGreeting").textContent = LANGUAGES[key].hello;
+      speak(LANGUAGES[key].hello);
+    };
     wrapper.appendChild(btn);
   });
 }
 
 function startOnboarding() {
-  injectMicButtons(); renderLangSelector(); appState.onboardingStep = 1;
+  injectMicButtons();
+  renderLangSelector();
+  appState.onboardingStep = 1;
   setTimeout(() => speak(LANGUAGES[appState.lang].hello), 1000);
 }
 
 function handleOnboardingInput() {
-  const val = onbInput.value.trim(); if (!val) return;
-  addMsg(onbChat, val, "user"); onbInput.value = "";
+  const val = onbInput.value.trim();
+  if (!val) return;
+  
+  addMsg(onbChat, val, "user");
+  onbInput.value = "";
+
   setTimeout(() => {
     if (appState.onboardingStep === 1) {
-      appState.user.name = val; const reply = `خوشبختم ${val} جان! فامیلیت چیه؟`;
-      addMsg(onbChat, reply, "bot"); speak(reply); appState.onboardingStep = 2;
+      appState.user.name = val;
+      const reply = `خوشبختم ${val} جان! فامیلیت چیه؟`;
+      addMsg(onbChat, reply, "bot"); speak(reply);
+      appState.onboardingStep = 2;
     } else if (appState.onboardingStep === 2) {
-      appState.user.last = val; const reply = `ممنون. شماره موبایلت رو وارد کن.`;
-      addMsg(onbChat, reply, "bot"); speak(reply); appState.onboardingStep = 3;
+      appState.user.last = val;
+      const reply = `ممنون. شماره موبایلت رو وارد کن (مثلاً 09123456789).`;
+      addMsg(onbChat, reply, "bot"); speak(reply);
+      appState.onboardingStep = 3;
     } else if (appState.onboardingStep === 3) {
-      if (val.length < 10) { addMsg(onbChat, "شماره موبایل نامعتبره.", "bot"); speak("شماره موبایل نامعتبره"); } 
-      else {
-        appState.user.mobile = val; const reply = "✅ ثبت‌نام انجام شد! در حال ورود...";
-        addMsg(onbChat, reply, "bot"); speak(reply); appState.onboardingStep = 4; appState.user.isGuest = false; setTimeout(goToMainScreen, 1500);
+      if (val.length < 10) {
+        const reply = "شماره موبایل نامعتبره. دوباره وارد کن.";
+        addMsg(onbChat, reply, "bot"); speak(reply);
+      } else {
+        appState.user.mobile = val;
+        const reply = "✅ ثبت‌نام شما با موفقیت انجام شد! در حال ورود به داشبورد...";
+        addMsg(onbChat, reply, "bot"); speak(reply);
+        appState.onboardingStep = 4;
+        appState.user.isGuest = false;
+        setTimeout(goToMainScreen, 1500);
       }
     }
   }, 600);
@@ -713,9 +772,14 @@ function handleOnboardingInput() {
 
 document.getElementById("onboardingSend").addEventListener("click", handleOnboardingInput);
 onbInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleOnboardingInput(); });
-document.getElementById("btnGuest").addEventListener("click", () => { appState.user.isGuest = true; appState.user.name = "مهمان"; goToMainScreen(); });
 
-// --- Main Screen ---
+document.getElementById("btnGuest").addEventListener("click", () => {
+  appState.user.isGuest = true;
+  appState.user.name = "مهمان";
+  goToMainScreen();
+});
+
+// ---------------- 4. MAIN SCREEN (DASHBOARD) ----------------
 function goToMainScreen() {
   document.getElementById("onboardingScreen").classList.add("hidden");
   document.getElementById("mainScreen").classList.add("active");
@@ -724,40 +788,56 @@ function goToMainScreen() {
 }
 
 function renderDashboard() {
+  // نوار افقی (Featured)
   const featured = ["iran_keshavarz", "iran_transport", "iran_legal", "iran_education"];
-  const strip = document.getElementById("featuredStrip"); strip.innerHTML = "";
+  const strip = document.getElementById("featuredStrip");
+  strip.innerHTML = "";
   featured.forEach(key => {
     const d = BRANCHES_DATA[key];
-    const div = document.createElement("div"); div.className = "featured-item";
+    const div = document.createElement("div");
+    div.className = "featured-item";
     div.innerHTML = `<div class="icon">${d.icon}</div><span>${d.title}</span>`;
-    div.onclick = () => openBranchInChat(d.title, key); strip.appendChild(div);
+    div.onclick = () => openBranchInChat(d.title, key);
+    strip.appendChild(div);
   });
 
-  const grid = document.getElementById("branchGrid"); grid.innerHTML = "";
+  // گرید ۱۲ آیکون
+  const grid = document.getElementById("branchGrid");
+  grid.innerHTML = "";
   Object.keys(BRANCHES_DATA).forEach(key => {
     const d = BRANCHES_DATA[key];
-    const card = document.createElement("div"); card.className = "branch-card";
+    const card = document.createElement("div");
+    card.className = "branch-card";
     card.innerHTML = `<div class="icon-circle"><span>${d.icon}</span></div><span class="branch-name">${d.title}</span>`;
-    card.onclick = () => openBranchInChat(d.title, key); grid.appendChild(card);
+    card.onclick = () => openBranchInChat(d.title, key);
+    grid.appendChild(card);
   });
 }
 
-// --- Hybrid Chat & Form ---
+// ---------------- 5. HYBRID CHAT & FORM ----------------
 const dashChatModal = document.getElementById("chatModal");
 const formModal = document.getElementById("formModal");
 const dashChatBox = document.getElementById("dashChatMessages");
 const dashInput = document.getElementById("dashChatInput");
 
 function addMsg(box, text, role) {
-  const div = document.createElement("div"); div.className = `msg ${role}`; div.textContent = text;
-  box.appendChild(div); box.scrollTop = box.scrollHeight;
+  const div = document.createElement("div");
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
 }
 
-document.getElementById("fabChat").addEventListener("click", () => { dashChatModal.classList.add("show"); dashInput.focus(); });
-document.getElementById("closeChatModal").addEventListener("click", () => { dashChatModal.classList.remove("show"); });
+document.getElementById("fabChat").addEventListener("click", () => {
+  dashChatModal.classList.add("show");
+  dashInput.focus();
+});
+document.getElementById("closeChatModal").addEventListener("click", () => {
+  dashChatModal.classList.remove("show");
+});
 
 // تابعی که ربات را همیشه فعال نگه می‌دارد
-function proactiveAI(text, openChat = true) {
+function proactiveAI(text, openChat = false) {
   if (openChat) {
     dashChatModal.classList.add("show");
   }
@@ -767,37 +847,52 @@ function proactiveAI(text, openChat = true) {
 
 // کلیک روی کارت‌های شاخه
 function openBranchInChat(branchTitle, branchKey) {
-  appState.currentBranch = branchKey; appState.currentCategory = null; appState.currentForm = null;
+  appState.currentBranch = branchKey; 
+  appState.currentCategory = null;
+  appState.currentForm = null;
+  
   const data = BRANCHES_DATA[branchKey];
   
-  // باز کردن فرم با لیست دسته‌ها
+  // ۱. باز کردن فرم با لیست دسته‌ها
   document.getElementById("formTitle").textContent = data.title + " - انتخاب دسته";
   const content = document.getElementById("formContent");
+  
   let buttonsHtml = data.categories.map((cat, idx) => 
-    `<button style="background:#fff; color:var(--text-dark); border:1px solid var(--border-color); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; cursor:pointer; text-align:right; margin-bottom:8px;" onclick="selectCategoryFromModal('${branchKey}', ${idx})">${cat}</button>`
+    `<button style="background:#fff; color:var(--text-dark); border:1px solid var(--border-color); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; cursor:pointer; text-align:right; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;" onclick="selectCategoryFromModal('${branchKey}', ${idx})">
+      <span>${cat}</span> <span style="color:var(--gold-main)">←</span>
+    </button>`
   ).join("");
-  content.innerHTML = `<p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">لطفاً دسته مورد نظر خود را انتخاب کنید:</p><div style="display:flex; flex-direction:column;">${buttonsHtml}</div>`;
+  
+  content.innerHTML = `
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">لطفاً دسته مورد نظر خود را انتخاب کنید:</p>
+    <div style="display:flex; flex-direction:column;">${buttonsHtml}</div>
+  `;
   
   formModal.classList.add("show");
   injectBotButtonToForm();
   
-  // ربات فعال می‌شود و توضیح می‌دهد
+  // ۲. ربات فعال می‌شود و توضیح می‌دهد
   proactiveAI(`شما وارد بخش ${data.title} شدید. لطفاً از پنجره باز شده، دسته مورد نظر خود را انتخاب کنید تا فرم مربوطه را برایتان باز کنم.`, false);
 }
 
+// وقتی کاربر روی یک دسته کلیک می‌کند
 window.selectCategoryFromModal = function(branchSlug, categoryIndex) {
   renderForm(branchSlug, categoryIndex);
 };
 
+// رندر کردن فرم تخصصی
 function renderForm(branchSlug, categoryIndex) {
   const data = BRANCHES_DATA[branchSlug];
   const form = data.formsByCategoryIndex[categoryIndex];
   if (!form) return;
 
-  appState.currentBranch = branchSlug; appState.currentCategory = categoryIndex; appState.currentForm = form;
+  appState.currentBranch = branchSlug;
+  appState.currentCategory = categoryIndex;
+  appState.currentForm = form;
 
   document.getElementById("formTitle").textContent = form.title;
   const content = document.getElementById("formContent");
+  
   content.innerHTML = `
     <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">${form.intro}</p>
     <form id="dynamicForm">
@@ -806,7 +901,8 @@ function renderForm(branchSlug, categoryIndex) {
           <label>${f.label} ${f.required ? '<span style="color:red">*</span>' : ''}</label>
           ${f.type === "select" 
             ? `<select id="field-${f.id}" ${f.required ? "required" : ""}><option value="">انتخاب کنید</option>${f.options.map(o => `<option value="${o}">${o}</option>`).join("")}</select>`
-            : f.type === "textarea" ? `<textarea id="field-${f.id}" rows="3" ${f.required ? "required" : ""}></textarea>`
+            : f.type === "textarea"
+              ? `<textarea id="field-${f.id}" rows="3" ${f.required ? "required" : ""}></textarea>`
               : `<input id="field-${f.id}" type="${f.type}" ${f.required ? "required" : ""} min="${f.min || ""}" max="${f.max || ""}">`
           }
         </div>
@@ -814,24 +910,35 @@ function renderForm(branchSlug, categoryIndex) {
       <button type="submit" class="btn-submit">ثبت نهایی درخواست</button>
     </form>
   `;
+
   formModal.classList.add("show");
 
   // ربات فعال می‌شود و فرم را توضیح می‌دهد
   proactiveAI(`فرم ${form.title} باز شد. لطفاً اطلاعات را وارد کنید یا اگر می‌خواهید من برایتان پر کنم، به من بگویید.`, false);
 
+  // ثبت فرم
   document.getElementById("dynamicForm").addEventListener("submit", (e) => {
-    e.preventDefault(); formModal.classList.remove("show");
+    e.preventDefault();
+    formModal.classList.remove("show");
+    
     const reply = "✅ درخواست شما با موفقیت ثبت شد! کد پیگیری: IR-" + Math.floor(Math.random()*90000+10000);
     proactiveAI(reply, true);
-    appState.currentBranch = null; appState.currentCategory = null; appState.currentForm = null;
+    
+    appState.currentBranch = null;
+    appState.currentCategory = null;
+    appState.currentForm = null;
   });
 }
 
+// بستن فرم
 document.getElementById("closeFormModal").addEventListener("click", () => {
   formModal.classList.remove("show");
-  addMsg(dashChatBox, "فرم رو بستم. اگر خواستی دوباره پر کنیم بگو.", "bot"); speak("فرم بسته شد");
+  const reply = "فرم رو بستم. اگر خواستی دوباره پر کنیم بگو.";
+  addMsg(dashChatBox, reply, "bot"); 
+  speak(reply);
 });
 
+// دکمه دستیار در هدر فرم
 function injectBotButtonToForm() {
   const formHeader = document.querySelector("#formModal .modal-header");
   let existingBtn = document.getElementById("botInFormBtn");
@@ -841,17 +948,20 @@ function injectBotButtonToForm() {
   botBtn.id = "botInFormBtn"; botBtn.innerHTML = "🤖 دستیار";
   botBtn.style = "background:var(--gold-main); color:#fff; border:none; border-radius:8px; padding:6px 12px; font-size:12px; cursor:pointer; margin-left:auto;";
   botBtn.onclick = () => {
-    formModal.classList.remove("show"); dashChatModal.classList.add("show");
+    formModal.classList.remove("show"); 
+    dashChatModal.classList.add("show");
     const reply = "من اینجام! اگر می‌خوای فیلدی رو پر کنم، فقط بگو (مثلاً: مساحت ۱۰ هکتار).";
-    addMsg(dashChatBox, reply, "bot"); speak(reply);
+    addMsg(dashChatBox, reply, "bot"); 
+    speak(reply);
   };
   formHeader.insertBefore(botBtn, document.getElementById("closeFormModal"));
 }
 
-// --- Chat Logic ---
+// ---------------- 6. CHAT AI LOGIC ----------------
 function handleDashboardChat() {
   const text = dashInput.value.trim(); if (!text) return;
-  addMsg(dashChatBox, text, "user"); dashInput.value = "";
+  addMsg(dashChatBox, text, "user"); 
+  dashInput.value = "";
   setTimeout(() => { processAILogic(text); }, 800);
 }
 
@@ -860,6 +970,8 @@ dashInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleDash
 
 function processAILogic(text) {
   const cleanText = normalizeDigits(text);
+  
+  // اگر فرم باز است، تلاش برای پر کردن خودکار
   if (appState.currentForm) {
     const numMatch = cleanText.match(/\d+/);
     if (numMatch) {
@@ -867,22 +979,31 @@ function processAILogic(text) {
       if (numField) {
         document.getElementById(`field-${numField.id}`).value = numMatch[0];
         const reply = `عدد ${numMatch[0]} رو توی فیلد «${numField.label}» ثبت کردم. حالا می‌تونی برگردی به فرم.`;
-        addMsg(dashChatBox, reply, "bot"); speak(reply); return;
+        addMsg(dashChatBox, reply, "bot"); 
+        speak(reply); 
+        return;
       }
     }
+    
     const reply = "فرم برات بازه. می‌تونی خودت پر کنی یا اگر فیلدی مونده بهم بگو تا پر کنم.";
-    addMsg(dashChatBox, reply, "bot"); speak(reply); return;
+    addMsg(dashChatBox, reply, "bot"); 
+    speak(reply); 
+    return;
   }
 
+  // اگر فرم باز نیست، شاخه رو تشخیص بده
   if (!appState.currentBranch) {
     let found = null;
     if (cleanText.includes("کشاورزی") || cleanText.includes("سم") || cleanText.includes("پهپاد")) found = "iran_keshavarz";
     else if (cleanText.includes("ماشین") || cleanText.includes("حمل") || cleanText.includes("بار")) found = "iran_transport";
+    else if (cleanText.includes("تعمیر") || cleanText.includes("مکانیک")) found = "iran_mechanic";
+    
     if (found) {
       openBranchInChat(BRANCHES_DATA[found].title, found);
     } else {
       const reply = "متوجه نشدم. لطفاً یکی از شاخه‌ها رو بگو یا روی کارت‌های پایین کلیک کن.";
-      addMsg(dashChatBox, reply, "bot"); speak(reply);
+      addMsg(dashChatBox, reply, "bot"); 
+      speak(reply);
     }
     return;
   }
@@ -891,6 +1012,7 @@ function processAILogic(text) {
 // ---------------- INITIALIZATION ----------------
 document.addEventListener("DOMContentLoaded", () => {
   startOnboarding();
+  console.log("%c[Iran AI] System Ready ✨", "color: #D4AF37; font-size: 16px; font-weight: bold;");
 });
 </script>
 </body>
