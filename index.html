@@ -3,248 +3,822 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0A0F0D">
-<title>KAR AI | سوپر اپلیکیشن خدمات</title>
+<title>KAR AI | هوش مصنوعی لوکس</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0A0F0D;
-  --card-bg: #151E1B;
-  --card-hover: #1C2824;
-  --primary: #A3E635;
-  --text-main: #F5F7F3;
-  --text-muted: #88998F;
-  --line: #232F2A;
-  --danger: #FF5252;
-  --radius-lg: 24px;
-  --radius-md: 16px;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --bg-deep: #050505;
+  --bg-elev: #0E0E10;
+  --bg-card: rgba(20, 20, 22, 0.72);
+  --bg-card-hover: rgba(28, 28, 32, 0.85);
+
+  /* Gold gradient system */
+  --gold-1: #F5E6B8;
+  --gold-2: #F5D76E;
+  --gold-3: #C9A227;
+  --gold-4: #8B6914;
+  --gold-deep: #5C4600;
+
+  /* Silver */
+  --silver-1: #F0F0F0;
+  --silver-2: #B8B8B8;
+  --silver-3: #808080;
+
+  /* Text */
+  --text-main: #F2F2F2;
+  --text-gold: #E8D9A0;
+  --text-muted: #7A7A7A;
+  --text-dim: #4A4A4A;
+
+  /* Borders & lines */
+  --border-gold: rgba(201, 162, 39, 0.35);
+  --border-gold-bright: rgba(245, 215, 110, 0.6);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+
+  /* Glows */
+  --glow-gold: 0 0 40px rgba(201, 162, 39, 0.25);
+  --glow-gold-soft: 0 0 20px rgba(201, 162, 39, 0.15);
+  --glow-gold-strong: 0 0 60px rgba(245, 215, 110, 0.4);
+
+  --radius: 22px;
+  --radius-lg: 28px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', system-ui, sans-serif; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
-  background-color: var(--bg);
+  background: var(--bg-deep);
   color: var(--text-main);
-  font-family: 'Vazirmatn', Tahoma, sans-serif;
-  line-height: 1.6;
-  padding-bottom: 90px;
-  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
 }
-body.modal-open { overflow: hidden; }
-a { text-decoration: none; color: inherit; }
-button, input, select, textarea { font: inherit; outline: none; }
-button { cursor: pointer; border: none; background: transparent; }
-.container { width: min(800px, 100%); margin: auto; padding: 0 16px; }
 
-/* هدر */
+/* Background luxury glows */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 5%, rgba(201, 162, 39, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(245, 215, 110, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(139, 105, 20, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Subtle noise texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+button { cursor: pointer; border: none; outline: none; background: transparent; font-family: inherit; }
+
+/* ========== HEADER ========== */
 header {
-  position: sticky; top: 0; z-index: 50;
-  background: rgba(10, 15, 13, 0.85);
+  position: relative;
+  z-index: 10;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
   backdrop-filter: blur(20px);
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: rgba(5, 5, 5, 0.6);
 }
-.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.brand { display: flex; align-items: center; gap: 8px; }
-.brand-logo { width: 40px; height: 40px; border-radius: 12px; background: var(--primary); color: var(--bg); display: grid; place-items: center; font-size: 22px; font-weight: 900; }
-.header-search { flex: 1; background: #1A2421; border-radius: var(--radius-md); display: flex; align-items: center; padding: 0 12px; height: 44px; }
-.header-search input { background: transparent; border: none; color: var(--text-main); width: 100%; padding: 0 8px; font-size: 13px; }
-.header-search input::placeholder { color: var(--text-muted); }
 
-/* بنر */
-.banner-wrap { margin: 16px 0; border-radius: var(--radius-lg); overflow: hidden; position: relative; height: 160px; background: linear-gradient(135deg, #124536, #0A2F24); display: flex; align-items: center; padding: 24px; }
-.banner-content { position: relative; z-index: 2; max-width: 60%; }
-.banner-content h2 { font-size: 18px; margin-bottom: 8px; color: var(--primary); }
-.banner-content p { font-size: 12px; color: #D0DDD5; }
-.banner-img { position: absolute; left: 10px; bottom: 0; font-size: 90px; transform: rotate(-10deg); opacity: 0.9; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 0.15em;
+  color: var(--gold-2);
+  text-transform: uppercase;
+}
 
-/* جست‌وجو */
-.quickbar { background: var(--card-bg); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 24px; border: 1px solid var(--line); box-shadow: var(--shadow); }
-.search-panel { display: grid; gap: 10px; }
-.field label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
-.field input, .field select { width: 100%; background: #0D1412; border: 1px solid var(--line); border-radius: 12px; padding: 12px; color: var(--text-main); font-size: 13px; }
-.field input:focus, .field select:focus { border-color: var(--primary); }
-.btn-search { background: var(--primary); color: var(--bg); font-weight: 800; border-radius: 12px; padding: 14px; width: 100%; margin-top: 6px; font-size: 14px; }
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-1) 0%, var(--gold-3) 60%, var(--gold-4) 100%);
+  color: #050505;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 900;
+  box-shadow: var(--glow-gold-soft), inset 0 1px 0 rgba(255,255,255,0.4);
+  position: relative;
+}
 
-/* گرید شاخه‌ها */
-.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.section-head h2 { font-size: 16px; font-weight: 800; }
-.branches-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-@media (max-width: 600px) { .branches-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
-.branch-card { background: var(--card-bg); border-radius: var(--radius-md); padding: 16px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; position: relative; transition: transform 0.2s, background 0.2s; border: 1px solid transparent; cursor: pointer; }
-.branch-card:active { transform: scale(0.95); background: var(--card-hover); }
-.branch-icon { font-size: 38px; line-height: 1; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.4)); transform: translateY(-2px); }
-.branch-card h3 { font-size: 11px; font-weight: 700; text-align: center; color: var(--text-main); }
+.logo-icon::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 1px solid var(--border-gold);
+}
 
-/* فوتر */
-.bottom-nav { position: fixed; bottom: 16px; right: 16px; left: 16px; background: rgba(21, 30, 27, 0.9); backdrop-filter: blur(20px); border-radius: 24px; display: flex; justify-content: space-around; align-items: center; padding: 10px 0; z-index: 50; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; font-weight: 600; transition: 0.2s; }
-.nav-item.active { color: var(--primary); }
-.nav-item .icon { font-size: 22px; }
-.nav-center-btn { width: 50px; height: 50px; border-radius: 50%; background: var(--primary); color: var(--bg); display: grid; place-items: center; font-size: 24px; font-weight: 900; transform: translateY(-15px); box-shadow: 0 8px 20px rgba(163, 230, 53, 0.4); }
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
-/* مودال‌ها */
-.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
-.modal-backdrop.show { display: flex; }
-.modal { background: var(--card-bg); border-radius: var(--radius-lg); width: 100%; max-width: 480px; padding: 24px; position: relative; border: 1px solid var(--line); max-height: 90vh; overflow-y: auto; }
-.modal h2 { font-size: 18px; margin-bottom: 8px; color: var(--primary); }
-.modal p { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
-.modal input { width: 100%; background: #0D1412; border: 1px solid var(--line); border-radius: 12px; padding: 14px; color: white; margin-bottom: 16px; }
-.modal-close { position: absolute; top: 16px; left: 16px; background: rgba(255,255,255,0.1); color: white; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; }
+.icon-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(20, 20, 22, 0.8);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-gold);
+  font-size: 16px;
+  transition: all 0.3s;
+}
 
-/* مودال سفر (شاخه) */
-#journeyBackdrop { padding: 0; }
-#journeyDialog { width: 100%; height: 100%; max-width: 100%; max-height: 100%; border-radius: 0; background: var(--bg); padding: 0; display: flex; flex-direction: column; }
-.journey-header { display: flex; align-items: center; gap: 12px; padding: 16px; background: rgba(21,30,27,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
-.journey-back, .journey-close { width: 36px; height: 36px; border-radius: 12px; background: rgba(255,255,255,0.05); color: white; display: grid; place-items: center; font-size: 18px; cursor: pointer; }
-.journey-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
-.journey-hero { background: linear-gradient(135deg, #124536, #0A2F24); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
-.journey-hero h1 { font-size: 20px; margin-bottom: 8px; color: white; }
-.journey-hero p { font-size: 12px; color: #D0DDD5; }
-.journey-categories { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-@media(max-width: 500px) { .journey-categories { grid-template-columns: 1fr; } }
-.journey-category { background: var(--card-bg); padding: 16px; border-radius: var(--radius-md); color: white; text-align: right; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-.journey-field { margin-bottom: 16px; }
-.journey-field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-.journey-field input, .journey-field select, .journey-field textarea { width: 100%; background: #0D1412; border: 1px solid var(--line); border-radius: 12px; padding: 14px; color: white; font-size: 13px; }
-.btn-primary { background: var(--primary); color: var(--bg); font-weight: 800; padding: 14px 24px; border-radius: 12px; width: 100%; font-size: 14px; cursor: pointer; }
+.icon-circle:hover {
+  border-color: var(--border-gold);
+  box-shadow: var(--glow-gold-soft);
+  background: rgba(30, 30, 32, 0.9);
+}
 
-/* دستیار هوش مصنوعی */
-.assistant-trigger { position: fixed; bottom: 90px; left: 20px; z-index: 40; width: 60px; height: 60px; border-radius: 50%; background: var(--card-bg); border: 2px solid var(--primary); color: var(--primary); font-size: 28px; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(0,0,0,0.5); animation: pulse 2s infinite; cursor: pointer; }
-@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(163, 230, 53, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(163, 230, 53, 0); } 100% { box-shadow: 0 0 0 0 rgba(163, 230, 53, 0); } }
-.assistant-panel { background: var(--card-bg); width: 100%; max-width: 400px; height: 80vh; border-radius: var(--radius-lg); display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); }
-.assistant-header { background: #124536; padding: 16px; display: flex; align-items: center; gap: 12px; }
-.assistant-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-.msg { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 13px; }
-.msg.user { align-self: flex-end; background: var(--primary); color: var(--bg); border-bottom-left-radius: 4px; }
-.msg.bot { align-self: flex-start; background: #1A2421; color: var(--text-main); border-bottom-right-radius: 4px; }
-.assistant-input { padding: 12px; background: #0D1412; display: flex; gap: 8px; }
-.assistant-input input { flex: 1; background: transparent; border: none; color: white; }
-.assistant-input button { background: var(--primary); color: var(--bg); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; }
+/* ========== AI SECTION ========== */
+.ai-section {
+  position: relative;
+  z-index: 5;
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Premium Robot */
+.robot-container {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  margin-bottom: 16px;
+  animation: float 4s ease-in-out infinite;
+}
+
+.robot {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  background:
+    radial-gradient(circle at 35% 30%, #FFF4CC 0%, var(--gold-2) 25%, var(--gold-3) 55%, var(--gold-4) 85%, var(--gold-deep) 100%);
+  box-shadow:
+    var(--glow-gold-strong),
+    inset 0 -8px 16px rgba(0,0,0,0.4),
+    inset 0 8px 16px rgba(255,255,255,0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(255, 240, 180, 0.6);
+}
+
+.robot::before,
+.robot::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: #0A0A0A;
+  border-radius: 50%;
+  position: absolute;
+  top: 42%;
+  animation: blink 5s infinite;
+  box-shadow: 0 0 6px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.5);
+}
+
+.robot::before { right: 26%; }
+.robot::after { left: 26%; }
+
+/* Orbital rings */
+.robot-container::before,
+.robot-container::after {
+  content: '';
+  position: absolute;
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 50%;
+  animation: orbit 8s linear infinite;
+}
+
+.robot-container::before {
+  inset: -14px;
+  border-top-color: var(--gold-3);
+  border-right-color: transparent;
+}
+
+.robot-container::after {
+  inset: -24px;
+  border-bottom-color: var(--gold-2);
+  border-left-color: transparent;
+  animation-duration: 12s;
+  animation-direction: reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes blink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ========== LANGUAGE SELECTOR ========== */
+.lang-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.lang-btn {
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-gold);
+  background: rgba(15, 15, 15, 0.6);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.lang-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(245, 215, 110, 0.15), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.lang-btn:hover::before {
+  transform: translateX(100%);
+}
+
+.lang-btn:hover {
+  border-color: var(--border-gold);
+  background: rgba(25, 25, 25, 0.9);
+  box-shadow: var(--glow-gold-soft);
+}
+
+.lang-btn.active {
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-3) 60%, var(--gold-4));
+  color: #0A0A0A;
+  border-color: var(--gold-2);
+  font-weight: 800;
+  box-shadow: var(--glow-gold), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+/* ========== CHAT CONTAINER ========== */
+.chat-container {
+  width: 100%;
+  max-width: 620px;
+  height: 240px;
+  position: relative;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(15, 15, 17, 0.9), rgba(10, 10, 12, 0.95));
+  border: 1px solid var(--border-gold);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow:
+    var(--glow-gold-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.chat-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-3), transparent);
+  opacity: 0.6;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-gold) transparent;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--gold-2), var(--gold-4));
+  border-radius: 2px;
+}
+
+/* Messages */
+.msg {
+  max-width: 85%;
+  padding: 11px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  line-height: 1.7;
+  animation: msgIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+  transform: translateY(8px);
+  word-wrap: break-word;
+}
+
+@keyframes msgIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.msg.bot {
+  align-self: flex-start;
+  background: rgba(20, 20, 24, 0.9);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-bottom-right-radius: 4px;
+  color: var(--text-main);
+  position: relative;
+}
+
+.msg.bot::before {
+  content: '◈';
+  position: absolute;
+  right: -22px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold-3);
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.msg.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--gold-2), var(--gold-3) 70%, var(--gold-4));
+  color: #0A0A0A;
+  border-bottom-left-radius: 4px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.25);
+}
+
+/* Chat input */
+.chat-input {
+  display: flex;
+  padding: 10px;
+  background: rgba(8, 8, 10, 0.9);
+  border-top: 1px solid var(--border-subtle);
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-input input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  padding: 10px 12px;
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+}
+
+.chat-input input::placeholder {
+  color: var(--text-dim);
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.btn-mic {
+  background: rgba(20, 20, 22, 0.9);
+  color: var(--text-gold);
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-mic:hover {
+  border-color: var(--border-gold);
+  box-shadow: var(--glow-gold-soft);
+}
+
+.btn-mic.recording {
+  background: linear-gradient(135deg, #FF5252, #B71C1C);
+  color: white;
+  border-color: #FF5252;
+  animation: recordPulse 1.5s infinite;
+}
+
+@keyframes recordPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(255, 82, 82, 0);
+  }
+}
+
+.btn-send {
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-3) 60%, var(--gold-4));
+  color: #0A0A0A;
+  box-shadow: var(--glow-gold-soft), inset 0 1px 0 rgba(255,255,255,0.3);
+  font-weight: 900;
+}
+
+.btn-send:hover {
+  box-shadow: var(--glow-gold), inset 0 1px 0 rgba(255,255,255,0.4);
+  transform: scale(1.05);
+}
+
+.btn-send:active {
+  transform: scale(0.95);
+}
+
+/* ========== BRANCHES SECTION ========== */
+.branches-section {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  border-top: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, transparent, rgba(5, 5, 5, 0.4));
+}
+
+.branches-section::before {
+  content: 'خدمات تخصصی';
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 16px;
+  font-weight: 500;
+  position: relative;
+}
+
+.branches-section::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-3), transparent);
+}
+
+.branches-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  max-width: 620px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .branches-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+}
+
+.branch-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 14px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border-subtle);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.branch-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(201, 162, 39, 0.1), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.branch-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-gold);
+  box-shadow: var(--glow-gold-soft);
+}
+
+.branch-card:hover::before {
+  opacity: 1;
+}
+
+.branch-card:active {
+  transform: scale(0.96);
+}
+
+.branch-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 30% 20%, rgba(245, 215, 110, 0.15), rgba(201, 162, 39, 0.05) 70%, transparent);
+  border: 1px solid rgba(201, 162, 39, 0.25);
+  position: relative;
+  transition: all 0.35s;
+}
+
+.branch-card:hover .branch-icon-wrap {
+  border-color: var(--border-gold-bright);
+  box-shadow: var(--glow-gold-soft);
+}
+
+.branch-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+  transition: transform 0.35s;
+}
+
+.branch-card:hover .branch-icon {
+  transform: scale(1.15);
+}
+
+.branch-name {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-gold);
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s;
+}
+
+.branch-card:hover .branch-name {
+  color: var(--gold-1);
+}
+
+/* ========== FORM MODAL ========== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-backdrop.show {
+  display: flex;
+}
+
+.modal {
+  background: linear-gradient(180deg, #14141A, #0A0A0E);
+  width: 100%;
+  max-width: 620px;
+  border-radius: 28px 28px 0 0;
+  padding: 24px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-top: 1px solid var(--border-gold);
+  box-shadow: 0 -20px 60px rgba(201, 162, 39, 0.15);
+  position: relative;
+}
+
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-3), transparent);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-top: 8px;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-gold);
+  font-size: 18px;
+  transition: all 0.3s;
+}
+
+.close-btn:hover {
+  border-color: var(--border-gold);
+  background: rgba(201, 162, 39, 0.1);
+}
+
+.form-content {
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.form-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.form-content::-webkit-scrollbar-thumb {
+  background: var(--gold-4);
+  border-radius: 2px;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 13px 14px;
+  color: var(--text-main);
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.3s;
+  outline: none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--border-gold-bright);
+  box-shadow: var(--glow-gold-soft);
+  background: rgba(10, 10, 10, 0.6);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--gold-1), var(--gold-3) 60%, var(--gold-4));
+  color: #0A0A0A;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  transition: all 0.3s;
+  box-shadow: var(--glow-gold-soft), inset 0 1px 0 rgba(255,255,255,0.3);
+  margin-top: 8px;
+}
+
+.btn-submit:hover {
+  box-shadow: var(--glow-gold), inset 0 1px 0 rgba(255,255,255,0.4);
+  transform: translateY(-2px);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .robot-container { width: 70px; height: 70px; }
+  .chat-container { height: 210px; }
+  .lang-btn { padding: 6px 12px; font-size: 11px; }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="container header-inner">
-    <a href="#" class="brand">
-      <div class="brand-logo">K</div>
-    </a>
-    <div class="header-search">
-      <span style="color: var(--text-muted)">⌕</span>
-      <input type="text" id="headerSearchInput" placeholder="جست‌وجو در KAR AI...">
-    </div>
-    <div>
-      <button data-open-modal="login" style="color: var(--text-main); font-size: 13px; font-weight: bold;">ورود</button>
-    </div>
+  <div class="logo">
+    <div class="logo-icon">K</div>
+    <span>KAR · AI</span>
+  </div>
+  <div class="header-actions">
+    <button class="icon-circle" title="قطع/وصل صدا" id="muteToggle">🔊</button>
   </div>
 </header>
 
-<main class="container">
-  <div class="banner-wrap">
-    <div class="banner-content">
-      <h2>اکوسیستم خدمات هوشمند</h2>
-      <p>با دستیار هوش مصنوعی اختصاصی در هر شاخه</p>
-    </div>
-    <div class="banner-img">🤖</div>
+<div class="ai-section">
+  <div class="robot-container">
+    <div class="robot"></div>
   </div>
 
-  <div class="quickbar">
-    <div class="search-panel">
-      <div class="field">
-        <label>چه خدمتی نیاز دارید؟</label>
-        <input type="text" id="serviceSearch" placeholder="مثلاً سم‌پاشی، حمل بار...">
-      </div>
-      <div class="field" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-        <select id="branchFilter">
-          <option value="">همه شاخه‌ها</option>
-        </select>
-        <select id="province"><option value="">همه استان‌ها</option></select>
-      </div>
-      <button class="btn-search" id="searchButton">جست‌وجو</button>
-    </div>
-  </div>
+  <div class="lang-selector" id="langSelector"></div>
 
-  <div class="section-head">
-    <h2>شاخه‌های خدمات</h2>
-  </div>
-  
-  <div class="branches-grid" id="branchGrid">
-    <!-- آیکون‌ها با ایموجی درشت برای حس 3D -->
-    <a class="branch-card" data-branch="iran_keshavarz"><div class="branch-icon">🚜</div><h3>کشاورزی</h3></a>
-    <a class="branch-card" data-branch="iran_transport"><div class="branch-icon">🚚</div><h3>حمل‌ونقل</h3></a>
-    <a class="branch-card" data-branch="iran_building"><div class="branch-icon">🏗️</div><h3>ساختمان</h3></a>
-    <a class="branch-card" data-branch="iran_education"><div class="branch-icon">🎓</div><h3>آموزش</h3></a>
-    <a class="branch-card" data-branch="iran_health"><div class="branch-icon">⚕️</div><h3>سلامت</h3></a>
-    <a class="branch-card" data-branch="iran_ads"><div class="branch-icon">📢</div><h3>آگهی</h3></a>
-    <a class="branch-card" data-branch="iran_accounting"><div class="branch-icon">💼</div><h3>حسابداری</h3></a>
-    <a class="branch-card" data-branch="iran_legal"><div class="branch-icon">⚖️</div><h3>حقوقی</h3></a>
-    <a class="branch-card" data-branch="iran_tourism"><div class="branch-icon">✈️</div><h3>گردشگری</h3></a>
-    <a class="branch-card" data-branch="iran_bank"><div class="branch-icon">💳</div><h3>پرداخت</h3></a>
-    <a class="branch-card" data-branch="iran_mechanic"><div class="branch-icon">🔧</div><h3>مکانیک</h3></a>
-    <a class="branch-card" data-branch="iran_production"><div class="branch-icon">🏭</div><h3>تولید</h3></a>
-  </div>
-</main>
-
-<nav class="bottom-nav">
-  <a href="#" class="nav-item active"><span class="icon">🏠</span><span>خانه</span></a>
-  <a href="#" class="nav-item"><span class="icon">🧾</span><span>سفارش‌ها</span></a>
-  <a href="#" class="nav-item nav-center-btn" id="assistantTrigger"><span>◈</span></a>
-  <a href="#" class="nav-item"><span class="icon">💬</span><span>پشتیبانی</span></a>
-  <a href="#" class="nav-item"><span class="icon">👤</span><span>پروفایل</span></a>
-</nav>
-
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal" id="authDialog">
-    <button class="modal-close" id="modalClose">×</button>
-    <h2 id="modalTitle">ورود / ثبت‌نام</h2>
-    <p id="modalDesc">شماره موبایل خود را وارد کنید</p>
-    <form id="authForm">
-      <input type="tel" id="mobile" placeholder="09123456789" required>
-      <button class="btn-primary" id="modalSubmit" type="submit">ادامه</button>
-    </form>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="journeyBackdrop">
-  <div class="modal" id="journeyDialog">
-    <div class="journey-header">
-      <button class="journey-back" id="journeyBack">→</button>
-      <div style="flex:1; font-weight:bold; font-size:14px;" id="journeyBreadcrumb">شاخه</div>
-      <button class="journey-close" id="journeyClose">×</button>
-    </div>
-    <div class="journey-content" id="journeyContent">
-      <div id="journeyInner"></div>
+  <div class="chat-container">
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input">
+      <button class="btn-icon btn-mic" id="micBtn" title="ضبط صدا">🎤</button>
+      <input type="text" id="chatInput" placeholder="اینجا بنویسید یا صحبت کنید…" autocomplete="off">
+      <button class="btn-icon btn-send" id="chatSend">↑</button>
     </div>
   </div>
 </div>
 
-<div class="modal-backdrop" id="assistantBackdrop">
-  <div class="assistant-panel" id="assistantPanel">
-    <div class="assistant-header">
-      <div style="background:var(--primary); color:var(--bg); width:36px; height:36px; border-radius:50%; display:grid; place-items:center; font-size:18px;">◈</div>
-      <div style="flex:1;">
-        <div style="font-weight:bold; font-size:14px;" id="assistantTitle">دستیار KAR AI</div>
-        <div style="font-size:10px; color:var(--primary);">آنلاین</div>
-      </div>
-      <button id="assistantClose" style="color:white; font-size:20px; cursor:pointer;">×</button>
-    </div>
-    <div class="assistant-messages" id="assistantMessages"></div>
-    <div class="assistant-input">
-      <input type="text" id="assistantInput" placeholder="سوال خود را بنویسید...">
-      <button id="assistantSend">↑</button>
-    </div>
-  </div>
+<div class="branches-section">
+  <div class="branches-grid" id="branchGrid"></div>
 </div>
 
-<button class="assistant-trigger" id="floatAssistantBtn">◈</button>
+<div class="modal-backdrop" id="formModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="formTitle">فرم درخواست</h2>
+      <button class="close-btn" id="closeFormModal">×</button>
+    </div>
+    <div class="form-content" id="formContent"></div>
+  </div>
+</div>
 <script>
 "use strict";
 
 /* =========================================
-   KAR AI V6.0 (SUPER APP) — PART 2 (FULL DATA)
+   KAR AI V7.0 (LUXURY UI) — PART 2 (DATA)
    Central Assistant + 12 Branches (68 Forms)
 ========================================= */
 
@@ -254,453 +828,421 @@ const CENTRAL_ASSISTANT = {
   avatar: "◈",
   greeting: "سلام! من دستیار هوش مصنوعی KAR AI هستم. می‌توانم در انتخاب شاخه مناسب، نحوه ثبت درخواست، کیف پول و همکاری به‌عنوان همکار راهنمایی‌تان کنم. چه کمکی می‌توانم بکنم؟",
   systemPrompt: `تو دستیار مرکزی هوش مصنوعی پلتفرم KAR AI هستی.
-
-پلتفرم KAR AI:
-- یک اکوسیستم جامع خدمات هوشمند با ۱۲ شاخه تخصصی
-- یک حساب کاربری، یک کیف پول مشترک، یک سامانه مدیریتی
-- هر شاخه دستیار هوش مصنوعی تخصصی خود را دارد
-
-۱۲ شاخه:
-1. ایران کشاورز (سم‌پاشی، خدمات پهپادی، ماشین‌آلات، نهاده، آبیاری، مشاوره مزرعه)
-2. ایران حمل‌ونقل (حمل بار، وانت/کامیون، اسباب‌کشی، حمل بین‌شهری)
-3. ایران ساختمان (ساخت، برق، لوله‌کشی، تأسیسات، نقاشی، نما، آسانسور)
-4. ایران آموزش (دوره، کلاس خصوصی، آموزش آنلاین، مهارت فنی، زبان)
-5. ایران سلامت (مراکز مجاز، متخصصان، مراقبت، نوبت)
-6. ایران آگهی (آگهی کالا، خدمات، ملک، ماشین‌آلات، استخدام)
-7. ایران حسابدار (حسابداری، مالیات، دفاتر، حقوق، مشاوره)
-8. ایران مشاوره قضایی (مشاوره حقوقی، معرفی وکیل، پیگیری)
-9. ایران گردشگر (اقامت، راهنما، تور، حمل‌ونقل سفر، تجربه محلی)
-10. ایران بانک (پرداخت قبض، شارژ، هزینه خدمات — از PSP مجاز)
-11. ایران مکانیک (تعمیر خودرو، ماشین‌آلات، سرویس، امداد)
-12. ایران تولید (تولیدکنندگان، سفارش عمده، ظرفیت تولید، استعلام)
-
-وظایف تو:
-- راهنمایی کاربر برای انتخاب شاخه مناسب
-- توضیح نحوه استفاده از سامانه (ثبت درخواست، پیگیری، کیف پول، همکاری)
-- هدایت به دستیار تخصصی شاخه در صورت نیاز
-
-اصول و محدودیت‌های حیاتی:
-- هرگز ادعای انجام خدمت یا تضمین قیمت نکن
-- هرگز جایگزین مشاوره حقوقی/پزشکی/مالی حرفه‌ای نشو
-- هرگز اطلاعات شخصی کاربر را درخواست نکن (به‌جز در فرم‌های رسمی سامانه)
-- در موارد خارج از حوزه، کاربر را به پشتیبانی ارجاع بده
-- پاسخ‌ها کوتاه، دقیق، فارسی و مفید باشند
-- اگر کاربر سوال تخصصی در حوزه یک شاخه پرسید، پیشنهاد کن با دستیار تخصصی آن شاخه صحبت کند`,
+پلتفرم KAR AI یک اکوسیستم جامع خدمات هوشمند با ۱۲ شاخه تخصصی است. یک حساب کاربری و یک کیف پول مشترک دارد.
+شاخه‌ها: کشاورزی، حمل‌ونقل، ساختمان، آموزش، سلامت، آگهی، حسابداری، مشاوره قضایی، گردشگری، پرداخت، مکانیک و تولید.
+وظایف تو: راهنمایی کاربر برای انتخاب شاخه، توضیح نحوه ثبت درخواست، هدایت به دستیار تخصصی شاخه.
+محدودیت‌ها: هرگز قیمت دقیق اعلام نکن، ادعای انجام خدمت نکن، اطلاعات شخصی درخواست نکن.`,
   suggestions: [
-    {
-      label: "چطور درخواست ثبت کنم؟",
-      answer: "برای ثبت درخواست ۳ گام ساده: ۱) شاخه موردنظر را از بخش «شاخه‌های اکوسیستم» انتخاب کنید. ۲) دسته خدمت را انتخاب کنید تا فرم تخصصی آن باز شود. ۳) فرم را با جزئیات لازم پر کنید و ثبت کنید. پس از تأیید، شماره پیگیری دریافت می‌کنید."
-    },
-    {
-      label: "چه شاخه‌ای مناسب من است؟",
-      answer: "بستگی به نیاز شما دارد. ۱۲ شاخه داریم: کشاورزی، حمل‌ونقل، ساختمان، آموزش، سلامت، آگهی، حسابداری، مشاوره قضایی، گردشگری، پرداخت، مکانیک و تولید. اگر بگویید دنبال چه هستید، دقیق‌تر راهنمایی می‌کنم."
-    },
-    {
-      label: "کیف پول چطور کار می‌کند؟",
-      answer: "KAR AI یک کیف پول مشترک بین همه شاخه‌ها دارد. شارژ از درگاه مجاز انجام می‌شود، موجودی بدون تاریخ انقضاست، و می‌توانید بین کاربران دیگر انتقال اعتبار بدهید (با فعال‌سازی دریافت و تأیید OTP). سوابق کامل تراکنش‌ها در /account/wallet قابل مشاهده است."
-    },
-    {
-      label: "چطور همکار شوم؟",
-      answer: "برای همکاری به‌عنوان ارائه‌دهنده خدمت، از دکمه «همکاری با ما» در هدر صفحه درخواست دهید. پس از بررسی اولیه، تیم KAR AI مراحل تأیید مدارک و فعال‌سازی پروفایل همکاری را هماهنگ می‌کند. همکاران می‌توانند خدمات، تعرفه، محدوده فعالیت و برنامه کاری خود را تنظیم کنند."
-    },
-    {
-      label: "سفارش‌هایم را کجا ببینم؟",
-      answer: "همه سفارش‌ها در مسیر /account/orders قابل مشاهده‌اند. هر سفارش دارای شماره پیگیری، خط زمانی وضعیت، و امکان اقدام‌های مجاز (لغو، تأیید، گزارش مشکل، امتیازدهی) است. در نسخه فعلی این بخش در انتظار اتصال به API است."
-    }
+    { label: "چطور درخواست ثبت کنم؟", answer: "برای ثبت درخواست ۳ گام ساده: ۱) شاخه موردنظر را انتخاب کنید. ۲) دسته خدمت را انتخاب کنید تا فرم باز شود. ۳) فرم را پر کنید و ثبت کنید." },
+    { label: "چه شاخه‌ای مناسب من است؟", answer: "بستگی به نیاز شما دارد. ما ۱۲ شاخه داریم: کشاورزی، حمل‌ونقل، ساختمان، آموزش، سلامت، آگهی، حسابداری، حقوقی، گردشگری، بانک، مکانیک و تولید. اگر بگویید دنبال چه هستید، دقیق‌تر راهنمایی می‌کنم." },
+    { label: "کیف پول چطور کار می‌کند؟", answer: "KAR AI یک کیف پول مشترک بین همه شاخه‌ها دارد. شارژ از درگاه مجاز، بدون تاریخ انقضا، و قابل انتقال بین کاربران است." },
+    { label: "چطور همکار شوم؟", answer: "از دکمه «همکاری با ما» در هدر درخواست دهید. تیم KAR AI پس از بررسی، مدارک را تأیید و پروفایل شما را فعال می‌کند." }
   ]
 };
 
 const BRANCHES_DATA = {
   iran_keshavarz: {
-    slug: "iran_keshavarz", title: "ایران کشاورز", icon: "❧",
+    slug: "iran_keshavarz", title: "ایران کشاورز", icon: "🚜",
     shortDescription: "خدمات و راهکارهای تخصصی کشاورزی",
-    description: "از سم‌پاشی و خدمات پهپادی گرفته تا اجاره ماشین‌آلات، تأمین نهاده، آبیاری و مشاوره مزرعه — همه چیز برای مدیریت هوشمند مزرعه در یک شاخه.",
+    description: "از سم‌پاشی و خدمات پهپادی گرفته تا اجاره ماشین‌آلات، تأمین نهاده، آبیاری و مشاوره مزرعه.",
     categories: ["سم‌پاشی و محلول‌پاشی", "خدمات پهپادی", "ماشین‌آلات و ادوات", "اجاره تجهیزات", "نهاده و بذر", "آبیاری", "مشاوره مزرعه", "خرید و فروش محصول"],
     formsByCategoryIndex: {
-      0: {
-        title: "درخواست سم‌پاشی",
-        intro: "برای ثبت درخواست سم‌پاشی، مشخصات مزرعه و نوع آفت/بیماری را وارد کنید.",
-        fields: [
-          { id: "area", label: "مساحت زمین (هکتار)", type: "number", required: true, min: 0.1, max: 5000, step: 0.1 },
-          { id: "crop", label: "نوع محصول", type: "text", required: true, minLength: 2, maxLength: 60 },
-          { id: "growth", label: "مرحله رشد", type: "select", required: true, options: ["کاشت", "داشت", "برداشت"] },
-          { id: "pestType", label: "نوع آفت یا بیماری", type: "text", required: true, maxLength: 100 },
-          { id: "location", label: "موقعیت زمین", type: "text", required: true, minLength: 5, maxLength: 200 },
-          { id: "when", label: "تاریخ موردنظر", type: "date", required: true, minDate: new Date().toISOString().slice(0, 10) },
-          { id: "notes", label: "توضیحات تکمیلی", type: "textarea", maxLength: 500 }
-        ]
-      },
-      1: {
-        title: "درخواست خدمات پهپادی",
-        intro: "خدمات پهپادی برای مزارع بزرگ یا زمین‌های صعب‌الوصول مناسب است.",
-        fields: [
-          { id: "area", label: "مساحت (هکتار)", type: "number", required: true, min: 1, max: 5000, step: 0.5 },
-          { id: "operationType", label: "نوع عملیات", type: "select", required: true, options: ["سم‌پاشی", "کودپاشی", "تصویربرداری هوایی", "نقشه‌برداری"] },
-          { id: "crop", label: "نوع محصول", type: "text", required: true, maxLength: 60 },
-          { id: "location", label: "موقعیت زمین", type: "text", required: true },
-          { id: "when", label: "تاریخ موردنظر", type: "date", required: true, minDate: new Date().toISOString().slice(0, 10) },
-          { id: "notes", label: "توضیحات", type: "textarea", maxLength: 500 }
-        ]
-      },
-      2: {
-        title: "درخواست ماشین‌آلات و ادوات",
-        intro: "تعمیر، نگهداری یا تأمین قطعات ماشین‌آلات کشاورزی.",
-        fields: [
-          { id: "machineType", label: "نوع ماشین", type: "select", required: true, options: ["تراکتور", "کمباین", "سم‌پاش", "خرمن‌کوب", "ادوات خاک‌ورزی", "سایر"] },
-          { id: "serviceType", label: "نوع خدمت", type: "select", required: true, options: ["تعمیر", "سرویس دوره‌ای", "تأمین قطعه", "مشاوره"] },
-          { id: "problem", label: "شرح مشکل", type: "textarea", required: true, minLength: 20, maxLength: 500 },
-          { id: "location", label: "محل ماشین", type: "text", required: true },
-          { id: "when", label: "زمان موردنظر", type: "date" },
-          { id: "notes", label: "توضیحات", type: "textarea" }
-        ]
-      },
-      3: {
-        title: "درخواست اجاره تجهیزات",
-        intro: "اجاره تراکتور، کمباین، ادوات و سایر تجهیزات کشاورزی.",
-        fields: [
-          { id: "equipment", label: "نوع تجهیز", type: "select", required: true, options: ["تراکتور", "کمباین", "ادوات خاک‌ورزی", "سم‌پاش", "خرمن‌کوب"] },
-          { id: "duration", label: "مدت اجاره (روز)", type: "number", required: true, min: 1, max: 180, step: 1 },
-          { id: "startDate", label: "تاریخ شروع", type: "date", required: true, minDate: new Date().toISOString().slice(0, 10) },
-          { id: "location", label: "محل استفاده", type: "text", required: true },
-          { id: "notes", label: "توضیحات", type: "textarea" }
-        ]
-      },
-      4: {
-        title: "درخواست نهاده و بذر",
-        intro: "خرید کود، سم، بذر گواهی‌شده و نهاده‌های کشاورزی.",
-        fields: [
-          { id: "inputType", label: "نوع نهاده", type: "select", required: true, options: ["کود", "سم", "بذر", "اصلاح‌کننده خاک"] },
-          { id: "productName", label: "نام محصول", type: "text", required: true, maxLength: 100 },
-          { id: "quantity", label: "مقدار (کیلوگرم/لیتر)", type: "number", required: true, min: 1, max: 100000 },
-          { id: "deliveryDate", label: "تاریخ تحویل", type: "date" },
-          { id: "location", label: "محل تحویل", type: "text", required: true },
-          { id: "notes", label: "توضیحات", type: "textarea" }
-        ]
-      },
-      5: {
-        title: "درخواست خدمات آبیاری",
-        intro: "طراحی، نصب یا تعمیر سیستم آبیاری قطره‌ای، بارانی یا غرقابی.",
-        fields: [
-          { id: "irrigationType", label: "نوع آبیاری", type: "select", required: true, options: ["قطره‌ای", "بارانی", "غرقابی", "میکرو"] },
-          { id: "serviceType", label: "نوع خدمت", type: "select", required: true, options: ["طراحی", "نصب", "تعمیر", "بازرسی"] },
-          { id: "area", label: "مساحت (هکتار)", type: "number", required: true, min: 0.1, max: 5000, step: 0.1 },
-          { id: "location", label: "موقعیت زمین", type: "text", required: true },
-          { id: "notes", label: "توضیحات", type: "textarea" }
-        ]
-      },
-      6: {
-        title: "درخواست مشاوره مزرعه",
-        intro: "مشاوره تخصصی برای انتخاب محصول، برنامه کاشت، آبیاری و برداشت.",
-        fields: [
-          { id: "topic", label: "موضوع مشاوره", type: "select", required: true, options: ["انتخاب محصول", "برنامه کاشت", "مدیریت آبیاری", "برنامه برداشت", "مدیریت آفات", "سایر"] },
-          { id: "area", label: "مساحت زمین (هکتار)", type: "number", required: true, min: 0.1, max: 5000 },
-          { id: "currentCrop", label: "محصول فعلی (اگر هست)", type: "text", maxLength: 60 },
-          { id: "description", label: "شرح وضعیت و هدف", type: "textarea", required: true, minLength: 30, maxLength: 1000 },
-          { id: "consultationType", label: "نوع مشاوره", type: "select", options: ["حضوری در مزرعه", "آنلاین", "تلفنی"] }
-        ]
-      },
-      7: {
-        title: "درخواست خرید / فروش محصول",
-        intro: "خرید یا فروش محصولات کشاورزی به‌صورت عمده.",
-        fields: [
-          { id: "dealType", label: "نوع معامله", type: "select", required: true, options: ["خرید", "فروش"] },
-          { id: "product", label: "نام محصول", type: "text", required: true, maxLength: 60 },
-          { id: "quantity", label: "مقدار (تن)", type: "number", required: true, min: 0.1, max: 10000, step: 0.1 },
-          { id: "harvestDate", label: "تاریخ برداشت / تحویل", type: "date" },
-          { id: "location", label: "محل تحویل", type: "text", required: true },
-          { id: "notes", label: "توضیحات", type: "textarea" }
-        ]
-      }
+      0: { title: "درخواست سم‌پاشی", intro: "مشخصات مزرعه و نوع آفت را وارد کنید.", fields: [
+        { id: "area", label: "مساحت زمین (هکتار)", type: "number", required: true, min: 0.1, max: 5000, step: 0.1 },
+        { id: "crop", label: "نوع محصول", type: "text", required: true, minLength: 2, maxLength: 60 },
+        { id: "growth", label: "مرحله رشد", type: "select", required: true, options: ["کاشت", "داشت", "برداشت"] },
+        { id: "pestType", label: "نوع آفت یا بیماری", type: "text", required: true, maxLength: 100 },
+        { id: "location", label: "موقعیت زمین", type: "text", required: true, minLength: 5, maxLength: 200 },
+        { id: "when", label: "تاریخ موردنظر", type: "date", required: true, minDate: new Date().toISOString().slice(0, 10) },
+        { id: "notes", label: "توضیحات تکمیلی", type: "textarea", maxLength: 500 }
+      ]},
+      1: { title: "درخواست خدمات پهپادی", intro: "مناسب مزارع بزرگ یا زمین‌های صعب‌الوصول.", fields: [
+        { id: "area", label: "مساحت (هکتار)", type: "number", required: true, min: 1, max: 5000, step: 0.5 },
+        { id: "operationType", label: "نوع عملیات", type: "select", required: true, options: ["سم‌پاشی", "کودپاشی", "تصویربرداری", "نقشه‌برداری"] },
+        { id: "crop", label: "نوع محصول", type: "text", required: true, maxLength: 60 },
+        { id: "location", label: "موقعیت", type: "text", required: true },
+        { id: "when", label: "تاریخ", type: "date", required: true },
+        { id: "notes", label: "توضیحات", type: "textarea" }
+      ]},
+      2: { title: "ماشین‌آلات و ادوات", intro: "تعمیر یا تأمین قطعات.", fields: [
+        { id: "machineType", label: "نوع ماشین", type: "select", required: true, options: ["تراکتور", "کمباین", "سم‌پاش", "خرمن‌کوب", "ادوات", "سایر"] },
+        { id: "serviceType", label: "نوع خدمت", type: "select", required: true, options: ["تعمیر", "سرویس", "قطعه", "مشاوره"] },
+        { id: "problem", label: "شرح مشکل", type: "textarea", required: true, minLength: 20 },
+        { id: "location", label: "محل ماشین", type: "text", required: true },
+        { id: "when", label: "زمان", type: "date" }
+      ]},
+      3: { title: "اجاره تجهیزات", intro: "اجاره تراکتور، کمباین و ادوات.", fields: [
+        { id: "equipment", label: "نوع تجهیز", type: "select", required: true, options: ["تراکتور", "کمباین", "ادوات", "سم‌پاش", "خرمن‌کوب"] },
+        { id: "duration", label: "مدت (روز)", type: "number", required: true, min: 1, max: 180 },
+        { id: "startDate", label: "تاریخ شروع", type: "date", required: true },
+        { id: "location", label: "محل استفاده", type: "text", required: true },
+        { id: "notes", label: "توضیحات", type: "textarea" }
+      ]},
+      4: { title: "نهاده و بذر", intro: "خرید کود، سم و بذر گواهی‌شده.", fields: [
+        { id: "inputType", label: "نوع نهاده", type: "select", required: true, options: ["کود", "سم", "بذر", "اصلاح‌کننده"] },
+        { id: "productName", label: "نام محصول", type: "text", required: true },
+        { id: "quantity", label: "مقدار", type: "number", required: true, min: 1 },
+        { id: "deliveryDate", label: "تاریخ تحویل", type: "date" },
+        { id: "location", label: "محل تحویل", type: "text", required: true }
+      ]},
+      5: { title: "خدمات آبیاری", intro: "طراحی، نصب یا تعمیر سیستم آبیاری.", fields: [
+        { id: "irrigationType", label: "نوع آبیاری", type: "select", required: true, options: ["قطره‌ای", "بارانی", "غرقابی", "میکرو"] },
+        { id: "serviceType", label: "خدمت", type: "select", required: true, options: ["طراحی", "نصب", "تعمیر", "بازرسی"] },
+        { id: "area", label: "مساحت (هکتار)", type: "number", required: true, min: 0.1 },
+        { id: "location", label: "موقعیت", type: "text", required: true }
+      ]},
+      6: { title: "مشاوره مزرعه", intro: "انتخاب محصول، کاشت و آبیاری.", fields: [
+        { id: "topic", label: "موضوع", type: "select", required: true, options: ["انتخاب محصول", "برنامه کاشت", "مدیریت آبیاری", "برداشت", "آفات"] },
+        { id: "area", label: "مساحت (هکتار)", type: "number", required: true },
+        { id: "currentCrop", label: "محصول فعلی", type: "text" },
+        { id: "description", label: "شرح وضعیت", type: "textarea", required: true, minLength: 30 }
+      ]},
+      7: { title: "خرید / فروش محصول", intro: "معاملات عمده محصولات کشاورزی.", fields: [
+        { id: "dealType", label: "معامله", type: "select", required: true, options: ["خرید", "فروش"] },
+        { id: "product", label: "نام محصول", type: "text", required: true },
+        { id: "quantity", label: "مقدار (تن)", type: "number", required: true, min: 0.1 },
+        { id: "harvestDate", label: "تاریخ تحویل", type: "date" },
+        { id: "location", label: "محل تحویل", type: "text", required: true }
+      ]}
     },
     assistant: {
-      name: "دستیار ایران کشاورز", avatar: "❧",
-      greeting: "سلام! من دستیار تخصصی ایران کشاورز هستم. در مورد سم‌پاشی، خدمات پهپادی، اجاره ماشین‌آلات، نهاده، آبیاری و مشاوره مزرعه راهنمایی می‌کنم. چه کمکی می‌توانم بکنم؟",
-      systemPrompt: `تو دستیار تخصصی ایران کشاورز در اکوسیستم KAR AI هستی. حوزه تخصص: سم‌پاشی، خدمات پهپادی، ماشین‌آلات کشاورزی، اجاره تجهیزات، نهاده و بذر، آبیاری، مشاوره مزرعه، خرید و فروش محصول.`,
+      name: "دستیار ایران کشاورز", avatar: "🚜",
+      greeting: "سلام! من دستیار تخصصی ایران کشاورز هستم. در مورد سم‌پاشی، خدمات پهپادی، ماشین‌آلات و مشاوره مزرعه راهنمایی می‌کنم.",
+      systemPrompt: `تو دستیار تخصصی ایران کشاورز هستی. هرگز توصیه گیاه‌پزشکی یا قیمت نده.`,
       suggestions: [
-        { label: "برای مزرعه‌ام سم‌پاشی می‌خواهم", answer: "برای سم‌پاشی، از دسته «سم‌پاشی و محلول‌پاشی» درخواست دهید. فرم شامل مساحت، نوع محصول، مرحله رشد، نوع آفت و زمان است. ارائه‌دهندگان تأییدشده پیشنهاد قیمت می‌دهند." },
-        { label: "اجاره پهپاد سم‌پاش", answer: "برای اجاره پهپاد، دسته «خدمات پهپادی» مناسب است. مناسب مزارع ۵ هکتار به بالا و زمین‌های صعب‌الوصول. هزینه معمولاً بر اساس هکتار محاسبه می‌شود." },
-        { label: "اجاره تراکتور و ادوات", answer: "دسته «اجاره تجهیزات» شامل تراکتور، کمباین و ادوات است. فرم شامل نوع تجهیز، مدت اجاره، تاریخ شروع و محل استفاده." }
+        { label: "سم‌پاشی می‌خواهم", answer: "دسته «سم‌پاشی و محلول‌پاشی» را انتخاب کنید. مساحت، محصول و نوع آفت را وارد کنید." },
+        { label: "اجاره پهپاد", answer: "دسته «خدمات پهپادی» مناسب مزارع ۵ هکتار به بالا است." },
+        { label: "مشاوره کاشت", answer: "دسته «مشاوره مزرعه» با کارشناسان مجرب." }
       ]
     },
     fullPagePath: "/b/iran_keshavarz", origin: "spec-v1.0-§3.3"
   },
 
   iran_transport: {
-    slug: "iran_transport", title: "ایران حمل‌ونقل", icon: "▰",
+    slug: "iran_transport", title: "ایران حمل‌ونقل", icon: "🚚",
     shortDescription: "درخواست حمل بار و جابه‌جایی",
-    description: "از حمل بار و وانت و کامیون گرفته تا اسباب‌کشی، حمل ماشین‌آلات و حمل بین‌شهری — همه خدمات لجستیک با پیگیری شفاف.",
+    description: "از حمل بار و وانت و کامیون گرفته تا اسباب‌کشی، حمل ماشین‌آلات و حمل بین‌شهری.",
     categories: ["حمل بار", "وانت و کامیون", "حمل ماشین‌آلات", "بار برگشتی", "اسباب‌کشی", "حمل بین‌شهری", "پیگیری بار"],
     formsByCategoryIndex: {
-      0: { title: "درخواست حمل بار", intro: "برای حمل بار عمومی، مبدأ، مقصد و مشخصات بار را وارد کنید.", fields: [{ id: "origin", label: "مبدأ", type: "text", required: true }, { id: "destination", label: "مقصد", type: "text", required: true }, { id: "loadType", label: "نوع بار", type: "select", required: true, options: ["عمومی", "فسادپذیر", "شکستنی", "خطرناک"] }, { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1, max: 30000 }, { id: "when", label: "تاریخ حمل", type: "date", minDate: new Date().toISOString().slice(0, 10) }] },
-      1: { title: "درخواست وانت / کامیون", intro: "انتخاب خودرو متناسب با وزن و نوع بار.", fields: [{ id: "vehicleType", label: "نوع خودرو", type: "select", required: true, options: ["وانت (تا ۵۰۰kg)", "کامیون کوچک (تا ۳ تن)", "کامیون متوسط (تا ۸ تن)", "کامیون سنگین (بالای ۸ تن)"] }, { id: "origin", label: "مبدأ", type: "text", required: true }, { id: "destination", label: "مقصد", type: "text", required: true }, { id: "weight", label: "وزن تقریبی (کیلوگرم)", type: "number", required: true, min: 1, max: 30000 }] },
-      2: { title: "درخواست حمل ماشین‌آلات سنگین", intro: "حمل تراکتور، لودر، بیل مکانیکی و ماشین‌آلات سنگین با تریلی مخصوص.", fields: [{ id: "machineType", label: "نوع ماشین", type: "select", required: true, options: ["تراکتور", "لودر", "بیل مکانیکی", "جرثقیل", "غلتک", "سایر"] }, { id: "weight", label: "وزن (تن)", type: "number", required: true, min: 1, max: 60 }, { id: "origin", label: "مبدأ", type: "text", required: true }, { id: "destination", label: "مقصد", type: "text", required: true }] },
-      3: { title: "درخواست حمل با بار برگشتی", intro: "استفاده از ظرفیت خالی کامیون‌ها در مسیر بازگشت.", fields: [{ id: "route", label: "مسیر موردنظر", type: "text", required: true }, { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1, max: 25000 }, { id: "loadType", label: "نوع بار", type: "select", required: true, options: ["عمومی", "فسادپذیر", "شکستنی"] }] },
-      4: { title: "درخواست اسباب‌کشی", intro: "اسباب‌کشی منزل یا دفتر با بسته‌بندی، حمل و چیدمان.", fields: [{ id: "origin", label: "آدرس مبدأ", type: "text", required: true }, { id: "destination", label: "آدرس مقصد", type: "text", required: true }, { id: "volume", label: "حجم تقریبی وسایل", type: "select", required: true, options: ["کم (یک اتاق)", "متوسط (۲-۳ اتاق)", "زیاد (بیش از ۳ اتاق)"] }] },
-      5: { title: "درخواست حمل بین‌شهری", intro: "حمل بار بین شهرها یا استان‌ها با کامیون و تریلی.", fields: [{ id: "origin", label: "شهر مبدأ", type: "text", required: true }, { id: "destination", label: "شهر مقصد", type: "text", required: true }, { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1, max: 30000 }] },
-      6: { title: "پیگیری وضعیت بار", intro: "وضعیت فعلی حمل خود را با شماره پیگیری استعلام کنید.", fields: [{ id: "trackingCode", label: "شماره پیگیری", type: "text", required: true, pattern: "^[A-Za-z0-9\\-]{6,30}$", patternMessage: "۶ تا ۳۰ کاراکتر لاتین/عدد" }, { id: "mobile", label: "شماره موبایل ثبت‌کننده", type: "tel", required: true, pattern: "^09\\d{9}$", patternMessage: "با ۰۹ شروع و ۱۱ رقم باشد." }] }
+      0: { title: "حمل بار عمومی", intro: "مبدأ، مقصد و مشخصات بار.", fields: [
+        { id: "origin", label: "مبدأ", type: "text", required: true, minLength: 3 },
+        { id: "destination", label: "مقصد", type: "text", required: true, minLength: 3 },
+        { id: "loadType", label: "نوع بار", type: "select", required: true, options: ["عمومی", "فسادپذیر", "شکستنی", "خطرناک"] },
+        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1, max: 30000 },
+        { id: "when", label: "تاریخ حمل", type: "date", minDate: new Date().toISOString().slice(0, 10) },
+        { id: "notes", label: "توضیحات", type: "textarea" }
+      ]},
+      1: { title: "وانت و کامیون", intro: "انتخاب خودرو متناسب با بار.", fields: [
+        { id: "vehicleType", label: "نوع خودرو", type: "select", required: true, options: ["وانت (تا ۵۰۰kg)", "کامیون کوچک (تا ۳ تن)", "کامیون متوسط (تا ۸ تن)", "کامیون سنگین"] },
+        { id: "origin", label: "مبدأ", type: "text", required: true },
+        { id: "destination", label: "مقصد", type: "text", required: true },
+        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1 },
+        { id: "when", label: "تاریخ", type: "date" }
+      ]},
+      2: { title: "حمل ماشین‌آلات", intro: "تراکتور، لودر و بیل مکانیکی.", fields: [
+        { id: "machineType", label: "نوع ماشین", type: "select", required: true, options: ["تراکتور", "لودر", "بیل مکانیکی", "جرثقیل", "غلتک", "سایر"] },
+        { id: "weight", label: "وزن (تن)", type: "number", required: true, min: 1, max: 60 },
+        { id: "origin", label: "مبدأ", type: "text", required: true },
+        { id: "destination", label: "مقصد", type: "text", required: true }
+      ]},
+      3: { title: "بار برگشتی", intro: "استفاده از ظرفیت خالی کامیون.", fields: [
+        { id: "route", label: "مسیر موردنظر", type: "text", required: true },
+        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1 },
+        { id: "loadType", label: "نوع بار", type: "select", required: true, options: ["عمومی", "فسادپذیر", "شکستنی"] }
+      ]},
+      4: { title: "اسباب‌کشی", intro: "اسباب‌کشی منزل یا دفتر.", fields: [
+        { id: "origin", label: "آدرس مبدأ", type: "text", required: true },
+        { id: "destination", label: "آدرس مقصد", type: "text", required: true },
+        { id: "originFloor", label: "طبقه مبدأ", type: "number", min: 0 },
+        { id: "destFloor", label: "طبقه مقصد", type: "number", min: 0 },
+        { id: "volume", label: "حجم وسایل", type: "select", required: true, options: ["کم", "متوسط", "زیاد"] }
+      ]},
+      5: { title: "حمل بین‌شهری", intro: "حمل بار بین شهرها.", fields: [
+        { id: "origin", label: "مبدأ", type: "text", required: true },
+        { id: "destination", label: "مقصد", type: "text", required: true },
+        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true },
+        { id: "when", label: "تاریخ", type: "date", required: true }
+      ]},
+      6: { title: "پیگیری بار", intro: "استعلام وضعیت حمل.", fields: [
+        { id: "trackingCode", label: "شماره پیگیری", type: "text", required: true, pattern: "^[A-Za-z0-9\\-]{6,30}$" },
+        { id: "mobile", label: "شماره موبایل", type: "tel", required: true, pattern: "^09\\d{9}$" }
+      ]}
     },
     assistant: {
-      name: "دستیار ایران حمل‌ونقل", avatar: "▰",
-      greeting: "سلام! من دستیار تخصصی ایران حمل‌ونقل هستم. برای حمل بار، وانت، کامیون، اسباب‌کشی، حمل بین‌شهری و پیگیری بار راهنمایی می‌کنم.",
-      systemPrompt: `تو دستیار تخصصی ایران حمل‌ونقل در KAR AI هستی.`,
+      name: "دستیار ایران حمل‌ونقل", avatar: "🚚",
+      greeting: "سلام! من دستیار تخصصی ایران حمل‌ونقل هستم. برای حمل بار، وانت، کامیون و پیگیری بار راهنمایی می‌کنم.",
+      systemPrompt: `تو دستیار تخصصی ایران حمل‌ونقل هستی.`,
       suggestions: [
-        { label: "برای حمل بار چه خودرویی مناسب است؟", answer: "بستگی به وزن: تا ۵۰۰kg وانت، تا ۳ تن کامیون کوچک، تا ۸ تن کامیون متوسط، بالاتر کامیون سنگین. برای بارهای حجیم سبک، وانت مسقف مناسب‌تر است." },
-        { label: "اسباب‌کشی منزل", answer: "دسته «اسباب‌کشی» شامل بسته‌بندی، حمل و چیدمان. آدرس مبدأ و مقصد، طبقات، آسانسور (دارد/ندارد) و حجم وسایل را مشخص کنید." },
-        { label: "پیگیری بار", answer: "دسته «پیگیری بار» با شماره پیگیری و موبایل ثبت‌کننده. وضعیت‌ها: در انتظار تخصیص، در حال بارگیری، در مسیر، تحویل‌شده." }
+        { label: "حمل بار", answer: "دسته «حمل بار» را انتخاب کنید. مبدأ و مقصد را مشخص کنید." },
+        { label: "وانت یا کامیون؟", answer: "بستگی به وزن دارد. تا ۵۰۰ کیلو وانت، بالاتر کامیون." },
+        { label: "پیگیری بار", answer: "دسته «پیگیری بار» با شماره پیگیری." }
       ]
     },
     fullPagePath: "/b/iran_transport", origin: "spec-v1.0-§3.3"
   },
 
   iran_building: {
-    slug: "iran_building", title: "ایران ساختمان", icon: "⌂",
+    slug: "iran_building", title: "ایران ساختمان", icon: "🏗️",
     shortDescription: "خدمات ساخت، تعمیر و تأسیسات",
-    description: "از ساخت و بازسازی گرفته تا برق، لوله‌کشی، تأسیسات، نقاشی، نما و آسانسور.",
-    categories: ["ساخت و بازسازی", "برق", "لوله‌کشی", "تأسیسات", "نقاشی", "نما", "آسانسور", "مصالح و تجهیزات"],
+    description: "از ساخت و بازسازی تا برق، لوله‌کشی، تأسیسات، نقاشی، نما و آسانسور.",
+    categories: ["ساخت و بازسازی", "برق", "لوله‌کشی", "تأسیسات", "نقاشی", "نما", "آسانسور", "مصالح"],
     formsByCategoryIndex: {
-      0: { title: "درخواست ساخت / بازسازی", intro: "جزئیات کار را وارد کنید.", fields: [{ id: "serviceType", label: "نوع کار", type: "select", required: true, options: ["ساخت", "بازسازی کامل", "بازسازی جزئی", "تعمیر"] }, { id: "area", label: "متراژ", type: "number", required: true }, { id: "location", label: "آدرس", type: "text", required: true }] },
-      1: { title: "درخواست خدمات برق", intro: "سیم‌کشی یا تعمیرات.", fields: [{ id: "serviceType", label: "نوع خدمت", type: "select", required: true, options: ["سیم‌کشی جدید", "تعمیر", "تابلو برق"] }, { id: "problem", label: "شرح مشکل", type: "textarea" }] },
-      2: { title: "درخواست لوله‌کشی", intro: "نصب یا رفع نشتی.", fields: [{ id: "pipeType", label: "نوع لوله", type: "select", required: true, options: ["آب", "فاضلاب", "گاز", "شوفاژ"] }, { id: "problemLocation", label: "محل مشکل", type: "select", options: ["آشپزخانه", "حمام", "حیاط", "سایر"] }] },
-      3: { title: "درخواست تأسیسات", intro: "پکیج، کولر، شوفاژ.", fields: [{ id: "systemType", label: "نوع سیستم", type: "select", required: true, options: ["پکیج", "کولر گازی", "کولر آبی", "شوفاژ"] }, { id: "serviceType", label: "خدمت", type: "select", options: ["نصب", "تعمیر", "سرویس"] }] },
-      4: { title: "درخواست نقاشی", intro: "نقاشی داخلی یا خارجی.", fields: [{ id: "paintType", label: "نوع نقاشی", type: "select", required: true, options: ["داخلی", "خارجی", "کنیتکس", "کاغذ دیواری"] }, { id: "area", label: "متراژ دیوارها", type: "number", required: true }] },
-      5: { title: "درخواست نما", intro: "ساخت یا بازسازی نما.", fields: [{ id: "facadeType", label: "نوع نما", type: "select", required: true, options: ["سنگ", "آجر", "کامپوزیت", "رومی"] }, { id: "area", label: "متراژ", type: "number", required: true }] },
-      6: { title: "درخواست آسانسور", intro: "نصب، سرویس یا تعمیر.", fields: [{ id: "serviceType", label: "خدمت", type: "select", required: true, options: ["نصب", "سرویس", "تعمیر"] }, { id: "stops", label: "تعداد توقف", type: "number" }] },
-      7: { title: "درخواست مصالح", intro: "خرید مصالح ساختمانی.", fields: [{ id: "materialType", label: "مصالح", type: "text", required: true }, { id: "quantity", label: "مقدار", type: "text", required: true }] }
+      0: { title: "ساخت / بازسازی", intro: "جزئیات کار را وارد کنید.", fields: [
+        { id: "serviceType", label: "نوع کار", type: "select", required: true, options: ["ساخت از ابتدا", "بازسازی کامل", "بازسازی جزئی", "تعمیر"] },
+        { id: "area", label: "متراژ (متر مربع)", type: "number", required: true, min: 1 },
+        { id: "floors", label: "تعداد طبقات", type: "number" },
+        { id: "location", label: "آدرس", type: "text", required: true },
+        { id: "description", label: "شرح جزئیات", type: "textarea", required: true }
+      ]},
+      1: { title: "خدمات برق", intro: "سیم‌کشی یا تعمیرات.", fields: [
+        { id: "serviceType", label: "نوع خدمت", type: "select", required: true, options: ["سیم‌کشی جدید", "تعمیر", "تابلو برق", "بازرسی"] },
+        { id: "area", label: "متراژ", type: "number", required: true },
+        { id: "problem", label: "شرح مشکل", type: "textarea" },
+        { id: "location", label: "آدرس", type: "text", required: true }
+      ]},
+      2: { title: "لوله‌کشی", intro: "نصب یا رفع نشتی.", fields: [
+        { id: "pipeType", label: "نوع لوله", type: "select", required: true, options: ["آب", "فاضلاب", "گاز", "شوفاژ"] },
+        { id: "problemLocation", label: "محل مشکل", type: "select", options: ["آشپزخانه", "حمام", "حیاط", "سایر"] },
+        { id: "description", label: "شرح مشکل", type: "textarea", required: true }
+      ]},
+      3: { title: "تأسیسات", intro: "پکیج، کولر، شوفاژ.", fields: [
+        { id: "systemType", label: "سیستم", type: "select", required: true, options: ["پکیج", "کولر گازی", "کولر آبی", "شوفاژ", "آبگرمکن"] },
+        { id: "serviceType", label: "خدمت", type: "select", required: true, options: ["نصب", "تعمیر", "سرویس"] }
+      ]},
+      4: { title: "نقاشی", intro: "داخلی یا خارجی.", fields: [
+        { id: "paintType", label: "نوع نقاشی", type: "select", required: true, options: ["داخلی", "خارجی", "کنیتکس", "کاغذ دیواری"] },
+        { id: "area", label: "متراژ دیوارها", type: "number", required: true },
+        { id: "location", label: "آدرس", type: "text", required: true }
+      ]},
+      5: { title: "نما", intro: "ساخت نما.", fields: [
+        { id: "facadeType", label: "نوع نما", type: "select", required: true, options: ["سنگ", "آجر", "کامپوزیت", "رومی"] },
+        { id: "area", label: "متراژ", type: "number", required: true }
+      ]},
+      6: { title: "آسانسور", intro: "نصب یا سرویس.", fields: [
+        { id: "serviceType", label: "خدمت", type: "select", required: true, options: ["نصب", "سرویس", "تعمیر"] },
+        { id: "stops", label: "تعداد توقف", type: "number" }
+      ]},
+      7: { title: "مصالح", intro: "خرید مصالح.", fields: [
+        { id: "materialType", label: "مصالح", type: "text", required: true },
+        { id: "quantity", label: "مقدار", type: "text", required: true }
+      ]}
     },
     assistant: {
-      name: "دستیار ایران ساختمان", avatar: "⌂",
-      greeting: "سلام! من دستیار تخصصی ایران ساختمان هستم. برای ساخت، بازسازی، برق، لوله‌کشی، تأسیسات، نقاشی، نما و آسانسور راهنمایی می‌کنم.",
-      systemPrompt: `تو دستیار تخصصی ایران ساختمان در KAR AI هستی.`,
+      name: "دستیار ایران ساختمان", avatar: "🏗️",
+      greeting: "سلام! من دستیار تخصصی ایران ساختمان هستم. برای ساخت، تعمیر و تأسیسات راهنمایی می‌کنم.",
+      systemPrompt: `تو دستیار تخصصی ایران ساختمان هستی.`,
       suggestions: [
-        { label: "تعمیر نشتی لوله", answer: "برای نشتی، دسته «لوله‌کشی». محل نشتی، نوع لوله و عکس محل. اگر نشتی گاز است، فوراً با ۱۹۴ تماس بگیرید." },
-        { label: "بازسازی کامل آپارتمان", answer: "دسته «ساخت و بازسازی» با نوع «بازسازی کامل». مشخصات: متراژ، تعداد اتاق، شامل آشپزخانه/حمام؟" },
-        { label: "برق‌کشی و تأسیسات", answer: "دسته «برق» برای سیم‌کشی، تابلو برق، نصب کلید و پریز. دسته «تأسیسات» برای پکیج و کولر." }
+        { label: "تعمیر لوله", answer: "دسته «لوله‌کشی» را انتخاب کنید." },
+        { label: "بازسازی", answer: "دسته «ساخت و بازسازی»." },
+        { label: "برق‌کشی", answer: "دسته «برق»." }
       ]
     },
     fullPagePath: "/b/iran_building", origin: "spec-v1.0-§3.3"
   },
 
   iran_education: {
-    slug: "iran_education", title: "ایران آموزش", icon: "▤",
+    slug: "iran_education", title: "ایران آموزش", icon: "🎓",
     shortDescription: "آموزش و خدمات یادگیری",
-    description: "دوره، کلاس خصوصی، آموزش آنلاین و مهارت فنی — با نمایش سطح، پیش‌نیاز و گواهی پایان دوره.",
-    categories: ["دوره‌های تخصصی", "کلاس خصوصی", "آموزش آنلاین", "مهارت فنی", "زبان", "آزمون و گواهی"],
+    description: "دوره، کلاس خصوصی، آموزش آنلاین و مهارت فنی.",
+    categories: ["دوره تخصصی", "کلاس خصوصی", "آموزش آنلاین", "مهارت فنی", "زبان", "آزمون"],
     formsByCategoryIndex: {
-      0: { title: "درخواست دوره تخصصی", intro: "ثبت‌نام در دوره‌های حرفه‌ای.", fields: [{ id: "subject", label: "موضوع دوره", type: "text", required: true }, { id: "level", label: "سطح", type: "select", required: true, options: ["مقدماتی", "متوسط", "پیشرفته"] }] },
-      1: { title: "درخواست کلاس خصوصی", intro: "کلاس با مدرس اختصاصی.", fields: [{ id: "subject", label: "موضوع", type: "text", required: true }, { id: "goal", label: "هدف", type: "text", required: true }, { id: "sessionsPerWeek", label: "جلسات در هفته", type: "number" }] },
-      2: { title: "درخواست آموزش آنلاین", intro: "دوره‌های آنلاین با پشتیبانی.", fields: [{ id: "subject", label: "موضوع", type: "text", required: true }, { id: "format", label: "قالب", type: "select", options: ["زنده", "ضبط‌شده"] }] },
-      3: { title: "درخواست مهارت فنی", intro: "آموزش برای اشتغال.", fields: [{ id: "skill", label: "مهارت", type: "select", required: true, options: ["تعمیرات", "برنامه‌نویسی", "طراحی", "برق", "مکانیک"] }] },
-      4: { title: "درخواست آموزش زبان", intro: "کلاس زبان‌های خارجی.", fields: [{ id: "language", label: "زبان", type: "select", required: true, options: ["انگلیسی", "آلمانی", "فرانسه", "عربی"] }, { id: "goal", label: "هدف", type: "select", options: ["مکالمه", "آزمون", "کاری"] }] },
-      5: { title: "آمادگی آزمون", intro: "آمادگی آزمون‌های استخدامی و زبان.", fields: [{ id: "examName", label: "نام آزمون", type: "text", required: true }, { id: "examDate", label: "تاریخ آزمون", type: "date", required: true }] }
+      0: { title: "دوره تخصصی", intro: "ثبت‌نام در دوره.", fields: [
+        { id: "subject", label: "موضوع", type: "text", required: true },
+        { id: "level", label: "سطح", type: "select", required: true, options: ["مقدماتی", "متوسط", "پیشرفته"] }
+      ]},
+      1: { title: "کلاس خصوصی", intro: "مدرس اختصاصی.", fields: [
+        { id: "subject", label: "موضوع", type: "text", required: true },
+        { id: "sessions", label: "جلسات در هفته", type: "number" }
+      ]},
+      2: { title: "آموزش آنلاین", intro: "دوره آنلاین.", fields: [
+        { id: "subject", label: "موضوع", type: "text", required: true },
+        { id: "format", label: "قالب", type: "select", options: ["زنده", "ضبط‌شده"] }
+      ]},
+      3: { title: "مهارت فنی", intro: "آموزش برای اشتغال.", fields: [
+        { id: "skill", label: "مهارت", type: "select", required: true, options: ["تعمیرات", "برنامه‌نویسی", "طراحی", "برق"] }
+      ]},
+      4: { title: "زبان", intro: "کلاس زبان خارجی.", fields: [
+        { id: "language", label: "زبان", type: "select", required: true, options: ["انگلیسی", "آلمانی", "فرانسه"] }
+      ]},
+      5: { title: "آزمون", intro: "آمادگی آزمون.", fields: [
+        { id: "examName", label: "نام آزمون", type: "text", required: true }
+      ]}
     },
     assistant: {
-      name: "دستیار ایران آموزش", avatar: "▤",
-      greeting: "سلام! من دستیار تخصصی ایران آموزش هستم. برای دوره، کلاس خصوصی، آموزش آنلاین، مهارت فنی و زبان راهنمایی می‌کنم.",
-      systemPrompt: `تو دستیار تخصصی ایران آموزش در KAR AI هستی.`,
+      name: "دستیار ایران آموزش", avatar: "🎓",
+      greeting: "سلام! من دستیار تخصصی ایران آموزش هستم.",
+      systemPrompt: `تو دستیار تخصصی ایران آموزش هستی.`,
       suggestions: [
-        { label: "کلاس خصوصی زبان انگلیسی", answer: "دسته «زبان» شامل کلاس خصوصی و گروهی. سطح فعلی، هدف (مکالمه/آزمون)، تعداد جلسات در هفته را مشخص کنید." },
-        { label: "دوره مهارت فنی", answer: "دسته «مهارت فنی» شامل تعمیرات، برنامه‌نویسی، طراحی، برق و مکانیک است." },
-        { label: "آمادگی برای آزمون", answer: "دسته «آزمون و گواهی» برای آمادگی آزمون‌های استخدامی و زبان. نام آزمون و تاریخ آن را مشخص کنید." }
+        { label: "کلاس زبان", answer: "دسته «زبان»." },
+        { label: "دوره فنی", answer: "دسته «مهارت فنی»." }
       ]
     },
     fullPagePath: "/b/iran_education", origin: "spec-v1.0-§3.3"
   },
 
   iran_health: {
-    slug: "iran_health", title: "ایران سلامت", icon: "✚",
+    slug: "iran_health", title: "ایران سلامت", icon: "⚕️",
     shortDescription: "خدمات سلامت و مراقبت",
-    description: "معرفی مراکز و متخصصان مجاز، خدمات مراقبتی و رزرو نوبت. اطلاعات حساس سلامت فقط با رضایت صریح و کنترل دسترسی پردازش می‌شود.",
-    categories: ["معرفی مراکز مجاز", "متخصصان تأییدشده", "خدمات مراقبتی", "رزرو نوبت"],
+    description: "معرفی مراکز مجاز، خدمات مراقبتی و رزرو نوبت.",
+    categories: ["مراکز مجاز", "متخصصان", "مراقبت در منزل", "رزرو نوبت"],
     formsByCategoryIndex: {
-      0: { title: "معرفی مراکز مجاز", intro: "معرفی بیمارستان و کلینیک.", fields: [{ id: "centerType", label: "نوع مرکز", type: "select", required: true, options: ["بیمارستان", "کلینیک", "آزمایشگاه"] }, { id: "specialty", label: "تخصص", type: "text", required: true }] },
-      1: { title: "معرفی متخصص", intro: "معرفی پزشکان تأییدشده.", fields: [{ id: "specialty", label: "تخصص", type: "text", required: true }, { id: "city", label: "شهر", type: "text", required: true }] },
-      2: { title: "خدمات مراقبتی", intro: "پرستار در منزل.", fields: [{ id: "careType", label: "نوع مراقبت", type: "select", required: true, options: ["پرستار", "مراقب سالمند", "کمک‌بهیار"] }, { id: "duration", label: "مدت", type: "select", options: ["کوتاه‌مدت", "بلندمدت"] }] },
-      3: { title: "رزرو نوبت", intro: "رزرو نوبت پزشک.", fields: [{ id: "specialty", label: "تخصص", type: "text", required: true }, { id: "preferredDate", label: "تاریخ موردنظر", type: "date" }] }
+      0: { title: "مراکز مجاز", intro: "بیمارستان و کلینیک.", fields: [{ id: "centerType", label: "نوع", type: "select", options: ["بیمارستان", "کلینیک"] }] },
+      1: { title: "متخصص", intro: "پزشکان.", fields: [{ id: "specialty", label: "تخصص", type: "text", required: true }] },
+      2: { title: "مراقبت", intro: "پرستار در منزل.", fields: [{ id: "careType", label: "نوع", type: "select", options: ["پرستار", "مراقب"] }] },
+      3: { title: "نوبت", intro: "رزرو نوبت.", fields: [{ id: "specialty", label: "تخصص", type: "text", required: true }] }
     },
     assistant: {
-      name: "دستیار ایران سلامت", avatar: "✚",
-      greeting: "سلام! من دستیار تخصصی ایران سلامت هستم. توجه: من جایگزین مشاوره پزشک نیستم.",
-      systemPrompt: `تو دستیار تخصصی ایران سلامت در KAR AI هستی. هرگز تشخیص یا تجویز دارو نکن. در موارد اورژانسی ارجاع به ۱۱۵ بده.`,
-      suggestions: [
-        { label: "رزرو نوبت پزشک", answer: "برای رزرو نوبت، دسته «رزرو نوبت» را انتخاب کنید. تخصص، شهر و بازه زمانی مناسب خود را مشخص کنید." },
-        { label: "خدمات مراقبتی در منزل", answer: "دسته «خدمات مراقبتی» شامل پرستار در منزل، مراقب سالمند و کمک‌بهیار است." },
-        { label: "اورژانس است، چه کنم؟", answer: "⚠️ در موارد اورژانسی فوراً با اورژانس ۱۱۵ تماس بگیرید. این پلتفرم برای موارد غیراورژانسی است." }
-      ]
+      name: "دستیار ایران سلامت", avatar: "⚕️",
+      greeting: "سلام! من دستیار تخصصی ایران سلامت هستم. من جایگزین پزشک نیستم.",
+      systemPrompt: `تو دستیار تخصصی ایران سلامت هستی. در موارد اورژانسی ارجاع به ۱۱۵ بده.`,
+      suggestions: [{ label: "رزرو نوبت", answer: "دسته «رزرو نوبت»." }]
     },
     fullPagePath: "/b/iran_health", origin: "spec-v1.0-§3.3"
   },
 
   iran_ads: {
-    slug: "iran_ads", title: "ایران آگهی", icon: "▧",
+    slug: "iran_ads", title: "ایران آگهی", icon: "📢",
     shortDescription: "ثبت و جست‌وجوی آگهی",
-    description: "ثبت آگهی کالا، خدمات، ملک، ماشین‌آلات و استخدام — با گزارش آگهی و کنترل محتوای ممنوع.",
-    categories: ["آگهی کالا", "آگهی خدمات", "آگهی ملک", "آگهی ماشین‌آلات", "استخدام", "گزارش آگهی"],
+    description: "کالا، خدمات، ملک، ماشین‌آلات و استخدام.",
+    categories: ["کالا", "خدمات", "ملک", "ماشین‌آلات", "استخدام", "گزارش"],
     formsByCategoryIndex: {
-      0: { title: "ثبت آگهی کالا", intro: "آگهی فروش کالا.", fields: [{ id: "title", label: "عنوان", type: "text", required: true }, { id: "condition", label: "وضعیت", type: "select", options: ["نو", "کارکرده"] }] },
-      1: { title: "ثبت آگهی خدمات", intro: "آگهی ارائه خدمات.", fields: [{ id: "title", label: "عنوان", type: "text", required: true }, { id: "description", label: "توضیحات", type: "textarea", required: true }] },
-      2: { title: "ثبت آگهی ملک", intro: "آگهی ملک.", fields: [{ id: "dealType", label: "معامله", type: "select", options: ["فروش", "اجاره"] }, { id: "area", label: "متراژ", type: "number", required: true }] },
-      3: { title: "ثبت آگهی ماشین‌آلات", intro: "آگهی ماشین‌آلات.", fields: [{ id: "machineType", label: "ماشین", type: "text", required: true }, { id: "year", label: "سال ساخت", type: "number" }] },
-      4: { title: "استخدام", intro: "فرصت شغلی.", fields: [{ id: "jobTitle", label: "عنوان شغلی", type: "text", required: true }, { id: "skills", label: "مهارت‌ها", type: "textarea" }] },
-      5: { title: "گزارش آگهی", intro: "گزارش محتوای ممنوع.", fields: [{ id: "reason", label: "دلیل", type: "select", options: ["کلاهبرداری", "محتوای ممنوع"] }] }
+      0: { title: "آگهی کالا", intro: "فروش کالا.", fields: [{ id: "title", label: "عنوان", type: "text", required: true }] },
+      1: { title: "آگهی خدمات", intro: "ارائه خدمات.", fields: [{ id: "title", label: "عنوان", type: "text", required: true }] },
+      2: { title: "آگهی ملک", intro: "فروش یا اجاره.", fields: [{ id: "dealType", label: "نوع", type: "select", options: ["فروش", "اجاره"] }] },
+      3: { title: "آگهی ماشین‌آلات", intro: "ماشین‌آلات.", fields: [{ id: "machine", label: "ماشین", type: "text", required: true }] },
+      4: { title: "استخدام", intro: "فرصت شغلی.", fields: [{ id: "jobTitle", label: "عنوان شغلی", type: "text", required: true }] },
+      5: { title: "گزارش", intro: "گزارش آگهی.", fields: [{ id: "reason", label: "دلیل", type: "select", options: ["کلاهبرداری", "محتوای ممنوع"] }] }
     },
     assistant: {
-      name: "دستیار ایران آگهی", avatar: "▧",
-      greeting: "سلام! من دستیار تخصصی ایران آگهی هستم. برای ثبت آگهی راهنمایی می‌کنم.",
-      systemPrompt: `تو دستیار تخصصی ایران آگهی در KAR AI هستی.`,
-      suggestions: [
-        { label: "چطور آگهی مؤثر ثبت کنم؟", answer: "عنوان دقیق، توضیح کامل مشخصات، قیمت واقع‌بینانه و عکس واضح." },
-        { label: "ثبت آگهی ملک", answer: "دسته «آگهی ملک». مشخصات: نوع معامله، متراژ، تعداد اتاق و قیمت." },
-        { label: "گزارش آگهی مشکوک", answer: "از دسته «گزارش آگهی» استفاده کنید. تیم بررسی ظرف ۲۴ ساعت بررسی می‌کند." }
-      ]
+      name: "دستیار ایران آگهی", avatar: "📢",
+      greeting: "سلام! من دستیار ایران آگهی هستم.",
+      systemPrompt: `تو دستیار ایران آگهی هستی.`,
+      suggestions: [{ label: "آگهی مؤثر", answer: "عنوان دقیق و عکس واضح." }]
     },
     fullPagePath: "/b/iran_ads", origin: "spec-v1.0-§3.3"
   },
 
   iran_accounting: {
-    slug: "iran_accounting", title: "ایران حسابدار", icon: "▥",
+    slug: "iran_accounting", title: "ایران حسابدار", icon: "💼",
     shortDescription: "خدمات حسابداری و مالی",
-    description: "از حسابداری و مالیات تا دفاتر، حقوق و دستمزد و مشاوره مالی کسب‌وکار — با دسترسی به حسابداران و مشاوران متخصص.",
-    categories: ["حسابداری", "مالیات", "دفاتر و اسناد", "حقوق و دستمزد", "مشاوره مالی"],
+    description: "حسابداری، مالیات، دفاتر و حقوق.",
+    categories: ["حسابداری", "مالیات", "دفاتر", "حقوق و دستمزد", "مشاوره"],
     formsByCategoryIndex: {
-      0: { title: "خدمات حسابداری", intro: "حسابداری دوره‌ای.", fields: [{ id: "serviceType", label: "نوع", type: "select", options: ["ماهانه", "فصلی", "سالانه"] }, { id: "businessType", label: "نوع کسب‌وکار", type: "text" }] },
-      1: { title: "خدمات مالیاتی", intro: "اظهارنامه و مشاوره.", fields: [{ id: "serviceType", label: "نوع", type: "select", options: ["اظهارنامه", "مشاوره"] }, { id: "fiscalYear", label: "سال مالی", type: "text" }] },
-      2: { title: "دفاتر و اسناد", intro: "تنظیم دفاتر قانونی.", fields: [{ id: "serviceType", label: "خدمت", type: "select", options: ["تنظیم", "پلمب"] }] },
-      3: { title: "حقوق و دستمزد", intro: "محاسبه حقوق.", fields: [{ id: "employeeCount", label: "تعداد کارمندان", type: "number" }] },
-      4: { title: "مشاوره مالی", intro: "بهبود عملکرد مالی.", fields: [{ id: "topic", label: "موضوع", type: "text", required: true }] }
+      0: { title: "حسابداری", intro: "حسابداری دوره‌ای.", fields: [{ id: "serviceType", label: "نوع", type: "select", options: ["ماهانه", "فصلی", "سالانه"] }] },
+      1: { title: "مالیات", intro: "اظهارنامه.", fields: [{ id: "serviceType", label: "نوع", type: "select", options: ["اظهارنامه", "مشاوره"] }] },
+      2: { title: "دفاتر", intro: "دفاتر قانونی.", fields: [{ id: "serviceType", label: "خدمت", type: "select", options: ["تنظیم", "پلمب"] }] },
+      3: { title: "حقوق", intro: "محاسبه حقوق.", fields: [{ id: "employeeCount", label: "تعداد کارمندان", type: "number" }] },
+      4: { title: "مشاوره", intro: "مشاوره مالی.", fields: [{ id: "topic", label: "موضوع", type: "text", required: true }] }
     },
     assistant: {
-      name: "دستیار ایران حسابدار", avatar: "▥",
-      greeting: "سلام! من دستیار تخصصی ایران حسابدار هستم. توجه: من جایگزین حسابدار رسمی نیستم.",
-      systemPrompt: `تو دستیار تخصصی ایران حسابدار در KAR AI هستی.`,
-      suggestions: [
-        { label: "حسابداری ماهانه", answer: "دسته «حسابداری» با نوع «ماهانه». شامل ثبت اسناد و تهیه صورت‌های مالی." },
-        { label: "اظهارنامه مالیاتی", answer: "دسته «مالیات» با نوع «اظهارنامه». محاسبه نهایی باید توسط حسابدار رسمی تأیید شود." },
-        { label: "محاسبه حقوق", answer: "دسته «حقوق و دستمزد». تعداد کارمندان و نوع قرارداد را وارد کنید." }
-      ]
+      name: "دستیار ایران حسابدار", avatar: "💼",
+      greeting: "سلام! من دستیار ایران حسابدار هستم. جایگزین حسابدار رسمی نیستم.",
+      systemPrompt: `تو دستیار ایران حسابدار هستی.`,
+      suggestions: [{ label: "حسابداری ماهانه", answer: "دسته «حسابداری»." }]
     },
     fullPagePath: "/b/iran_accounting", origin: "spec-v1.0-§3.3"
   },
 
   iran_legal: {
-    slug: "iran_legal", title: "ایران مشاوره قضایی", icon: "⚖",
+    slug: "iran_legal", title: "ایران مشاوره قضایی", icon: "⚖️",
     shortDescription: "راهنمایی و خدمات حقوقی",
-    description: "معرفی مشاور و وکیل واجد صلاحیت، مشاوره حقوقی و پیگیری درخواست. KAR AI ادعای تضمین نتیجه قضایی ارائه نمی‌دهد.",
-    categories: ["مشاوره حقوقی", "معرفی وکیل", "پیگیری درخواست"],
+    description: "مشاوره حقوقی، معرفی وکیل و پیگیری.",
+    categories: ["مشاوره حقوقی", "معرفی وکیل", "پیگیری"],
     formsByCategoryIndex: {
-      0: { title: "مشاوره حقوقی", intro: "مشاوره با وکیل.", fields: [{ id: "legalArea", label: "حوزه", type: "select", options: ["قراردادها", "خانواده", "کیفری", "ملکی"] }, { id: "description", label: "شرح", type: "textarea" }] },
-      1: { title: "معرفی وکیل", intro: "وکیل واجد صلاحیت.", fields: [{ id: "legalArea", label: "حوزه", type: "text" }, { id: "city", label: "شهر", type: "text" }] },
-      2: { title: "پیگیری درخواست", intro: "پیگیری پرونده.", fields: [{ id: "caseNumber", label: "شماره پرونده", type: "text" }] }
+      0: { title: "مشاوره حقوقی", intro: "با وکیل.", fields: [{ id: "legalArea", label: "حوزه", type: "select", options: ["قرارداد", "خانواده", "کیفری", "ملکی"] }] },
+      1: { title: "معرفی وکیل", intro: "وکیل واجد صلاحیت.", fields: [{ id: "city", label: "شهر", type: "text" }] },
+      2: { title: "پیگیری", intro: "پیگیری پرونده.", fields: [{ id: "caseNumber", label: "شماره پرونده", type: "text" }] }
     },
     assistant: {
-      name: "دستیار ایران مشاوره قضایی", avatar: "⚖",
-      greeting: "سلام! من دستیار تخصصی ایران مشاوره قضایی هستم. توجه: من جایگزین وکیل نیستم و هیچ نتیجه قضایی تضمین نمی‌شود.",
-      systemPrompt: `تو دستیار تخصصی ایران مشاوره قضایی در KAR AI هستی.`,
-      suggestions: [
-        { label: "مشاوره حقوقی قرارداد", answer: "دسته «مشاوره حقوقی» با حوزه «قراردادها»." },
-        { label: "معرفی وکیل خانواده", answer: "دسته «معرفی وکیل» با حوزه «خانواده»." },
-        { label: "هزینه مشاوره چقدر است؟", answer: "هزینه بر اساس نوع موضوع و تجربه وکیل متفاوت است. قبل از پرداخت مبلغ را می‌بینید." }
-      ]
+      name: "دستیار ایران مشاوره قضایی", avatar: "⚖️",
+      greeting: "سلام! من دستیار ایران مشاوره قضایی هستم. نتیجه قضایی تضمین نمی‌شود.",
+      systemPrompt: `تو دستیار ایران مشاوره قضایی هستی.`,
+      suggestions: [{ label: "مشاوره قرارداد", answer: "دسته «مشاوره حقوقی»." }]
     },
     fullPagePath: "/b/iran_legal", origin: "spec-v1.0-§3.3"
   },
 
   iran_tourism: {
-    slug: "iran_tourism", title: "ایران گردشگر", icon: "⌁",
+    slug: "iran_tourism", title: "ایران گردشگر", icon: "✈️",
     shortDescription: "خدمات سفر و گردشگری",
-    description: "از اقامت و راهنما گرفته تا تور، حمل‌ونقل سفر، تجربه محلی و برنامه سفر — همه در یک شاخه.",
-    categories: ["اقامت", "راهنمای تور", "تور مسافرتی", "حمل‌ونقل سفر", "تجربه محلی", "برنامه سفر"],
+    description: "اقامت، راهنما، تور و برنامه سفر.",
+    categories: ["اقامت", "راهنما", "تور", "حمل‌ونقل", "تجربه محلی", "برنامه سفر"],
     formsByCategoryIndex: {
-      0: { title: "درخواست اقامت", intro: "رزرو هتل یا بومگردی.", fields: [{ id: "accommodationType", label: "نوع", type: "select", options: ["هتل", "بومگردی", "آپارتمان"] }, { id: "city", label: "شهر", type: "text" }] },
-      1: { title: "راهنمای تور", intro: "راهنمای محلی.", fields: [{ id: "city", label: "شهر", type: "text" }, { id: "language", label: "زبان", type: "select", options: ["فارسی", "انگلیسی"] }] },
-      2: { title: "تور مسافرتی", intro: "تور یک‌روزه یا چندروزه.", fields: [{ id: "tourType", label: "نوع", type: "select", options: ["یک‌روزه", "چندروزه"] }, { id: "destination", label: "مقصد", type: "text" }] },
-      3: { title: "حمل‌ونقل سفر", intro: "خودرو با راننده.", fields: [{ id: "vehicleType", label: "خودرو", type: "select", options: ["سواری", "ون", "اتوبوس"] }] },
+      0: { title: "اقامت", intro: "هتل و بومگردی.", fields: [{ id: "accommodationType", label: "نوع", type: "select", options: ["هتل", "بومگردی"] }] },
+      1: { title: "راهنما", intro: "راهنمای تور.", fields: [{ id: "city", label: "شهر", type: "text" }] },
+      2: { title: "تور", intro: "تور مسافرتی.", fields: [{ id: "tourType", label: "نوع", type: "select", options: ["یک‌روزه", "چندروزه"] }] },
+      3: { title: "حمل‌ونقل", intro: "خودرو سفر.", fields: [{ id: "vehicleType", label: "خودرو", type: "select", options: ["سواری", "ون"] }] },
       4: { title: "تجربه محلی", intro: "آشپزی و صنایع دستی.", fields: [{ id: "experienceType", label: "نوع", type: "text" }] },
-      5: { title: "برنامه سفر", intro: "طراحی مسیر.", fields: [{ id: "origin", label: "مبدأ", type: "text" }, { id: "destination", label: "مقصد", type: "text" }] }
+      5: { title: "برنامه سفر", intro: "طراحی مسیر.", fields: [{ id: "destination", label: "مقصد", type: "text" }] }
     },
     assistant: {
-      name: "دستیار ایران گردشگر", avatar: "⌁",
-      greeting: "سلام! من دستیار تخصصی ایران گردشگر هستم. چه سفری در پیش دارید؟",
-      systemPrompt: `تو دستیار تخصصی ایران گردشگر در KAR AI هستی.`,
-      suggestions: [
-        { label: "رزرو اقامت در شیراز", answer: "دسته «اقامت». تاریخ ورود و خروج و تعداد نفرات را وارد کنید." },
-        { label: "تور یک‌روزه", answer: "دسته «تور مسافرتی» با نوع «یک‌روزه»." },
-        { label: "برنامه سفر", answer: "دسته «برنامه سفر». سبک سفر و بودجه را مشخص کنید." }
-      ]
+      name: "دستیار ایران گردشگر", avatar: "✈️",
+      greeting: "سلام! من دستیار ایران گردشگر هستم.",
+      systemPrompt: `تو دستیار ایران گردشگر هستی.`,
+      suggestions: [{ label: "اقامت شیراز", answer: "دسته «اقامت»." }]
     },
     fullPagePath: "/b/iran_tourism", origin: "spec-v1.0-§3.3"
   },
 
   iran_bank: {
-    slug: "iran_bank", title: "ایران بانک", icon: "▣",
-    shortDescription: "خدمات پرداخت از طریق ارائه‌دهندگان مجاز",
-    description: "پرداخت قبض، شارژ و هزینه خدمات متصل به PSP و بانک‌های مجاز. KAR AI بانک نیست.",
-    categories: ["پرداخت قبض", "شارژ", "پرداخت هزینه خدمات", "خدمات PSP"],
+    slug: "iran_bank", title: "ایران بانک", icon: "💳",
+    shortDescription: "خدمات پرداخت مجاز",
+    description: "پرداخت قبض، شارژ و هزینه‌های خدمات.",
+    categories: ["پرداخت قبض", "شارژ", "هزینه خدمات", "PSP"],
     formsByCategoryIndex: {
-      0: { title: "پرداخت قبض", intro: "قبض برق، آب، گاز.", fields: [{ id: "billType", label: "نوع", type: "select", options: ["برق", "آب", "گاز", "تلفن"] }, { id: "billId", label: "شناسه قبض", type: "text", required: true }] },
-      1: { title: "شارژ موبایل", intro: "شارژ همه اپراتورها.", fields: [{ id: "operator", label: "اپراتور", type: "select", options: ["ایرانسل", "همراه اول"] }, { id: "mobile", label: "شماره", type: "tel" }] },
-      2: { title: "پرداخت هزینه خدمات", intro: "عوارض و جریمه.", fields: [{ id: "serviceType", label: "نوع", type: "text" }, { id: "amount", label: "مبلغ", type: "number" }] },
-      3: { title: "خدمات PSP", intro: "سایر خدمات.", fields: [{ id: "serviceType", label: "خدمت", type: "text" }] }
+      0: { title: "پرداخت قبض", intro: "قبض‌ها.", fields: [{ id: "billType", label: "نوع", type: "select", options: ["برق", "آب", "گاز"] }] },
+      1: { title: "شارژ", intro: "موبایل.", fields: [{ id: "operator", label: "اپراتور", type: "select", options: ["ایرانسل", "همراه اول"] }] },
+      2: { title: "هزینه خدمات", intro: "عوارض.", fields: [{ id: "serviceType", label: "نوع", type: "text" }] },
+      3: { title: "PSP", intro: "سایر خدمات.", fields: [{ id: "serviceType", label: "خدمت", type: "text" }] }
     },
     assistant: {
-      name: "دستیار ایران بانک", avatar: "▣",
-      greeting: "سلام! من دستیار تخصصی ایران بانک هستم. KAR AI بانک نیست و وجوه را نگهداری نمی‌کند.",
-      systemPrompt: `تو دستیار تخصصی ایران بانک در KAR AI هستی. هرگز اطلاعات کارت بانکی را درخواست نکن.`,
-      suggestions: [
-        { label: "پرداخت قبض", answer: "دسته «پرداخت قبض». شناسه قبض و پرداخت را وارد کنید." },
-        { label: "شارژ موبایل", answer: "دسته «شارژ». اپراتور و شماره را وارد کنید." },
-        { label: "آیا KAR AI بانک است؟", answer: "خیر. پرداخت‌ها از طریق درگاه‌های PSP مجاز انجام می‌شود." }
-      ]
+      name: "دستیار ایران بانک", avatar: "💳",
+      greeting: "سلام! من دستیار ایران بانک هستم. KAR AI بانک نیست.",
+      systemPrompt: `تو دستیار ایران بانک هستی. اطلاعات کارت نگیر.`,
+      suggestions: [{ label: "پرداخت قبض", answer: "دسته «پرداخت قبض»." }]
     },
     fullPagePath: "/b/iran_bank", origin: "spec-v1.0-§3.3"
   },
 
   iran_mechanic: {
-    slug: "iran_mechanic", title: "ایران مکانیک", icon: "⚙",
-    shortDescription: "عیب‌یابی و خدمات تعمیرات",
-    description: "تعمیر خودرو و ماشین‌آلات، سرویس دوره‌ای، امداد و برق و مکانیک صنعتی — با دسترسی به تعمیرکاران معتبر.",
-    categories: ["تعمیر خودرو", "تعمیر ماشین‌آلات", "سرویس دوره‌ای", "امداد خودرو", "مکانیک صنعتی"],
+    slug: "iran_mechanic", title: "ایران مکانیک", icon: "🔧",
+    shortDescription: "عیب‌یابی و تعمیرات",
+    description: "تعمیر خودرو، ماشین‌آلات و امداد.",
+    categories: ["تعمیر خودرو", "تعمیر ماشین‌آلات", "سرویس", "امداد", "صنعتی"],
     formsByCategoryIndex: {
-      0: { title: "تعمیر خودرو", intro: "تعمیرگاه یا در محل.", fields: [{ id: "vehicleType", label: "خودرو", type: "text" }, { id: "problem", label: "شرح مشکل", type: "textarea" }] },
-      1: { title: "تعمیر ماشین‌آلات", intro: "ماشین صنعتی.", fields: [{ id: "machineType", label: "ماشین", type: "text" }, { id: "problem", label: "مشکل", type: "textarea" }] },
-      2: { title: "سرویس دوره‌ای", intro: "روغن و فیلتر.", fields: [{ id: "vehicleType", label: "خودرو", type: "text" }, { id: "serviceType", label: "سرویس", type: "select", options: ["کامل", "روغن"] }] },
-      3: { title: "امداد خودرو", intro: "فوری در محل.", fields: [{ id: "emergencyType", label: "مشکل", type: "select", options: ["باتری", "لاستیک", "سوخت"] }, { id: "location", label: "آدرس", type: "text" }] },
-      4: { title: "مکانیک صنعتی", intro: "تجهیزات صنعتی.", fields: [{ id: "equipmentType", label: "تجهیز", type: "text" }] }
+      0: { title: "تعمیر خودرو", intro: "تعمیرگاه.", fields: [{ id: "vehicleType", label: "خودرو", type: "text" }] },
+      1: { title: "ماشین‌آلات", intro: "صنعتی.", fields: [{ id: "machineType", label: "ماشین", type: "text" }] },
+      2: { title: "سرویس", intro: "روغن.", fields: [{ id: "serviceType", label: "سرویس", type: "select", options: ["کامل", "روغن"] }] },
+      3: { title: "امداد", intro: "فوری.", fields: [{ id: "emergencyType", label: "مشکل", type: "select", options: ["باتری", "لاستیک"] }] },
+      4: { title: "صنعتی", intro: "تجهیزات.", fields: [{ id: "equipmentType", label: "تجهیز", type: "text" }] }
     },
     assistant: {
-      name: "دستیار ایران مکانیک", avatar: "⚙",
-      greeting: "سلام! من دستیار تخصصی ایران مکانیک هستم. چه مشکلی دارید؟",
-      systemPrompt: `تو دستیار تخصصی ایران مکانیک در KAR AI هستی.`,
-      suggestions: [
-        { label: "خودرویم روشن نمی‌شود", answer: "دسته «تعمیر خودرو» یا «امداد خودرو»." },
-        { label: "سرویس دوره‌ای", answer: "دسته «سرویس دوره‌ای». نوع خودرو و کارکرد را وارد کنید." },
-        { label: "امداد فوری", answer: "دسته «امداد خودرو». آدرس دقیق را وارد کنید." }
-      ]
+      name: "دستیار ایران مکانیک", avatar: "🔧",
+      greeting: "سلام! من دستیار ایران مکانیک هستم.",
+      systemPrompt: `تو دستیار ایران مکانیک هستی.`,
+      suggestions: [{ label: "خودرو روشن نمی‌شود", answer: "دسته «تعمیر خودرو»." }]
     },
     fullPagePath: "/b/iran_mechanic", origin: "spec-v1.0-§3.3"
   },
 
   iran_production: {
-    slug: "iran_production", title: "ایران تولید", icon: "▦",
+    slug: "iran_production", title: "ایران تولید", icon: "🏭",
     shortDescription: "خدمات تولید و صنعت",
-    description: "معرفی تولیدکنندگان و کارخانه‌ها، سفارش عمده، محصولات، ظرفیت تولید و استعلام همکاری صنعتی.",
-    categories: ["تولیدکنندگان", "کارخانه‌ها", "سفارش عمده", "محصولات", "ظرفیت تولید", "استعلام همکاری"],
+    description: "تولیدکنندگان، سفارش عمده و ظرفیت.",
+    categories: ["تولیدکنندگان", "کارخانه‌ها", "سفارش عمده", "محصولات", "ظرفیت", "همکاری"],
     formsByCategoryIndex: {
-      0: { title: "معرفی تولیدکنندگان", intro: "جست‌وجو.", fields: [{ id: "industry", label: "صنعت", type: "text" }] },
-      1: { title: "معرفی کارخانه", intro: "کارخانه.", fields: [{ id: "industry", label: "صنعت", type: "text" }] },
-      2: { title: "سفارش عمده", intro: "تولید به سفارش.", fields: [{ id: "productName", label: "محصول", type: "text" }, { id: "quantity", label: "مقدار", type: "number" }] },
-      3: { title: "درخواست محصولات", intro: "محصول خاص.", fields: [{ id: "productType", label: "محصول", type: "text" }] },
-      4: { title: "ظرفیت تولید", intro: "استعلام ظرفیت.", fields: [{ id: "productName", label: "محصول", type: "text" }] },
-      5: { title: "همکاری صنعتی", intro: "تولید مشترک.", fields: [{ id: "partnershipType", label: "نوع", type: "text" }] }
+      0: { title: "تولیدکننده", intro: "جست‌وجو.", fields: [{ id: "industry", label: "صنعت", type: "text" }] },
+      1: { title: "کارخانه", intro: "کارخانه.", fields: [{ id: "industry", label: "صنعت", type: "text" }] },
+      2: { title: "سفارش عمده", intro: "تولید.", fields: [{ id: "productName", label: "محصول", type: "text" }] },
+      3: { title: "محصولات", intro: "محصول خاص.", fields: [{ id: "productType", label: "محصول", type: "text" }] },
+      4: { title: "ظرفیت", intro: "استعلام.", fields: [{ id: "productName", label: "محصول", type: "text" }] },
+      5: { title: "همکاری", intro: "مشترک.", fields: [{ id: "partnershipType", label: "نوع", type: "text" }] }
     },
     assistant: {
-      name: "دستیار ایران تولید", avatar: "▦",
-      greeting: "سلام! من دستیار تخصصی ایران تولید هستم. چه کمکی می‌توانم بکنم؟",
-      systemPrompt: `تو دستیار تخصصی ایران تولید در KAR AI هستی.`,
-      suggestions: [
-        { label: "سفارش عمده محصول", answer: "دسته «سفارش عمده». مشخصات و مقدار را وارد کنید." },
-        { label: "پیدا کردن تولیدکننده", answer: "دسته «تولیدکنندگان». صنعت و محصول را مشخص کنید." },
-        { label: "همکاری صنعتی", answer: "دسته «استعلام همکاری صنعتی»." }
-      ]
+      name: "دستیار ایران تولید", avatar: "🏭",
+      greeting: "سلام! من دستیار ایران تولید هستم.",
+      systemPrompt: `تو دستیار ایران تولید هستی.`,
+      suggestions: [{ label: "سفارش عمده", answer: "دسته «سفارش عمده»." }]
     },
     fullPagePath: "/b/iran_production", origin: "spec-v1.0-§3.3"
   }
@@ -710,430 +1252,368 @@ const BRANCHES_DATA = {
 "use strict";
 
 /* =========================================
-   KAR AI V6.0 (SUPER APP) — PART 3 (LOGIC)
-   Connecting UI to Worker/API (Stubs included)
+   KAR AI V7.0 (LUXURY UI) — PART 3 (LOGIC)
+   AI Brain, Voice Engine, Hybrid Form Sync
 ========================================= */
 
-// ================= STATE & UTILS =================
-const INERT_SUPPORTED = ("inert" in HTMLElement.prototype);
-let toastTimer = null;
-let searchDebounceTimer = null;
-let urlUpdateTimer = null;
-let _restoringFromURL = false;
+// ---------------- 1. STATE & UTILS ----------------
+const appState = {
+  lang: "fa", // fa, ar, az, ku, en
+  isMuted: false,
+  chatMode: "onboarding", // onboarding, ordering, hybrid
+  userData: {},
+  currentBranch: null,
+  currentCategory: null,
+  currentForm: null,
+  isRecording: false
+};
 
-const modalState = { backdropId: null, dialogId: null, opener: null, onClose: null };
-const journeyState = { branchSlug: null, categoryIndex: null, step: "branch", formData: null };
-const assistantState = { scope: "central", assistant: null, branchSlug: null, messages: [], isOpen: false };
-const priorInertState = new WeakMap();
+// زبان‌ها و دیکشنری پایه
+const LANGUAGES = {
+  fa: { code: "fa-IR", label: "فارسی", hello: "سلام! من دستیار هوش مصنوعی KAR AI هستم. بیا با هم حسابت رو بسازیم. اسم کوچیکت چیه؟" },
+  ar: { code: "ar-SA", label: "العربية", hello: "مرحباً! أنا مساعد الذكاء الاصطناعي KAR AI. لننشئ حسابك معاً. ما هو اسمك الأول؟" },
+  az: { code: "az-AZ", label: "آذری", hello: "Salam! Mən KAR AI süni intellekt köməkçisiyəm. Gəlin hesabınızı yaradaq. Adınız nədir?" },
+  ku: { code: "ku-TR", label: "کوردی", hello: "سڵاو! من یاریدەدەری زیرەکی دەستکردی KAR AI یەم. وەرە حسابات بۆ دروست بکەین. ناوی یەکەمت چییە؟" },
+  en: { code: "en-US", label: "English", hello: "Hello! I am the KAR AI assistant. Let's create your account. What is your first name?" }
+};
 
-const PROVINCES = ["آذربایجان غربی", "آذربایجان شرقی", "اردبیل", "اصفهان", "البرز", "ایلام", "بوشهر", "تهران", "چهارمحال و بختیاری", "خراسان جنوبی", "خراسان رضوی", "خراسان شمالی", "خوزستان", "زنجان", "سمنان", "سیستان و بلوچستان", "فارس", "قزوین", "قم", "کردستان", "کرمان", "کرمانشاه", "کهگیلویه و بویراحمد", "گلستان", "گیلان", "لرستان", "مازندران", "مرکزی", "هرمزگان", "همدان", "یزد"];
-
-function escapeHTML(str) {
-  if (typeof str !== "string") return "";
-  return str.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+// (Mock API - اینجا بعداً به Worker و Gemini وصل می‌شود)
+// TODO: Replace with actual fetch to Cloudflare Worker
+async function fetchAIResponse(text, lang) {
+  // شبیه‌سازی تاخیر هوش مصنوعی
+  return new Promise(resolve => setTimeout(() => resolve("mock_response"), 800)); 
 }
 
-function normalizePersianText(value) {
-  if (typeof value !== "string") return "";
-  return value.toLowerCase().replace(/[\u200c\u200f\u200e\u200b]/g, "")
-    .replace(/ي/g, "ی").replace(/ك/g, "ک").replace(/ة/g, "ه").replace(/[أإآ]/g, "ا")
-    .replace(/\s+/g, " ").trim();
+// پاکسازی و تصحیح متن فارسی (ی/ک عربی به فارسی)
+function normalizeText(text) {
+  return text.trim()
+    .replace(/ي/g, "ی").replace(/ك/g, "ک")
+    .replace(/[٠-٩]/g, d => "۰۱۲۳۴۵۶۷۸۹"[d.charCodeAt(0) - 0x0660])
+    .replace(/[0-9]/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
 }
 
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
+// ---------------- 2. VOICE ENGINE (STT & TTS) ----------------
+const synth = window.speechSynthesis;
+let recognition = null;
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
 }
 
-// ================= MODAL SYSTEM =================
-function openDialog(backdropId, dialogId, opener, options = {}) {
-  if (modalState.dialogId) closeDialog();
-  const backdrop = document.getElementById(backdropId);
-  const dialog = document.getElementById(dialogId);
-  if (!backdrop || !dialog) return;
+function speak(text) {
+  if (appState.isMuted || !synth) return;
+  synth.cancel(); // قطع صحبت قبلی
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = LANGUAGES[appState.lang].code;
+  utterance.rate = 1.0;
+  utterance.pitch = 1.0;
+  synth.speak(utterance);
+}
 
-  modalState.backdropId = backdropId;
-  modalState.dialogId = dialogId;
-  modalState.opener = opener || document.activeElement;
-  modalState.onClose = options.onClose || null;
-
-  backdrop.classList.add("show");
-  document.body.classList.add("modal-open");
-  
-  if (INERT_SUPPORTED) {
-    document.querySelectorAll("body > *:not(script):not(.modal-backdrop)").forEach(el => {
-      if (!priorInertState.has(el)) priorInertState.set(el, el.hasAttribute("inert"));
-      el.setAttribute("inert", "");
-    });
+function startListening() {
+  if (!recognition) {
+    alert("مرورگر شما از میکروفون پشتیبانی نمی‌کند. لطفاً از کروم استفاده کنید.");
+    return;
   }
-
-  const focusable = dialog.querySelector("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
-  if (focusable) focusable.focus();
+  recognition.lang = LANGUAGES[appState.lang].code;
+  recognition.start();
+  appState.isRecording = true;
+  document.getElementById("micBtn").classList.add("recording");
 }
 
-function closeDialog() {
-  if (!modalState.backdropId) return;
-  const backdrop = document.getElementById(modalState.backdropId);
-  if (backdrop) backdrop.classList.remove("show");
-  document.body.classList.remove("modal-open");
-
-  if (INERT_SUPPORTED) {
-    document.querySelectorAll("body > *[inert]").forEach(el => {
-      if (priorInertState.get(el) === false) el.removeAttribute("inert");
-      priorInertState.delete(el);
-    });
-  }
-
-  const opener = modalState.opener;
-  const onClose = modalState.onClose;
-  modalState.backdropId = null;
-  modalState.dialogId = null;
-  modalState.opener = null;
-  modalState.onClose = null;
-
-  if (onClose) onClose();
-  if (opener && document.body.contains(opener)) opener.focus();
-}
-
-document.addEventListener("keydown", e => {
-  if (!modalState.dialogId) return;
-  if (e.key === "Escape") { e.preventDefault(); closeDialog(); }
+recognition && (recognition.onresult = function(event) {
+  const transcript = event.results[0][0].transcript;
+  document.getElementById("chatInput").value = transcript;
+  appState.isRecording = false;
+  document.getElementById("micBtn").classList.remove("recording");
+  handleChatSend(); // ارسال خودکار بعد از صحبت
 });
 
-document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
-  backdrop.addEventListener("click", e => {
-    if (e.target === backdrop && backdrop.id === modalState.backdropId) closeDialog();
-  });
+recognition && (recognition.onerror = function() {
+  appState.isRecording = false;
+  document.getElementById("micBtn").classList.remove("recording");
 });
 
-// ================= AUTH / OTP STUB =================
-document.querySelectorAll("[data-open-modal]").forEach(btn => {
-  btn.addEventListener("click", function() {
-    openDialog("modalBackdrop", "authDialog", this);
-  });
-});
-document.getElementById("modalClose")?.addEventListener("click", closeDialog);
-
-document.getElementById("authForm")?.addEventListener("submit", function(e) {
-  e.preventDefault();
-  const mobile = document.getElementById("mobile").value;
-  // TODO: Connect to Worker API for OTP
-  // fetch('/api/v1/auth/otp/send', { method: 'POST', body: JSON.stringify({mobile}) })
-  console.log(`[API STUB] Sending OTP to ${mobile}`);
-  showToast("کد تایید به شماره شما ارسال شد (شبیه‌سازی)");
-  closeDialog();
+recognition && (recognition.onend = function() {
+  appState.isRecording = false;
+  document.getElementById("micBtn").classList.remove("recording");
 });
 
-// ================= JOURNEY LOGIC =================
-function openBranchJourney(slug, opener) {
-  const data = BRANCHES_DATA[slug];
-  if (!data) return;
-
-  journeyState.branchSlug = slug;
-  journeyState.categoryIndex = null;
-  journeyState.step = "branch";
-  journeyState.formData = null;
-
-  openDialog("journeyBackdrop", "journeyDialog", opener, {
-    onClose: () => { journeyState.branchSlug = null; scheduleURLUpdate(); }
-  });
-  renderJourney();
-  scheduleURLUpdate();
-}
-
-function renderJourney() {
-  const data = BRANCHES_DATA[journeyState.branchSlug];
-  if (!data) return;
-
-  const inner = document.getElementById("journeyInner");
-  const breadcrumb = document.getElementById("journeyBreadcrumb");
-  const backBtn = document.getElementById("journeyBack");
-
-  backBtn.hidden = (journeyState.step === "branch" || journeyState.step === "success");
-
-  if (journeyState.step === "branch") {
-    breadcrumb.innerHTML = `<button data-act="close" style="color:var(--primary)">خانه</button> / ${data.title}`;
-    inner.innerHTML = `
-      <div class="journey-hero">
-        <h1>${data.title}</h1>
-        <p>${data.description}</p>
-      </div>
-      <div class="journey-categories">
-        ${data.categories.map((c, i) => `<button class="journey-category" data-act="cat" data-val="${i}"><span>${c}</span><span>←</span></button>`).join("")}
-      </div>
-    `;
-  } 
-  else if (journeyState.step === "category") {
-    const cat = data.categories[journeyState.categoryIndex];
-    breadcrumb.innerHTML = `<button data-act="close" style="color:var(--primary)">خانه</button> / <button data-act="branch" style="color:var(--primary)">${data.title}</button> / ${cat}`;
-    inner.innerHTML = `
-      <div class="journey-hero"><h1>${cat}</h1></div>
-      <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">برای ثبت درخواست در این دسته، دکمه زیر را بزنید.</p>
-      <button class="btn-primary" data-act="form">ثبت درخواست ${cat}</button>
-    `;
-  }
-  else if (journeyState.step === "form") {
-    const form = data.formsByCategoryIndex[journeyState.categoryIndex];
-    breadcrumb.innerHTML = `<button data-act="close" style="color:var(--primary)">خانه</button> / <button data-act="branch" style="color:var(--primary)">${data.title}</button> / <button data-act="cat" style="color:var(--primary)">${data.categories[journeyState.categoryIndex]}</button> / ثبت`;
-    
-    inner.innerHTML = `
-      <h2 style="font-size:16px; margin-bottom:8px;">${form.title}</h2>
-      <p style="font-size:12px; color:var(--text-muted); margin-bottom:20px;">${form.intro}</p>
-      <form id="dynamicForm">
-        ${form.fields.map(f => `
-          <div class="journey-field">
-            <label>${f.label} ${f.required ? '<span style="color:var(--danger)">*</span>' : ''}</label>
-            ${f.type === "select" 
-              ? `<select id="f-${f.id}" ${f.required ? "required" : ""}><option value="">انتخاب کنید</option>${f.options.map(o => `<option value="${o}">${o}</option>`).join("")}</select>`
-              : f.type === "textarea"
-                ? `<textarea id="f-${f.id}" rows="3" ${f.required ? "required" : ""}></textarea>`
-                : `<input id="f-${f.id}" type="${f.type}" ${f.required ? "required" : ""} min="${f.min || ""}" max="${f.max || ""}">`
-            }
-          </div>
-        `).join("")}
-        <button type="submit" class="btn-primary" style="margin-top:20px;">ثبت درخواست</button>
-      </form>
-    `;
-    document.getElementById("dynamicForm").addEventListener("submit", handleFormSubmit);
-  }
-  else if (journeyState.step === "success") {
-    breadcrumb.innerHTML = `ثبت موفق`;
-    inner.innerHTML = `
-      <div style="text-align:center; padding:40px 0;">
-        <div style="font-size:60px; color:var(--primary); margin-bottom:16px;">✓</div>
-        <h2>درخواست با موفقیت ثبت شد</h2>
-        <p style="color:var(--text-muted); font-size:12px; margin:16px 0;">کد پیگیری شما: <b>KAR-${Math.floor(Math.random()*90000)+10000}</b></p>
-        <button class="btn-primary" data-act="close">بازگشت به خانه</button>
-      </div>
-    `;
-  }
-
-  // Event Listeners for journey buttons
-  inner.querySelectorAll("[data-act]").forEach(btn => {
-    btn.addEventListener("click", function(e) {
-      e.preventDefault();
-      const act = this.dataset.act;
-      if (act === "close") closeDialog();
-      if (act === "branch") { journeyState.categoryIndex = null; journeyState.step = "branch"; renderJourney(); }
-      if (act === "cat") { journeyState.categoryIndex = parseInt(this.dataset.val); journeyState.step = "category"; renderJourney(); }
-      if (act === "form") { journeyState.step = "form"; renderJourney(); }
-    });
-  });
-  
-  breadcrumb.querySelectorAll("[data-act]").forEach(btn => {
-    btn.addEventListener("click", function(e) {
-      e.preventDefault();
-      const act = this.dataset.act;
-      if (act === "close") closeDialog();
-      if (act === "branch") { journeyState.categoryIndex = null; journeyState.step = "branch"; renderJourney(); }
-      if (act === "cat") { journeyState.step = "category"; renderJourney(); }
-    });
-  });
-}
-
-document.getElementById("journeyClose")?.addEventListener("click", closeDialog);
-document.getElementById("journeyBack")?.addEventListener("click", () => {
-  if (journeyState.step === "form") { journeyState.step = "category"; renderJourney(); }
-  else if (journeyState.step === "category") { journeyState.categoryIndex = null; journeyState.step = "branch"; renderJourney(); }
-});
-
-// Validation and Submit
-function handleFormSubmit(e) {
-  e.preventDefault();
-  const form = BRANCHES_DATA[journeyState.branchSlug].formsByCategoryIndex[journeyState.categoryIndex];
-  const formData = {};
-  let hasError = false;
-
-  form.fields.forEach(f => {
-    const input = document.getElementById(`f-${f.id}`);
-    if (!input) return;
-    const val = input.value.trim();
-    
-    if (f.required && !val) { showToast(`وارد کردن ${f.label} الزامی است.`); hasError = true; return; }
-    if (val && f.min && Number(val) < f.min) { showToast(`حداقل ${f.label} ${f.min} است.`); hasError = true; return; }
-    if (val && f.max && Number(val) > f.max) { showToast(`حداکثر ${f.label} ${f.max} است.`); hasError = true; return; }
-    
-    formData[f.id] = val;
-  });
-
-  if (hasError) return;
-
-  // TODO: Connect to Worker API for Order Creation
-  // fetch('/api/v1/orders', { method: 'POST', body: JSON.stringify({ branch: journeyState.branchSlug, form: formData }) })
-  
-  journeyState.step = "success";
-  renderJourney();
-  scheduleURLUpdate();
-}
-
-// Bind branch cards
-document.querySelectorAll(".branch-card").forEach(card => {
-  card.addEventListener("click", function(e) {
-    e.preventDefault();
-    openBranchJourney(this.dataset.branch, this);
-  });
-});
-
-// ================= AI ASSISTANT LOGIC =================
-function openAssistant(scope, branchSlug, opener) {
-  const config = scope === "branch" ? BRANCHES_DATA[branchSlug].assistant : CENTRAL_ASSISTANT;
-  
-  assistantState.scope = scope;
-  assistantState.branchSlug = branchSlug;
-  assistantState.assistant = config;
-  assistantState.messages = [];
-
-  document.getElementById("assistantTitle").textContent = config.name;
-  const msgBox = document.getElementById("assistantMessages");
-  msgBox.innerHTML = "";
-  
-  addAssistantMsg("bot", config.greeting);
-  
-  // Render Suggestion Chips
-  const chipsDiv = document.createElement("div");
-  chipsDiv.style.display = "flex"; chipsDiv.style.flexWrap = "wrap"; chipsDiv.style.gap = "8px"; chipsDiv.style.marginTop = "10px";
-  config.suggestions.forEach(s => {
-    const chip = document.createElement("button");
-    chip.textContent = s.label;
-    chip.style.cssText = "background:transparent; border:1px solid var(--primary); color:var(--primary); padding:6px 12px; border-radius:20px; font-size:11px; cursor:pointer;";
-    chip.onclick = () => {
-      addAssistantMsg("user", s.label);
-      chipsDiv.remove();
-      setTimeout(() => addAssistantMsg("bot", s.answer), 600);
-    };
-    chipsDiv.appendChild(chip);
-  });
-  msgBox.appendChild(chipsDiv);
-
-  openDialog("assistantBackdrop", "assistantPanel", opener);
-}
-
-function addAssistantMsg(role, text) {
-  const box = document.getElementById("assistantMessages");
+// ---------------- 3. CHAT UI ----------------
+function addMessage(role, text) {
+  const box = document.getElementById("chatMessages");
   const div = document.createElement("div");
   div.className = `msg ${role}`;
   div.textContent = text;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
+  if (role === "bot") speak(text);
 }
 
-document.getElementById("assistantSend")?.addEventListener("click", () => {
-  const input = document.getElementById("assistantInput");
-  const val = input.value.trim();
-  if (!val) return;
-  
-  addAssistantMsg("user", val);
-  input.value = "";
-  
-  // TODO: Connect to Worker API for LLM
-  // fetch('/api/v1/assistant/chat', { method: 'POST', body: JSON.stringify({ message: val }) })
-  
-  setTimeout(() => {
-    addAssistantMsg("bot", "در حال حاضر به مدل هوش مصنوعی متصل نیستم. لطفاً از گزینه‌های پیشنهادی استفاده کنید یا در نسخه عملیاتی سوال خود را بپرسید.");
-  }, 800);
-});
+function setChatInputState(disabled) {
+  const input = document.getElementById("chatInput");
+  const send = document.getElementById("chatSend");
+  input.disabled = disabled;
+  send.disabled = disabled;
+  if (disabled) {
+    input.placeholder = "لطفاً صبر کنید...";
+  } else {
+    input.placeholder = "اینجا بنویسید یا صحبت کنید…";
+    input.focus();
+  }
+}
 
-document.getElementById("assistantInput")?.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") document.getElementById("assistantSend").click();
-});
-
-document.getElementById("assistantClose")?.addEventListener("click", closeDialog);
-document.getElementById("floatAssistantBtn")?.addEventListener("click", function() { openAssistant("central", null, this); });
-document.getElementById("assistantTrigger")?.addEventListener("click", function(e) { e.preventDefault(); openAssistant("central", null, this); });
-
-// ================= SEARCH & FILTER =================
-function filterBranches() {
-  const q = normalizePersianText(document.getElementById("serviceSearch").value);
-  document.querySelectorAll(".branch-card").forEach(card => {
-    const data = BRANCHES_DATA[card.dataset.branch];
-    if (!data) return;
-    const text = normalizePersianText(data.title + " " + data.shortDescription + " " + data.categories.join(" "));
-    card.style.display = (!q || text.includes(q)) ? "flex" : "none";
+// ---------------- 4. LANGUAGE SELECTOR ----------------
+function renderLanguageButtons() {
+  const container = document.getElementById("langSelector");
+  container.innerHTML = "";
+  Object.keys(LANGUAGES).forEach(key => {
+    const btn = document.createElement("button");
+    btn.className = `lang-btn ${appState.lang === key ? "active" : ""}`;
+    btn.textContent = LANGUAGES[key].label;
+    btn.onclick = () => {
+      appState.lang = key;
+      renderLanguageButtons();
+      addMessage("bot", "زبان گفتار به " + LANGUAGES[key].label + " تغییر یافت. (نوشتار سایت ثابت است)");
+      // اگر در مرحله خوش‌آمدگویی بودیم، دوباره سلام کند
+      if (appState.chatMode === "onboarding" && Object.keys(appState.userData).length === 0) {
+        addMessage("bot", LANGUAGES[key].hello);
+      }
+    };
+    container.appendChild(btn);
   });
 }
 
-document.getElementById("serviceSearch")?.addEventListener("input", () => {
-  clearTimeout(searchDebounceTimer);
-  searchDebounceTimer = setTimeout(filterBranches, 150);
-});
+// ---------------- 5. DYNAMIC FORM RENDERER ----------------
+function renderForm(branchSlug, categoryIndex) {
+  const data = BRANCHES_DATA[branchSlug];
+  const form = data.formsByCategoryIndex[categoryIndex];
+  if (!form) return;
 
-// ================= URL STATE =================
-function updateURLState() {
-  if (_restoringFromURL) return;
-  const params = new URLSearchParams();
-  const q = document.getElementById("serviceSearch").value.trim();
-  if (q) params.set("q", q);
+  appState.currentBranch = branchSlug;
+  appState.currentCategory = categoryIndex;
+  appState.currentForm = form;
+
+  document.getElementById("formTitle").textContent = form.title;
+  const content = document.getElementById("formContent");
   
-  if (journeyState.branchSlug) {
-    params.set("open", journeyState.branchSlug);
-    if (journeyState.step !== "branch") params.set("step", journeyState.step);
-    if (journeyState.categoryIndex !== null) params.set("cat", journeyState.categoryIndex);
-  }
-  history.replaceState(null, "", window.location.pathname + (params.toString() ? "?" + params.toString() : ""));
+  content.innerHTML = `
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">${form.intro}</p>
+    <form id="dynamicForm">
+      ${form.fields.map(f => `
+        <div class="field">
+          <label>${f.label} ${f.required ? '<span style="color:var(--danger)">*</span>' : ''}</label>
+          ${f.type === "select" 
+            ? `<select id="field-${f.id}" ${f.required ? "required" : ""}><option value="">انتخاب کنید</option>${f.options.map(o => `<option value="${o}">${o}</option>`).join("")}</select>`
+            : f.type === "textarea"
+              ? `<textarea id="field-${f.id}" rows="3" ${f.required ? "required" : ""}></textarea>`
+              : `<input id="field-${f.id}" type="${f.type}" ${f.required ? "required" : ""} min="${f.min || ""}" max="${f.max || ""}">`
+          }
+        </div>
+      `).join("")}
+      <button type="submit" class="btn-submit">ثبت نهایی درخواست</button>
+    </form>
+  `;
+
+  document.getElementById("formModal").classList.add("show");
+
+  // وقتی کاربر فیلدی را دستی تغییر دهد، ربات متوجه شود
+  content.querySelectorAll("input, select, textarea").forEach(el => {
+    el.addEventListener("change", () => {
+      const fieldId = el.id.replace("field-", "");
+      const field = form.fields.find(f => f.id === fieldId);
+      if (field) {
+        addMessage("bot", `متوجه شدم ${field.label} را تغییر دادی. ثبت کردم.`);
+      }
+    });
+  });
+
+  document.getElementById("dynamicForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    document.getElementById("formModal").classList.remove("show");
+    addMessage("bot", "✅ درخواست شما با موفقیت ثبت شد. کد پیگیری: KAR-" + Math.floor(Math.random()*90000+10000));
+    // TODO: fetch('/api/v1/orders', ...)
+    appState.chatMode = "ordering"; // برگشت به حالت مکالمه
+  });
 }
 
-function scheduleURLUpdate() {
-  if (_restoringFromURL) return;
-  clearTimeout(urlUpdateTimer);
-  urlUpdateTimer = setTimeout(updateURLState, 100);
-}
-
-function restoreFromURL() {
-  _restoringFromURL = true;
-  const params = new URLSearchParams(window.location.search);
+// ---------------- 6. AI BRAIN (ONBOARDING & ORDERING) ----------------
+async function processUserInput(text) {
+  setChatInputState(true);
+  const cleanText = normalizeText(text);
   
-  if (params.has("q")) {
-    document.getElementById("serviceSearch").value = params.get("q");
-    filterBranches();
+  // مرحله ۱: ثبت‌نام (Onboarding)
+  if (appState.chatMode === "onboarding") {
+    if (!appState.userData.firstName) {
+      appState.userData.firstName = cleanText;
+      addMessage("bot", `${cleanText} جان، چه اسم قشنگی! فامیلیت چیه؟`);
+    } 
+    else if (!appState.userData.lastName) {
+      appState.userData.lastName = cleanText;
+      addMessage("bot", `ممنون ${appState.userData.firstName} ${appState.userData.lastName}. حالا شماره موبایلت رو بگو تا کد تایید برات بفرستم.`);
+    }
+    else if (!appState.userData.mobile) {
+      const mobileRegex = /^09\d{9}$/;
+      if (!mobileRegex.test(text)) {
+        addMessage("bot", "❌ شماره موبایل نامعتبره. باید ۱۱ رقم باشه و با ۰۹ شروع بشه. دوباره بگو.");
+      } else {
+        appState.userData.mobile = text;
+        addMessage("bot", "✅ کد ۵ رقمی به شماره شما پیامک شد. لطفاً کد رو وارد کن. (فعلاً هر ۵ رقمی رو قبول می‌کنم)");
+      }
+    }
+    else if (!appState.userData.otp) {
+      appState.userData.otp = text;
+      addMessage("bot", "✅ شماره تایید شد! حالا بریم سراغ محیط اصلی. چه خدمتی نیاز داری؟");
+      appState.chatMode = "ordering";
+      document.getElementById("userGreeting").textContent = appState.userData.firstName + " عزیز";
+    }
+    setChatInputState(false);
+    return;
   }
-  
-  if (params.has("open")) {
-    const slug = params.get("open");
-    if (BRANCHES_DATA[slug]) {
-      journeyState.branchSlug = slug;
-      journeyState.step = params.get("step") || "branch";
-      if (params.has("cat")) journeyState.categoryIndex = parseInt(params.get("cat"));
-      setTimeout(() => openBranchJourney(slug, document.body), 100);
+
+  // مرحله ۲: سفارش (Ordering & Hybrid)
+  if (appState.chatMode === "ordering") {
+    // ۱. تشخیص شاخه
+    if (!appState.currentBranch) {
+      const branchKeys = Object.keys(BRANCHES_DATA);
+      let foundBranch = null;
+      for (let key of branchKeys) {
+        if (cleanText.includes(BRANCHES_DATA[key].title) || cleanText.includes(BRANCHES_DATA[key].title.replace("ایران ", ""))) {
+          foundBranch = key; break;
+        }
+      }
+      if (cleanText.includes("کشاورزی")) foundBranch = "iran_keshavarz";
+      if (cleanText.includes("ماشین") || cleanText.includes("حمل")) foundBranch = "iran_transport";
+      if (cleanText.includes("خانه") || cleanText.includes("ساختمان")) foundBranch = "iran_building";
+      
+      if (foundBranch) {
+        appState.currentBranch = foundBranch;
+        const data = BRANCHES_DATA[foundBranch];
+        addMessage("bot", `عالیه! وارد بخش ${data.title} شدیم. چه کاری می‌خوای انجام بدیم؟ (${data.categories.slice(0,3).join("، ")} و...)`);
+      } else {
+        addMessage("bot", "متوجه نشدم. لطفاً یکی از شاخه‌ها رو بگو یا روی کارت‌های پایین کلیک کن.");
+      }
+      setChatInputState(false);
+      return;
+    }
+
+    // ۲. تشخیص دسته
+    if (appState.currentCategory === null) {
+      const data = BRANCHES_DATA[appState.currentBranch];
+      let foundCat = -1;
+      data.categories.forEach((cat, i) => {
+        if (cleanText.includes(cat) || cat.includes(cleanText)) foundCat = i;
+      });
+      // کیووردهای خاص
+      if (appState.currentBranch === "iran_keshavarz" && cleanText.includes("سم")) foundCat = 0;
+      if (appState.currentBranch === "iran_keshavarz" && cleanText.includes("پهپاد")) foundCat = 1;
+
+      if (foundCat > -1) {
+        appState.currentCategory = foundCat;
+        addMessage("bot", `انتخاب خوبی کردی! فرم «${data.categories[foundCat]}» رو برات باز می‌کنم. بیا با هم پر کنیم...`);
+        renderForm(appState.currentBranch, foundCat);
+      } else {
+        addMessage("bot", `دسته‌های موجود در ${data.title}: ${data.categories.join("، ")}. کدوم رو می‌خوای؟`);
+      }
+      setChatInputState(false);
+      return;
+    }
+
+    // ۳. پر کردن فرم (اگر فرم باز است و کاربر در چت چیزی می‌گوید)
+    if (appState.currentForm) {
+      addMessage("bot", "من فرم رو برات باز کردم. اگر چیزی می‌خوای اضافه کنی یا فیلدی رو پر کنم، فقط بگو (مثلاً بگو مساحت ۱۰ هکتار).");
+      // جستجوی عدد در متن برای پر کردن خودکار
+      const numMatch = text.match(/\d+/);
+      if (numMatch) {
+        const fieldId = appState.currentForm.fields[0].id; // فرض می‌کنیم اولین فیلد عددی است (مثل مساحت)
+        const input = document.getElementById(`field-${fieldId}`);
+        if (input) {
+          input.value = numMatch[0];
+          addMessage("bot", `عدد ${numMatch[0]} رو توی فیلد ${appState.currentForm.fields[0].label} ثبت کردم.`);
+        }
+      }
     }
   }
-  _restoringFromURL = false;
+  
+  setChatInputState(false);
 }
 
-// ================= INITIALIZATION =================
-document.addEventListener("DOMContentLoaded", () => {
-  // Populate Provinces
-  const provSelect = document.getElementById("province");
-  if (provSelect) {
-    PROVINCES.forEach(p => {
-      const opt = document.createElement("option");
-      opt.value = p; opt.textContent = p;
-      provSelect.appendChild(opt);
-    });
-  }
-
-  // Populate Branch Dropdown
-  const branchFilter = document.getElementById("branchFilter");
-  if (branchFilter) {
-    Object.keys(BRANCHES_DATA).forEach(k => {
-      const opt = document.createElement("option");
-      opt.value = k; opt.textContent = BRANCHES_DATA[k].title;
-      branchFilter.appendChild(opt);
-    });
-  }
+function handleChatSend() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
   
-  restoreFromURL();
-  console.log("%c[KAR AI] System Ready 🚀 (API & Worker integration pending)", "color: #A3E635; font-size: 16px; font-weight: bold;");
-});
+  addMessage("user", text);
+  input.value = "";
+  processUserInput(text);
+}
 
-// Create Toast Element on the fly
-const toastDiv = document.createElement('div');
-toastDiv.id = 'toast';
-toastDiv.style.cssText = 'position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:var(--card-bg); color:var(--primary); padding:12px 24px; border-radius:30px; font-size:13px; opacity:0; transition:0.3s; pointer-events:none; border:1px solid var(--primary); z-index:9999;';
-document.body.appendChild(toastDiv);
+// ---------------- 7. EVENT LISTENERS & INITIALIZATION ----------------
+document.addEventListener("DOMContentLoaded", () => {
+  
+  // رندر دکمه‌های زبان
+  renderLanguageButtons();
+
+  // رندر کارت‌های شاخه
+  const branchGrid = document.getElementById("branchGrid");
+  Object.keys(BRANCHES_DATA).forEach(key => {
+    const branch = BRANCHES_DATA[key];
+    const card = document.createElement("div");
+    card.className = "branch-card";
+    card.innerHTML = `
+      <div class="branch-icon-wrap"><div class="branch-icon">${branch.icon}</div></div>
+      <span class="branch-name">${branch.title.replace("ایران ", "")}</span>
+    `;
+    card.onclick = () => {
+      // حالت Hybrid: کاربر دستی کلیک کرد
+      appState.chatMode = "hybrid";
+      appState.currentBranch = key;
+      appState.currentCategory = null;
+      appState.currentForm = null;
+      const catStr = branch.categories.join("، ");
+      addMessage("bot", `دیدم که خودت ${branch.title} رو انتخاب کردی. من کنارتم. چه خدمتی از این بخش می‌خوای؟ (${catStr})`);
+    };
+    branchGrid.appendChild(card);
+  });
+
+  // چت: ارسال
+  document.getElementById("chatSend").addEventListener("click", handleChatSend);
+  document.getElementById("chatInput").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") handleChatSend();
+  });
+
+  // میکروفون
+  document.getElementById("micBtn").addEventListener("click", () => {
+    if (appState.isRecording) {
+      recognition.stop();
+    } else {
+      startListening();
+    }
+  });
+
+  // قطع/وصل صدا
+  document.getElementById("muteToggle").addEventListener("click", function() {
+    appState.isMuted = !appState.isMuted;
+    this.textContent = appState.isMuted ? "🔇" : "🔊";
+    if (appState.isMuted && synth) synth.cancel();
+  });
+
+  // بستن مودال فرم
+  document.getElementById("closeFormModal").addEventListener("click", () => {
+    document.getElementById("formModal").classList.remove("show");
+    addMessage("bot", "فرم رو بستم. اگر باز هم کمکی خواستی بگو.");
+    appState.chatMode = "ordering";
+  });
+
+  // شروع مکالمه اولیه (ربات سلام می‌کند)
+  setTimeout(() => {
+    addMessage("bot", LANGUAGES[appState.lang].hello);
+  }, 1000);
+
+  console.log("%c[KAR AI] Luxury UI + AI Brain Ready ✨", "color: #F5D76E; font-size: 16px; font-weight: bold;");
+});
 </script>
 </body>
 </html>
