@@ -3,76 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>KAR AI | اکوسیستم هوشمند لوکس</title>
+<title>KAR AI | ورود به اکوسیستم</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-deep: #050505;
-  --bg-card: rgba(20, 20, 22, 0.72);
-  --bg-card-hover: rgba(30, 30, 35, 0.9);
+  --bg-card: rgba(20, 20, 22, 0.85);
   --gold-1: #F5E6B8;
   --gold-2: #F5D76E;
   --gold-3: #C9A227;
   --gold-4: #8B6914;
   --text-main: #F2F2F2;
   --text-muted: #9A9A9A;
-  --border-gold: rgba(201, 162, 39, 0.35);
-  --glow-gold: 0 0 40px rgba(201, 162, 39, 0.25);
-  --glow-gold-soft: 0 0 20px rgba(201, 162, 39, 0.15);
+  --border-gold: rgba(201, 162, 39, 0.4);
+  --glow-gold: 0 0 30px rgba(201, 162, 39, 0.3);
   --radius: 24px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; }
 body { background: var(--bg-deep); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; position: relative; font-size: 16px; }
-body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(201, 162, 39, 0.12) 0%, transparent 60%); pointer-events: none; z-index: 0; }
+body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(201, 162, 39, 0.15) 0%, transparent 60%); pointer-events: none; z-index: 0; }
 
-button { cursor: pointer; border: none; outline: none; background: transparent; font-family: inherit; }
+button { cursor: pointer; border: none; outline: none; background: transparent; font-family: inherit; transition: 0.3s; }
 
-/* ================= صفحه ۱: ثبت‌نام (Onboarding) ================= */
+/* ================= صفحه ۱: ورود و ثبت‌نام حرفه‌ای ================= */
 #onboardingScreen {
   position: absolute; inset: 0; z-index: 100; background: var(--bg-deep);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
-  transition: opacity 0.5s ease; overflow-y: auto;
+  display: flex; flex-direction: column; align-items: center; padding: 40px 20px;
+  overflow-y: auto; z-index: 10;
 }
 #onboardingScreen.hidden { opacity: 0; pointer-events: none; }
 
-/* ربات لوکس */
-.robot-wrapper { position: relative; margin-bottom: 30px; animation: float 4s ease-in-out infinite; }
-.robot-head {
-  width: 110px; height: 100px; border-radius: 30px;
-  background: linear-gradient(135deg, var(--gold-1), var(--gold-3), var(--gold-4));
-  border: 3px solid var(--gold-2); box-shadow: var(--glow-gold);
-  position: relative; display: flex; justify-content: center; align-items: center; gap: 20px;
-}
-.robot-eye { width: 20px; height: 30px; background: #050505; border-radius: 10px; box-shadow: inset 0 3px 6px rgba(255,255,255,0.3); animation: blink 4s infinite; }
-.robot-antenna { position: absolute; top: -26px; left: 50%; transform: translateX(-50%); width: 6px; height: 26px; background: var(--gold-3); }
-.robot-antenna::after { content: ''; position: absolute; top: -10px; left: -6px; width: 18px; height: 18px; background: var(--gold-2); border-radius: 50%; box-shadow: 0 0 20px var(--gold-2); }
-.robot-mouth { position: absolute; bottom: 16px; width: 40px; height: 8px; background: #050505; border-radius: 4px; opacity: 0.7; }
+/* هدر لاگین */
+.login-header { text-align: center; margin-bottom: 30px; margin-top: 10px; }
+.login-header h1 { font-size: 26px; font-weight: 900; color: var(--gold-2); letter-spacing: 2px; margin-bottom: 8px; }
+.login-header p { font-size: 14px; color: var(--text-muted); }
 
-@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+/* ربات Eilik */
+.robot-wrapper { position: relative; margin-bottom: 20px; animation: float 4s ease-in-out infinite; display: flex; justify-content: center; }
+.robot-svg { width: 140px; height: 140px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6)); }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.waving-arm { transform-origin: 145px 105px; animation: wave 2s ease-in-out infinite alternate; }
+@keyframes wave { 0% { transform: rotate(0deg); } 100% { transform: rotate(-25deg); } }
+.eye-glow { animation: blink 5s infinite; transform-origin: center; }
 @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
 
-/* کادر چت ثبت‌نام */
-.chat-box-auth {
-  width: 100%; max-width: 520px; background: var(--bg-card); border: 1px solid var(--border-gold);
-  border-radius: var(--radius); box-shadow: var(--glow-gold-soft); display: flex; flex-direction: column; overflow: hidden; height: 400px;
+/* انتخاب زبان */
+.lang-selector { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; justify-content: center; }
+.lang-btn { padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; border: 1px solid var(--border-gold); color: var(--gold-1); background: rgba(0,0,0,0.3); }
+.lang-btn.active { background: linear-gradient(135deg, var(--gold-2), var(--gold-3)); color: #000; border-color: var(--gold-2); box-shadow: var(--glow-gold); }
+
+/* کادر چت و فرم */
+.auth-container {
+  width: 100%; max-width: 480px; background: var(--bg-card); border: 1px solid var(--border-gold);
+  border-radius: var(--radius); box-shadow: var(--glow-gold); display: flex; flex-direction: column; overflow: hidden;
+  backdrop-filter: blur(20px);
 }
-.chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
-.msg { max-width: 85%; padding: 14px 18px; border-radius: 18px; font-size: 14px; line-height: 1.7; animation: msgIn 0.3s forwards; }
+.chat-messages { padding: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 250px; overflow-y: auto; }
+.msg { max-width: 90%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.6; animation: msgIn 0.3s forwards; }
 @keyframes msgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.msg.bot { align-self: flex-start; background: rgba(201, 162, 39, 0.1); border: 1px solid var(--border-gold); color: var(--gold-1); border-bottom-right-radius: 4px; }
+.msg.bot { align-self: flex-start; background: rgba(201, 162, 39, 0.15); border: 1px solid var(--border-gold); color: var(--gold-1); border-bottom-right-radius: 4px; }
 .msg.user { align-self: flex-end; background: linear-gradient(135deg, var(--gold-2), var(--gold-4)); color: #000; font-weight: bold; border-bottom-left-radius: 4px; }
 
-.chat-input-area { display: flex; padding: 12px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--border-gold); gap: 8px; }
-.chat-input-area input { flex: 1; background: transparent; border: none; color: white; padding: 10px; outline: none; font-size: 14px; }
-.chat-input-area button { background: var(--gold-3); color: #000; width: 46px; height: 46px; border-radius: 12px; font-weight: 900; font-size: 18px; }
-.btn-guest { margin-top: 20px; color: var(--text-muted); text-decoration: underline; cursor: pointer; font-size: 14px; padding: 10px; }
-.btn-guest:hover { color: var(--gold-2); }
+/* فرم ورود داخل باکس */
+.auth-form { padding: 16px; border-top: 1px solid rgba(201, 162, 39, 0.2); background: rgba(0,0,0,0.4); }
+.input-group { display: flex; gap: 8px; margin-bottom: 12px; }
+.input-group input { flex: 1; background: rgba(0,0,0,0.5); border: 1px solid var(--border-gold); border-radius: 12px; padding: 14px; color: white; font-size: 14px; outline: none; transition: 0.3s; }
+.input-group input:focus { border-color: var(--gold-2); box-shadow: var(--glow-gold); }
+.btn-primary { width: 100%; background: linear-gradient(135deg, var(--gold-2), var(--gold-3)); color: #000; font-weight: 900; padding: 15px; border-radius: 12px; font-size: 15px; box-shadow: 0 4px 15px rgba(201, 162, 39, 0.3); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201, 162, 39, 0.5); }
+.btn-primary:active { transform: translateY(0); }
 
-/* ================= صفحه ۲: داشبورد اصلی (Main) ================= */
+/* لینک‌های پایین */
+.auth-links { display: flex; justify-content: space-between; width: 100%; max-width: 480px; margin-top: 20px; }
+.auth-link { font-size: 13px; color: var(--text-muted); border-bottom: 1px dashed var(--text-muted); padding-bottom: 2px; }
+.auth-link:hover { color: var(--gold-1); border-color: var(--gold-1); }
+
+/* ================= صفحه ۲: داشبورد اصلی (از قبل) ================= */
 #mainScreen {
   position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10;
-  transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); overflow-y: auto;
+  transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); overflow-y: auto; background: var(--bg-deep);
 }
 #mainScreen.active { transform: translateY(0); }
 
@@ -80,14 +90,8 @@ header { padding: 16px 24px; display: flex; justify-content: space-between; alig
 .logo { display: flex; align-items: center; gap: 10px; font-weight: 900; color: var(--gold-2); letter-spacing: 2px; font-size: 18px; }
 #userLabel { font-size: 13px; color: var(--gold-1); background: rgba(201, 162, 39, 0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-gold); }
 
-/* ربات بالای داشبورد */
 .main-robot { display: flex; justify-content: center; padding: 20px 0 10px; }
-.main-robot .robot-head { width: 90px; height: 80px; border-radius: 24px; gap: 16px; }
-.main-robot .robot-eye { width: 16px; height: 24px; }
-.main-robot .robot-antenna { height: 20px; top: -20px; }
-.main-robot .robot-mouth { width: 30px; bottom: 12px; height: 6px; }
 
-/* نوار افقی (کسب‌وکارهای مهم) */
 .featured-strip-wrapper { padding: 10px 24px 20px; overflow-x: auto; scrollbar-width: none; }
 .featured-strip-wrapper::-webkit-scrollbar { display: none; }
 .featured-strip { display: flex; gap: 16px; width: max-content; }
@@ -95,26 +99,21 @@ header { padding: 16px 24px; display: flex; justify-content: space-between; alig
   background: linear-gradient(180deg, rgba(30,30,30,0.9), rgba(15,15,15,0.9));
   border: 1px solid var(--border-gold); border-radius: 20px; padding: 16px 24px;
   display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 120px;
-  cursor: grab; transition: 0.3s;
+  cursor: pointer;
 }
-.featured-item:hover { box-shadow: var(--glow-gold-soft); transform: translateY(-4px); }
+.featured-item:hover { box-shadow: var(--glow-gold); transform: translateY(-4px); }
 .featured-item .icon { font-size: 36px; }
 .featured-item span { font-size: 13px; font-weight: bold; color: var(--gold-1); text-align: center; }
 
-/* گرید ۱۲ شاخه */
-.branches-grid {
-  padding: 10px 24px 100px;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-content: start;
-}
+.branches-grid { padding: 10px 24px 100px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-content: start; }
 @media(max-width: 600px) { .branches-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
 
 .branch-card {
   background: var(--bg-card); border-radius: 20px; padding: 16px 10px;
   display: flex; flex-direction: column; align-items: center; gap: 10px;
-  border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.05); cursor: pointer;
 }
 .branch-card:hover { border-color: var(--border-gold); box-shadow: var(--glow-gold-soft); transform: translateY(-3px); }
-.branch-card:active { transform: scale(0.95); }
 .branch-card .icon-circle {
   width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
   background: radial-gradient(circle, rgba(201, 162, 39, 0.15), transparent);
@@ -122,65 +121,101 @@ header { padding: 16px 24px; display: flex; justify-content: space-between; alig
 }
 .branch-card span { font-size: 12px; font-weight: 700; color: var(--gold-1); text-align: center; }
 
-/* دکمه شناور چت هوش مصنوعی */
 .fab-chat {
   position: fixed; bottom: 24px; left: 24px; z-index: 50;
   width: 64px; height: 64px; border-radius: 50%;
   background: linear-gradient(135deg, var(--gold-2), var(--gold-4));
   box-shadow: var(--glow-gold); display: grid; place-items: center; font-size: 28px; color: #000;
-  transition: 0.3s; border: 3px solid var(--gold-1); font-weight: 900;
+  border: 3px solid var(--gold-1); font-weight: 900;
 }
 .fab-chat:hover { transform: scale(1.1); }
 
-/* ================= مودال‌های سفارش و چت ================= */
-.modal-backdrop {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
-  display: none; align-items: flex-end; justify-content: center; z-index: 200;
-}
+/* مودال‌ها */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); display: none; align-items: flex-end; justify-content: center; z-index: 200; }
 .modal-backdrop.show { display: flex; }
-.modal {
-  background: linear-gradient(180deg, #14141A, #0A0A0E); width: 100%; max-width: 600px;
-  border-radius: 28px 28px 0 0; padding: 20px; max-height: 90vh; display: flex; flex-direction: column;
-  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-top: 1px solid var(--border-gold);
-}
+.modal { background: linear-gradient(180deg, #14141A, #0A0A0E); width: 100%; max-width: 600px; border-radius: 28px 28px 0 0; padding: 20px; max-height: 90vh; display: flex; flex-direction: column; animation: slideUp 0.4s ease-out; border-top: 1px solid var(--border-gold); }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .modal-title { font-size: 17px; font-weight: 900; color: var(--gold-1); }
 .close-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.05); color: var(--gold-2); font-size: 22px; }
 
-/* فرم‌های داینامیک */
 .form-content { overflow-y: auto; padding-bottom: 20px; }
 .field { margin-bottom: 14px; }
 .field label { display: block; font-size: 13px; color: var(--gold-1); margin-bottom: 6px; }
-.field input, .field select, .field textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border-gold); border-radius: 12px; padding: 14px; color: white; font-size: 14px; font-family: inherit; outline: none; }
+.field input, .field select, .field textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border-gold); border-radius: 12px; padding: 14px; color: white; font-size: 14px; outline: none; }
 .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold-2); box-shadow: var(--glow-gold-soft); }
 .btn-submit { width: 100%; padding: 16px; border-radius: 14px; background: linear-gradient(135deg, var(--gold-2), var(--gold-4)); color: #000; font-weight: 900; font-size: 15px; margin-top: 10px; }
 
-/* چت داخل مودال */
 .chat-box-dash { height: 60vh; border-radius: 28px 28px 0 0; width: 100%; max-width: 600px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border-gold); background: var(--bg-card); }
+.chat-input-area { display: flex; padding: 12px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--border-gold); gap: 8px; }
+.chat-input-area input { flex: 1; background: transparent; border: none; color: white; padding: 10px; outline: none; font-size: 14px; }
+.chat-input-area button { background: var(--gold-3); color: #000; width: 46px; height: 46px; border-radius: 12px; font-weight: 900; font-size: 18px; }
 </style>
 </head>
 <body>
 
-<!-- ================= صفحه ثبت نام ================= -->
+<!-- ================= صفحه ورود حرفه‌ای ================= -->
 <div id="onboardingScreen">
+  
+  <div class="login-header">
+    <h1>KAR AI</h1>
+    <p>به اکوسیستم هوشمند خدمات خوش آمدید</p>
+  </div>
+
+  <!-- ربات Eilik -->
   <div class="robot-wrapper">
-    <div class="robot-antenna"></div>
-    <div class="robot-head">
-      <div class="robot-eye"></div>
-      <div class="robot-eye"></div>
-      <div class="robot-mouth"></div>
+    <svg class="robot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="100" cy="180" rx="60" ry="15" fill="#E2E8F0" />
+      <ellipse cx="100" cy="177" rx="55" ry="12" fill="#FFFFFF" />
+      <path d="M 55 110 Q 30 130 45 150 Q 55 155 60 145 Q 65 130 60 115 Z" fill="#75CBB7" />
+      <path d="M 45 150 Q 35 160 45 165 Q 55 165 60 155 Z" fill="#FFFFFF" />
+      <g class="waving-arm">
+        <path d="M 145 105 Q 170 90 175 60 Q 180 50 185 55 Q 190 70 170 100 Q 160 115 145 115 Z" fill="#75CBB7" />
+        <ellipse cx="180" cy="55" rx="10" ry="15" fill="#FFFFFF" transform="rotate(-30 180 55)" />
+      </g>
+      <path d="M 55 100 Q 55 150 100 160 Q 145 150 145 100 Q 145 80 100 80 Q 55 80 55 100 Z" fill="#FFFFFF" />
+      <path d="M 60 95 Q 100 115 140 95 Q 140 110 100 120 Q 60 110 60 95 Z" fill="#75CBB7" />
+      <text x="100" y="135" font-family="Arial" font-size="12" fill="#888" text-anchor="middle" font-weight="bold">Eilik</text>
+      <path d="M 40 70 Q 40 10 100 10 Q 160 10 160 70 Q 160 90 100 90 Q 40 90 40 70 Z" fill="#FFFFFF" />
+      <rect x="45" y="88" width="110" height="4" fill="#75CBB7" rx="2" />
+      <rect x="55" y="30" width="90" height="50" rx="25" fill="#111111" />
+      <g class="eye-glow">
+        <path d="M 75 50 Q 75 40 85 40 Q 95 40 95 50 Q 95 60 85 60 Q 75 60 75 50 Z" fill="#00FFFF" />
+        <path d="M 105 50 Q 105 40 115 40 Q 125 40 125 50 Q 125 60 115 60 Q 105 60 105 50 Z" fill="#00FFFF" />
+        <circle cx="80" cy="45" r="2" fill="#FFFFFF" opacity="0.6"/>
+        <circle cx="110" cy="45" r="2" fill="#FFFFFF" opacity="0.6"/>
+      </g>
+      <ellipse cx="35" cy="55" rx="8" ry="12" fill="#FFFFFF" />
+      <ellipse cx="165" cy="55" rx="8" ry="12" fill="#FFFFFF" />
+    </svg>
+  </div>
+
+  <!-- انتخاب زبان -->
+  <div class="lang-selector" id="langSelector"></div>
+
+  <!-- کادر ورود -->
+  <div class="auth-container">
+    <!-- پیام‌های ربات -->
+    <div class="chat-messages" id="onboardingChat">
+      <div class="msg bot" id="initialGreeting">سلام! من دستیار هوش مصنوعی KAR AI هستم. لطفاً برای ساخت حساب، نام خود را وارد کنید.</div>
+    </div>
+    
+    <!-- فرم حرفه‌ای -->
+    <div class="auth-form">
+      <div class="input-group">
+        <input type="text" id="onboardingInput" placeholder="نام و نام خانوادگی شما...">
+      </div>
+      <button class="btn-primary" id="onboardingSend">مرحله بعد ←</button>
     </div>
   </div>
-  <div class="chat-box-auth">
-    <div class="chat-messages" id="onboardingChat"></div>
-    <div class="chat-input-area">
-      <input type="text" id="onboardingInput" placeholder="پاسخ خود را بنویسید...">
-      <button id="onboardingSend">↑</button>
-    </div>
+
+  <!-- لینک‌های پایین صفحه -->
+  <div class="auth-links">
+    <button class="auth-link" id="btnGuest">ورود به عنوان مهمان</button>
+    <button class="auth-link" onclick="alert('در نسخه نهایی به صفحه ورود با رمز متصل می‌شود.')">ورود با رمز عبور</button>
   </div>
-  <button class="btn-guest" id="btnGuest">ورود به عنوان مهمان</button>
+
 </div>
 
 <!-- ================= داشبورد اصلی ================= -->
@@ -191,14 +226,11 @@ header { padding: 16px 24px; display: flex; justify-content: space-between; alig
   </header>
 
   <div class="main-robot">
-    <div class="robot-wrapper" style="margin-bottom:0;">
-      <div class="robot-antenna"></div>
-      <div class="robot-head">
-        <div class="robot-eye"></div>
-        <div class="robot-eye"></div>
-        <div class="robot-mouth"></div>
-      </div>
-    </div>
+    <!-- همون ربات کوچیک شده برای بالای داشبورد -->
+    <svg class="robot-svg" style="width: 90px; height: 90px;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+       <!-- (همون کدهای SVG ربات اینجا قرار می‌گیره) -->
+       <ellipse cx="100" cy="180" rx="60" ry="15" fill="#E2E8F0" /><ellipse cx="100" cy="177" rx="55" ry="12" fill="#FFFFFF" /><path d="M 55 110 Q 30 130 45 150 Q 55 155 60 145 Q 65 130 60 115 Z" fill="#75CBB7" /><path d="M 45 150 Q 35 160 45 165 Q 55 165 60 155 Z" fill="#FFFFFF" /><g class="waving-arm"><path d="M 145 105 Q 170 90 175 60 Q 180 50 185 55 Q 190 70 170 100 Q 160 115 145 115 Z" fill="#75CBB7" /><ellipse cx="180" cy="55" rx="10" ry="15" fill="#FFFFFF" transform="rotate(-30 180 55)" /></g><path d="M 55 100 Q 55 150 100 160 Q 145 150 145 100 Q 145 80 100 80 Q 55 80 55 100 Z" fill="#FFFFFF" /><path d="M 60 95 Q 100 115 140 95 Q 140 110 100 120 Q 60 110 60 95 Z" fill="#75CBB7" /><text x="100" y="135" font-family="Arial" font-size="12" fill="#888" text-anchor="middle" font-weight="bold">Eilik</text><path d="M 40 70 Q 40 10 100 10 Q 160 10 160 70 Q 160 90 100 90 Q 40 90 40 70 Z" fill="#FFFFFF" /><rect x="45" y="88" width="110" height="4" fill="#75CBB7" rx="2" /><rect x="55" y="30" width="90" height="50" rx="25" fill="#111111" /><g class="eye-glow"><path d="M 75 50 Q 75 40 85 40 Q 95 40 95 50 Q 95 60 85 60 Q 75 60 75 50 Z" fill="#00FFFF" /><path d="M 105 50 Q 105 40 115 40 Q 125 40 125 50 Q 125 60 115 60 Q 105 60 105 50 Z" fill="#00FFFF" /></g>
+    </svg>
   </div>
 
   <div class="featured-strip-wrapper">
@@ -210,7 +242,7 @@ header { padding: 16px 24px; display: flex; justify-content: space-between; alig
   <button class="fab-chat" id="fabChat">◈</button>
 </div>
 
-<!-- مودال چت (دستیار داشبورد) -->
+<!-- مودال چت داشبورد -->
 <div class="modal-backdrop" id="chatModal">
   <div class="chat-box-dash">
     <div class="modal-header" style="padding:16px; background:#0D1412; margin:0; border-bottom:1px solid var(--border-gold);">
@@ -241,8 +273,8 @@ header { padding: 16px 24px; display: flex; justify-content: space-between; alig
 "use strict";
 
 /* =========================================
-   KAR AI V8.0 (LUXURY UI + FULL DATA)
-   PART 2: CENTRAL ASSISTANT + 12 BRANCHES (68 FORMS)
+   KAR AI V9.0 (PRO UI) — PART 2: DATA
+   Central Assistant + 12 Branches (68 Forms)
 ========================================= */
 
 const CENTRAL_ASSISTANT = {
@@ -675,7 +707,7 @@ const BRANCHES_DATA = {
 "use strict";
 
 /* =========================================
-   KAR AI V8.0 (LUXURY UI) — PART 3 (AI LOGIC)
+   KAR AI V9.0 (PRO UI) — PART 3 (AI LOGIC)
 ========================================= */
 
 // ---------------- 1. STATE & CONFIG ----------------
@@ -684,13 +716,12 @@ const appState = {
   isMuted: false,
   user: { name: "مهمان", isGuest: true },
   onboardingStep: 0, // 0: Start, 1: Name, 2: Last, 3: Mobile, 4: Done
-  chatMode: "idle", // idle, ai_chat, form_open
+  chatMode: "idle", 
   currentBranch: null,
   currentCategory: null,
   currentForm: null
 };
 
-// زبان‌ها و دیکشنری پایه (فقط برای مکالمه AI - نوشتار سایت همیشه فارسی است)
 const LANGUAGES = {
   fa: { code: "fa-IR", label: "فارسی", hello: "سلام! من دستیار هوش مصنوعی KAR AI هستم. اسم کوچیکت چیه تا حسابت رو بسازیم؟" },
   ar: { code: "ar-SA", label: "العربية", hello: "مرحباً! أنا مساعد الذكاء الاصطناعي KAR AI. ما هو اسمك الأول؟" },
@@ -698,6 +729,14 @@ const LANGUAGES = {
   ku: { code: "ku-TR", label: "کوردی", hello: "سڵاو! من یاریدەدەری زیرەکی دەستکردی KAR AI یەم. ناوی یەکەمت چییە؟" },
   en: { code: "en-US", label: "English", hello: "Hello! I am the KAR AI assistant. What is your first name?" }
 };
+
+// تبدیل اعداد فارسی به انگلیسی برای تشخیص درست هوش مصنوعی
+function normalizeDigits(str) {
+  if (typeof str !== "string") return "";
+  return str
+    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+}
 
 // ---------------- 2. VOICE ENGINE (STT & TTS) ----------------
 const synth = window.speechSynthesis;
@@ -711,28 +750,53 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
 
 function speak(text) {
   if (appState.isMuted || !synth) return;
-  synth.cancel();
+  synth.cancel(); // قطع صدای قبلی
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = LANGUAGES[appState.lang].code;
   utterance.rate = 1.0;
   synth.speak(utterance);
 }
 
+// دکمه میکروفون را به صورت داینامیک به کادرهای ورود اضافه می‌کنیم
+function injectMicButtons() {
+  const style = document.createElement('style');
+  style.innerHTML = `.mic-btn { background: rgba(201, 162, 39, 0.2); border: 1px solid var(--gold-3); color: var(--gold-2); width: 46px; height: 46px; border-radius: 12px; font-size: 18px; display: grid; place-items: center; transition: 0.3s; cursor: pointer; } .mic-btn.recording { background: #ff5252; color: white; border-color: #ff5252; animation: pulse 1.5s infinite; } @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,82,82,0.5); } 70% { box-shadow: 0 0 0 10px rgba(255,82,82,0); } 100% { box-shadow: 0 0 0 0 rgba(255,82,82,0); } }`;
+  document.head.appendChild(style);
+
+  // دکمه میکروفون برای ثبت‌نام
+  const onbForm = document.querySelector('.auth-form .input-group');
+  if (onbForm && !document.getElementById('micBtnOnb')) {
+    const btn = document.createElement('button');
+    btn.id = 'micBtnOnb'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
+    btn.onclick = () => startListening('onboardingInput');
+    onbForm.insertBefore(btn, onbForm.firstChild);
+  }
+
+  // دکمه میکروفون برای داشبورد
+  const dashForm = document.querySelector('.chat-input-area');
+  if (dashForm && !document.getElementById('micBtnDash')) {
+    const btn = document.createElement('button');
+    btn.id = 'micBtnDash'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
+    btn.onclick = () => startListening('dashChatInput');
+    dashForm.insertBefore(btn, dashForm.firstChild);
+  }
+}
+
 function startListening(inputId) {
   if (!recognition) {
-    alert("مرورگر شما از میکروفون پشتیبانی نمی‌کند. لطفاً از کروم استفاده کنید.");
+    alert("مرورگر شما از میکروفون پشتیبانی نمی‌کند. لطفاً از مرورگر Chrome استفاده کنید.");
     return;
   }
   recognition.lang = LANGUAGES[appState.lang].code;
   recognition.start();
-  const micBtn = document.getElementById("micBtnOnb") || document.getElementById("micBtnDash");
+  const micBtn = document.getElementById(inputId === "onboardingInput" ? "micBtnOnb" : "micBtnDash");
   if(micBtn) micBtn.classList.add("recording");
   
   recognition.onresult = function(event) {
     const transcript = event.results[0][0].transcript;
     document.getElementById(inputId).value = transcript;
     if(micBtn) micBtn.classList.remove("recording");
-    // ارسال خودکار
+    // ارسال خودکار بعد از صحبت
     if(inputId === "onboardingInput") handleOnboardingInput();
     else if(inputId === "dashChatInput") handleDashboardChat();
   };
@@ -741,61 +805,67 @@ function startListening(inputId) {
   recognition.onend = function() { if(micBtn) micBtn.classList.remove("recording"); };
 }
 
-// ---------------- 3. ONBOARDING LOGIC (ثبت‌نام) ----------------
+// ---------------- 3. ONBOARDING (LOGIN) LOGIC ----------------
 const onbChat = document.getElementById("onboardingChat");
 const onbInput = document.getElementById("onboardingInput");
 
-// دکمه‌های انتخاب زبان را در صفحه ثبت‌نام می‌سازیم
 function renderLangSelector() {
-  const wrapper = document.createElement("div");
-  wrapper.style.cssText = "display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; justify-content:center;";
+  const wrapper = document.getElementById("langSelector");
+  wrapper.innerHTML = "";
   Object.keys(LANGUAGES).forEach(key => {
     const btn = document.createElement("button");
-    btn.style.cssText = `padding:6px 14px; border-radius:20px; font-size:12px; border:1px solid var(--border-gold); background:${appState.lang === key ? 'var(--gold-3)' : 'transparent'}; color:${appState.lang === key ? '#000' : 'var(--gold-1)'};`;
+    btn.className = `lang-btn ${appState.lang === key ? 'active' : ''}`;
     btn.textContent = LANGUAGES[key].label;
     btn.onclick = () => {
       appState.lang = key;
-      renderLangSelector(); // رفرش
-      addMsg(onbChat, LANGUAGES[key].hello, "bot");
+      renderLangSelector();
+      // تغییر پیام خوش‌آمدگویی بر اساس زبان جدید
+      document.getElementById("initialGreeting").textContent = LANGUAGES[key].hello;
+      speak(LANGUAGES[key].hello);
     };
     wrapper.appendChild(btn);
   });
-  const robotWrap = document.querySelector(".robot-wrapper");
-  if(!document.getElementById("langWrapper")) {
-      wrapper.id = "langWrapper";
-      robotWrap.parentNode.insertBefore(wrapper, robotWrap.nextSibling);
-  }
 }
 
 function startOnboarding() {
+  injectMicButtons();
   renderLangSelector();
-  setTimeout(() => {
-    addMsg(onbChat, LANGUAGES[appState.lang].hello, "bot");
-    appState.onboardingStep = 1;
-  }, 500);
+  appState.onboardingStep = 1;
+  
+  // سلام اولیه
+  setTimeout(() => speak(LANGUAGES[appState.lang].hello), 1000);
 }
 
 function handleOnboardingInput() {
   const val = onbInput.value.trim();
   if (!val) return;
+  
   addMsg(onbChat, val, "user");
   onbInput.value = "";
 
   setTimeout(() => {
     if (appState.onboardingStep === 1) {
       appState.user.name = val;
-      addMsg(onbChat, `خوشبختم ${val} جان! فامیلیت چیه؟`, "bot");
+      const reply = `خوشبختم ${val} جان! فامیلیت چیه؟`;
+      addMsg(onbChat, reply, "bot");
+      speak(reply);
       appState.onboardingStep = 2;
     } else if (appState.onboardingStep === 2) {
       appState.user.last = val;
-      addMsg(onbChat, `ممنون. شماره موبایلت رو وارد کن (مثلاً 09123456789).`, "bot");
+      const reply = `ممنون. شماره موبایلت رو وارد کن (مثلاً 09123456789).`;
+      addMsg(onbChat, reply, "bot");
+      speak(reply);
       appState.onboardingStep = 3;
     } else if (appState.onboardingStep === 3) {
       if (val.length < 10) {
-        addMsg(onbChat, "شماره موبایل نامعتبره. دوباره وارد کن.", "bot");
+        const reply = "شماره موبایل نامعتبره. دوباره وارد کن.";
+        addMsg(onbChat, reply, "bot");
+        speak(reply);
       } else {
         appState.user.mobile = val;
-        addMsg(onbChat, "✅ ثبت‌نام شما با موفقیت انجام شد! در حال ورود به داشبورد...", "bot");
+        const reply = "✅ ثبت‌نام شما با موفقیت انجام شد! در حال ورود به داشبورد...";
+        addMsg(onbChat, reply, "bot");
+        speak(reply);
         appState.onboardingStep = 4;
         appState.user.isGuest = false;
         setTimeout(goToMainScreen, 1500);
@@ -807,13 +877,14 @@ function handleOnboardingInput() {
 document.getElementById("onboardingSend").addEventListener("click", handleOnboardingInput);
 onbInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleOnboardingInput(); });
 
+// ورود مهمان
 document.getElementById("btnGuest").addEventListener("click", () => {
   appState.user.isGuest = true;
   appState.user.name = "مهمان";
   goToMainScreen();
 });
 
-// ---------------- 4. MAIN SCREEN (داشبورد) ----------------
+// ---------------- 4. MAIN SCREEN (DASHBOARD) ----------------
 function goToMainScreen() {
   document.getElementById("onboardingScreen").classList.add("hidden");
   document.getElementById("mainScreen").classList.add("active");
@@ -849,7 +920,7 @@ function renderDashboard() {
   });
 }
 
-// ---------------- 5. CHAT & AI (تعامل دوطرفه) ----------------
+// ---------------- 5. HYBRID CHAT & AI ----------------
 const dashChatModal = document.getElementById("chatModal");
 const dashChatBox = document.getElementById("dashChatMessages");
 const dashInput = document.getElementById("dashChatInput");
@@ -860,7 +931,6 @@ function addMsg(box, text, role) {
   div.textContent = text;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
-  if (role === "bot") speak(text);
 }
 
 document.getElementById("fabChat").addEventListener("click", () => {
@@ -871,9 +941,9 @@ document.getElementById("closeChatModal").addEventListener("click", () => {
   dashChatModal.classList.remove("show");
 });
 
-// وقتی کاربر روی کارت شاخه کلیک می‌کند (Hybrid Mode)
+// اگر کاربر روی کارت‌های شاخه کلیک کرد (دستی)
 function openBranchInChat(branchTitle) {
-  appState.currentBranch = null; // ریست
+  appState.currentBranch = null; 
   appState.currentCategory = null;
   appState.currentForm = null;
   
@@ -884,11 +954,13 @@ function openBranchInChat(branchTitle) {
     const key = Object.keys(BRANCHES_DATA).find(k => BRANCHES_DATA[k].title === branchTitle);
     appState.currentBranch = key;
     const data = BRANCHES_DATA[key];
-    addMsg(dashChatBox, `عالیه! وارد بخش ${data.title} شدیم. چه کاری از این بخش می‌خوای انجام بدیم؟ (${data.categories.slice(0,3).join("، ")}...)`, "bot");
+    const reply = `عالیه! وارد بخش ${data.title} شدیم. چه کاری از این بخش می‌خوای انجام بدیم؟ (${data.categories.slice(0,3).join("، ")} و...)`;
+    addMsg(dashChatBox, reply, "bot");
+    speak(reply);
   }, 600);
 }
 
-// ارسال پیام توسط کاربر در داشبورد
+// ارسال پیام در داشبورد
 function handleDashboardChat() {
   const text = dashInput.value.trim();
   if (!text) return;
@@ -903,21 +975,27 @@ function handleDashboardChat() {
 document.getElementById("dashChatSend").addEventListener("click", handleDashboardChat);
 dashInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleDashboardChat(); });
 
-// موتور اصلی هوش مصنوعی (شبیه‌سازی)
+// مغز هوش مصنوعی (شبیه‌ساز)
 function processAILogic(text) {
+  const cleanText = normalizeDigits(text);
+
   // ۱. تشخیص شاخه
   if (!appState.currentBranch) {
     let found = null;
-    if (text.includes("کشاورزی") || text.includes("سم") || text.includes("پهپاد")) found = "iran_keshavarz";
-    else if (text.includes("ماشین") || text.includes("حمل") || text.includes("بار")) found = "iran_transport";
-    else if (text.includes("خانه") || text.includes("لوله") || text.includes("برق")) found = "iran_building";
+    if (cleanText.includes("کشاورزی") || cleanText.includes("سم") || cleanText.includes("پهپاد")) found = "iran_keshavarz";
+    else if (cleanText.includes("ماشین") || cleanText.includes("حمل") || cleanText.includes("بار")) found = "iran_transport";
+    else if (cleanText.includes("خانه") || cleanText.includes("لوله") || cleanText.includes("برق")) found = "iran_building";
     
     if (found) {
       appState.currentBranch = found;
       const data = BRANCHES_DATA[found];
-      addMsg(dashChatBox, `عالیه! وارد بخش ${data.title} شدیم. چه خدمتی می‌خوای؟ (${data.categories.join("، ")})`, "bot");
+      const reply = `عالیه! وارد بخش ${data.title} شدیم. چه خدمتی می‌خوای؟ (${data.categories.join("، ")})`;
+      addMsg(dashChatBox, reply, "bot");
+      speak(reply);
     } else {
-      addMsg(dashChatBox, "متوجه نشدم. لطفاً یکی از شاخه‌ها رو بگو (مثلاً کشاورزی، حمل‌ونقل) یا روی کارت‌های پایین کلیک کن.", "bot");
+      const reply = "متوجه نشدم. لطفاً یکی از شاخه‌ها رو بگو (مثلاً کشاورزی، حمل‌ونقل) یا روی کارت‌های پایین کلیک کن.";
+      addMsg(dashChatBox, reply, "bot");
+      speak(reply);
     }
     return;
   }
@@ -927,18 +1005,22 @@ function processAILogic(text) {
     const data = BRANCHES_DATA[appState.currentBranch];
     let foundIdx = -1;
     data.categories.forEach((cat, i) => {
-      if (text.includes(cat) || cat.includes(text)) foundIdx = i;
+      if (cleanText.includes(cat) || cat.includes(cleanText)) foundIdx = i;
     });
     // کیووردهای خاص
-    if (appState.currentBranch === "iran_keshavarz" && text.includes("سم")) foundIdx = 0;
-    if (appState.currentBranch === "iran_keshavarz" && text.includes("پهپاد")) foundIdx = 1;
+    if (appState.currentBranch === "iran_keshavarz" && cleanText.includes("سم")) foundIdx = 0;
+    if (appState.currentBranch === "iran_keshavarz" && cleanText.includes("پهپاد")) foundIdx = 1;
 
     if (foundIdx > -1) {
       appState.currentCategory = foundIdx;
-      addMsg(dashChatBox, `انتخاب خوبی کردی! فرم «${data.categories[foundIdx]}» رو برات باز می‌کنم. اطلاعات رو بگو تا پر کنم...`, "bot");
+      const reply = `انتخاب خوبی کردی! فرم «${data.categories[foundIdx]}» رو برات باز می‌کنم. اطلاعات رو بگو تا پر کنم...`;
+      addMsg(dashChatBox, reply, "bot");
+      speak(reply);
       renderForm(appState.currentBranch, foundIdx);
     } else {
-      addMsg(dashChatBox, `دسته‌های موجود در این بخش: ${data.categories.join("، ")}. کدوم رو می‌خوای؟`, "bot");
+      const reply = `دسته‌های موجود در این بخش: ${data.categories.join("، ")}. کدوم رو می‌خوای؟`;
+      addMsg(dashChatBox, reply, "bot");
+      speak(reply);
     }
     return;
   }
@@ -949,19 +1031,22 @@ function processAILogic(text) {
     let filled = false;
     
     // جستجوی عدد برای فیلدهای Number
-    const numMatch = text.match(/\d+/);
+    const numMatch = cleanText.match(/\d+/);
     if (numMatch) {
-      const numField = form.fields.find(f => f.type === "number" && !document.getElementById(`field-${f.id}`).value);
+      const numField = form.fields.find(f => f.type === "number" && document.getElementById(`field-${f.id}`) && !document.getElementById(`field-${f.id}`).value);
       if (numField) {
         document.getElementById(`field-${numField.id}`).value = numMatch[0];
-        addMsg(dashChatBox, `عدد ${numMatch[0]} رو توی فیلد «${numField.label}» ثبت کردم.`, "bot");
+        const reply = `عدد ${numMatch[0]} رو توی فیلد «${numField.label}» ثبت کردم.`;
+        addMsg(dashChatBox, reply, "bot");
+        speak(reply);
         filled = true;
       }
     }
     
-    // جستجوی کلمات برای فیلدهای Select یا Text
     if (!filled) {
-      addMsg(dashChatBox, "فرم برات بازه. می‌تونی خودت دستی پر کنی یا اگر فیلدی مونده بهم بگو تا پر کنم. در نهایت روی «ثبت نهایی» بزن.", "bot");
+      const reply = "فرم برات بازه. می‌تونی خودت دستی پر کنی یا اگر فیلدی مونده بهم بگو تا پر کنم. در نهایت روی «ثبت نهایی» بزن.";
+      addMsg(dashChatBox, reply, "bot");
+      speak(reply);
     }
   }
 }
@@ -998,20 +1083,20 @@ function renderForm(branchSlug, categoryIndex) {
   `;
 
   document.getElementById("formModal").classList.add("show");
-  
-  // بستن مودال چت تا کاربر فرم رو ببینه
-  dashChatModal.classList.remove("show");
+  dashChatModal.classList.remove("show"); // بستن چت تا کاربر فرم رو ببینه
 
-  // لیسنر ثبت فرم
+  // ثبت فرم
   document.getElementById("dynamicForm").addEventListener("submit", (e) => {
     e.preventDefault();
     document.getElementById("formModal").classList.remove("show");
     
-    // بستن فرم و پیام موفقیت
+    // باز کردن مجدد چت و پیام موفقیت
     dashChatModal.classList.add("show");
-    addMsg(dashChatBox, "✅ درخواست شما با موفقیت ثبت شد! کد پیگیری: KAR-" + Math.floor(Math.random()*90000+10000), "bot");
+    const reply = "✅ درخواست شما با موفقیت ثبت شد! کد پیگیری: KAR-" + Math.floor(Math.random()*90000+10000);
+    addMsg(dashChatBox, reply, "bot");
+    speak(reply);
     
-    // ریست کردن حالت برای سفارش بعدی
+    // ریست برای سفارش بعدی
     appState.currentBranch = null;
     appState.currentCategory = null;
     appState.currentForm = null;
@@ -1021,14 +1106,15 @@ function renderForm(branchSlug, categoryIndex) {
 document.getElementById("closeFormModal").addEventListener("click", () => {
   document.getElementById("formModal").classList.remove("show");
   dashChatModal.classList.add("show");
-  addMsg(dashChatBox, "فرم رو بستم. اگر خواستی دوباره پر کنیم بگو.", "bot");
+  const reply = "فرم رو بستم. اگر خواستی دوباره پر کنیم بگو.";
+  addMsg(dashChatBox, reply, "bot");
+  speak(reply);
 });
 
 // ---------------- INITIALIZATION ----------------
 document.addEventListener("DOMContentLoaded", () => {
-  // شروع صفحه ثبت‌نام
   startOnboarding();
-  console.log("%c[KAR AI] Luxury AI System Ready ✨", "color: #F5D76E; font-size: 16px; font-weight: bold;");
+  console.log("%c[KAR AI] Pro System Ready ✨", "color: #F5D76E; font-size: 16px; font-weight: bold;");
 });
 </script>
 </body>
