@@ -279,26 +279,15 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
 "use strict";
 
 /* =========================================
-   IRAN AI V10.0 — PART 2: DATA
-   Central Assistant + 12 Branches (68 Forms)
+   IRAN AI V11.5 — FULL DATA + PROACTIVE AI LOGIC
 ========================================= */
 
+// ---------------- 1. FULL DATABASE (68 FORMS) ----------------
 const CENTRAL_ASSISTANT = {
-  id: "central",
-  name: "دستیار Iran AI",
-  avatar: "◈",
-  greeting: "سلام! من دستیار هوش مصنوعی Iran AI هستم. می‌توانم در انتخاب شاخه مناسب، نحوه ثبت درخواست، کیف پول و همکاری به‌عنوان همکار راهنمایی‌تان کنم. چه کمکی می‌توانم بکنم؟",
-  systemPrompt: `تو دستیار مرکزی هوش مصنوعی پلتفرم Iran AI هستی.
-پلتفرم Iran AI یک اکوسیستم جامع خدمات هوشمند با ۱۲ شاخه تخصصی است. یک حساب کاربری و یک کیف پول مشترک دارد.
-شاخه‌ها: کشاورزی، حمل‌ونقل، ساختمان، آموزش، سلامت، آگهی، حسابداری، مشاوره قضایی، گردشگری، پرداخت، مکانیک و تولید.
-وظایف تو: راهنمایی کاربر برای انتخاب شاخه، توضیح نحوه ثبت درخواست، هدایت به دستیار تخصصی شاخه.
-محدودیت‌ها: هرگز قیمت دقیق اعلام نکن، ادعای انجام خدمت نکن، اطلاعات شخصی درخواست نکن.`,
-  suggestions: [
-    { label: "چطور درخواست ثبت کنم؟", answer: "برای ثبت درخواست ۳ گام ساده: ۱) شاخه موردنظر را انتخاب کنید. ۲) دسته خدمت را انتخاب کنید تا فرم باز شود. ۳) فرم را پر کنید و ثبت کنید." },
-    { label: "چه شاخه‌ای مناسب من است؟", answer: "بستگی به نیاز شما دارد. ما ۱۲ شاخه داریم: کشاورزی، حمل‌ونقل، ساختمان، آموزش، سلامت، آگهی، حسابداری، حقوقی، گردشگری، بانک، مکانیک و تولید. اگر بگویید دنبال چه هستید، دقیق‌تر راهنمایی می‌کنم." },
-    { label: "کیف پول چطور کار می‌کند؟", answer: "Iran AI یک کیف پول مشترک بین همه شاخه‌ها دارد. شارژ از درگاه مجاز، بدون تاریخ انقضا، و قابل انتقال بین کاربران است." },
-    { label: "چطور همکار شوم؟", answer: "از دکمه «همکاری با ما» در هدر درخواست دهید. تیم Iran AI پس از بررسی، مدارک را تأیید و پروفایل شما را فعال می‌کند." }
-  ]
+  id: "central", name: "دستیار Iran AI", avatar: "◈",
+  greeting: "سلام! من دستیار هوش مصنوعی Iran AI هستم. چه کمکی می‌توانم بکنم؟",
+  systemPrompt: `تو دستیار مرکزی هوش مصنوعی Iran AI هستی.`,
+  suggestions: []
 };
 
 const BRANCHES_DATA = {
@@ -306,9 +295,10 @@ const BRANCHES_DATA = {
     slug: "iran_keshavarz", title: "ایران کشاورز", icon: "🚜",
     shortDescription: "خدمات و راهکارهای تخصصی کشاورزی",
     description: "از سم‌پاشی و خدمات پهپادی گرفته تا اجاره ماشین‌آلات، تأمین نهاده، آبیاری و مشاوره مزرعه.",
-    categories: ["سم‌پاشی و محلول‌پاشی", "خدمات پهپادی", "ماشین‌آلات و ادوات", "اجاره تجهیزات", "نهاده و بذر", "آبیاری", "مشاوره مزرعه", "خرید و فروش محصول"],
+    categories: ["سم‌پاشی (پهپادی/تراکتوری)", "ادوات کشاورزی و ماشین‌آلات", "اجاره تجهیزات", "نهاده و بذر", "آبیاری", "مشاوره مزرعه", "خرید و فروش محصول"],
     formsByCategoryIndex: {
       0: { title: "درخواست سم‌پاشی", intro: "مشخصات مزرعه و نوع آفت را وارد کنید.", fields: [
+        { id: "method", label: "روش سم‌پاشی", type: "select", required: true, options: ["پهپادی (هوایی)", "تراکتوری (زمینی)", "دستی"] },
         { id: "area", label: "مساحت زمین (هکتار)", type: "number", required: true, min: 0.1, max: 5000, step: 0.1 },
         { id: "crop", label: "نوع محصول", type: "text", required: true, minLength: 2, maxLength: 60 },
         { id: "growth", label: "مرحله رشد", type: "select", required: true, options: ["کاشت", "داشت", "برداشت"] },
@@ -317,72 +307,54 @@ const BRANCHES_DATA = {
         { id: "when", label: "تاریخ موردنظر", type: "date", required: true, minDate: new Date().toISOString().slice(0, 10) },
         { id: "notes", label: "توضیحات تکمیلی", type: "textarea", maxLength: 500 }
       ]},
-      1: { title: "درخواست خدمات پهپادی", intro: "مناسب مزارع بزرگ یا زمین‌های صعب‌الوصول.", fields: [
-        { id: "area", label: "مساحت (هکتار)", type: "number", required: true, min: 1, max: 5000, step: 0.5 },
-        { id: "operationType", label: "نوع عملیات", type: "select", required: true, options: ["سم‌پاشی", "کودپاشی", "تصویربرداری", "نقشه‌برداری"] },
-        { id: "crop", label: "نوع محصول", type: "text", required: true, maxLength: 60 },
-        { id: "location", label: "موقعیت", type: "text", required: true },
-        { id: "when", label: "تاریخ", type: "date", required: true },
-        { id: "notes", label: "توضیحات", type: "textarea" }
-      ]},
-      2: { title: "ماشین‌آلات و ادوات", intro: "تعمیر یا تأمین قطعات.", fields: [
-        { id: "machineType", label: "نوع ماشین", type: "select", required: true, options: ["تراکتور", "کمباین", "سم‌پاش", "خرمن‌کوب", "ادوات", "سایر"] },
-        { id: "serviceType", label: "نوع خدمت", type: "select", required: true, options: ["تعمیر", "سرویس", "قطعه", "مشاوره"] },
-        { id: "problem", label: "شرح مشکل", type: "textarea", required: true, minLength: 20 },
+      1: { title: "ادوات کشاورزی و ماشین‌آلات", intro: "تعمیر، نگهداری یا تأمین قطعات.", fields: [
+        { id: "machineType", label: "نوع ماشین/ادوات", type: "select", required: true, options: ["تراکتور", "کمباین", "سم‌پاش تراکتوری", "خرمن‌کوب", "ادوات خاک‌ورزی", "سایر"] },
+        { id: "serviceType", label: "نوع خدمت", type: "select", required: true, options: ["تعمیر", "سرویس دوره‌ای", "تأمین قطعه", "مشاوره"] },
+        { id: "problem", label: "شرح مشکل", type: "textarea", required: true, minLength: 20, maxLength: 500 },
         { id: "location", label: "محل ماشین", type: "text", required: true },
-        { id: "when", label: "زمان", type: "date" }
+        { id: "when", label: "زمان موردنظر", type: "date" }
       ]},
-      3: { title: "اجاره تجهیزات", intro: "اجاره تراکتور، کمباین و ادوات.", fields: [
+      2: { title: "اجاره تجهیزات", intro: "اجاره تراکتور، کمباین و ادوات.", fields: [
         { id: "equipment", label: "نوع تجهیز", type: "select", required: true, options: ["تراکتور", "کمباین", "ادوات", "سم‌پاش", "خرمن‌کوب"] },
-        { id: "duration", label: "مدت (روز)", type: "number", required: true, min: 1, max: 180 },
-        { id: "startDate", label: "تاریخ شروع", type: "date", required: true },
+        { id: "duration", label: "مدت اجاره (روز)", type: "number", required: true, min: 1, max: 180, step: 1 },
+        { id: "startDate", label: "تاریخ شروع", type: "date", required: true, minDate: new Date().toISOString().slice(0, 10) },
         { id: "location", label: "محل استفاده", type: "text", required: true },
         { id: "notes", label: "توضیحات", type: "textarea" }
       ]},
-      4: { title: "نهاده و بذر", intro: "خرید کود، سم و بذر گواهی‌شده.", fields: [
-        { id: "inputType", label: "نوع نهاده", type: "select", required: true, options: ["کود", "سم", "بذر", "اصلاح‌کننده"] },
-        { id: "productName", label: "نام محصول", type: "text", required: true },
-        { id: "quantity", label: "مقدار", type: "number", required: true, min: 1 },
+      3: { title: "نهاده و بذر", intro: "خرید کود، سم، بذر گواهی‌شده.", fields: [
+        { id: "inputType", label: "نوع نهاده", type: "select", required: true, options: ["کود", "سم", "بذر", "اصلاح‌کننده خاک"] },
+        { id: "productName", label: "نام محصول", type: "text", required: true, maxLength: 100 },
+        { id: "quantity", label: "مقدار (کیلوگرم/لیتر)", type: "number", required: true, min: 1, max: 100000 },
         { id: "deliveryDate", label: "تاریخ تحویل", type: "date" },
         { id: "location", label: "محل تحویل", type: "text", required: true }
       ]},
-      5: { title: "خدمات آبیاری", intro: "طراحی، نصب یا تعمیر سیستم آبیاری.", fields: [
+      4: { title: "خدمات آبیاری", intro: "طراحی، نصب یا تعمیر سیستم آبیاری.", fields: [
         { id: "irrigationType", label: "نوع آبیاری", type: "select", required: true, options: ["قطره‌ای", "بارانی", "غرقابی", "میکرو"] },
-        { id: "serviceType", label: "خدمت", type: "select", required: true, options: ["طراحی", "نصب", "تعمیر", "بازرسی"] },
-        { id: "area", label: "مساحت (هکتار)", type: "number", required: true, min: 0.1 },
-        { id: "location", label: "موقعیت", type: "text", required: true }
+        { id: "serviceType", label: "نوع خدمت", type: "select", required: true, options: ["طراحی", "نصب", "تعمیر", "بازرسی"] },
+        { id: "area", label: "مساحت (هکتار)", type: "number", required: true, min: 0.1, max: 5000, step: 0.1 },
+        { id: "location", label: "موقعیت زمین", type: "text", required: true }
       ]},
-      6: { title: "مشاوره مزرعه", intro: "انتخاب محصول، کاشت و آبیاری.", fields: [
-        { id: "topic", label: "موضوع", type: "select", required: true, options: ["انتخاب محصول", "برنامه کاشت", "مدیریت آبیاری", "برداشت", "آفات"] },
-        { id: "area", label: "مساحت (هکتار)", type: "number", required: true },
-        { id: "currentCrop", label: "محصول فعلی", type: "text" },
-        { id: "description", label: "شرح وضعیت", type: "textarea", required: true, minLength: 30 }
+      5: { title: "مشاوره مزرعه", intro: "انتخاب محصول، برنامه کاشت، آبیاری.", fields: [
+        { id: "topic", label: "موضوع مشاوره", type: "select", required: true, options: ["انتخاب محصول", "برنامه کاشت", "مدیریت آبیاری", "برنامه برداشت", "مدیریت آفات"] },
+        { id: "area", label: "مساحت زمین (هکتار)", type: "number", required: true, min: 0.1, max: 5000 },
+        { id: "currentCrop", label: "محصول فعلی", type: "text", maxLength: 60 },
+        { id: "description", label: "شرح وضعیت و هدف", type: "textarea", required: true, minLength: 30 }
       ]},
-      7: { title: "خرید / فروش محصول", intro: "معاملات عمده محصولات کشاورزی.", fields: [
-        { id: "dealType", label: "معامله", type: "select", required: true, options: ["خرید", "فروش"] },
-        { id: "product", label: "نام محصول", type: "text", required: true },
-        { id: "quantity", label: "مقدار (تن)", type: "number", required: true, min: 0.1 },
+      6: { title: "خرید / فروش محصول", intro: "معاملات عمده محصولات کشاورزی.", fields: [
+        { id: "dealType", label: "نوع معامله", type: "select", required: true, options: ["خرید", "فروش"] },
+        { id: "product", label: "نام محصول", type: "text", required: true, maxLength: 60 },
+        { id: "quantity", label: "مقدار (تن)", type: "number", required: true, min: 0.1, max: 10000, step: 0.1 },
         { id: "harvestDate", label: "تاریخ تحویل", type: "date" },
         { id: "location", label: "محل تحویل", type: "text", required: true }
       ]}
     },
-    assistant: {
-      name: "دستیار ایران کشاورز", avatar: "🚜",
-      greeting: "سلام! من دستیار تخصصی ایران کشاورز هستم. در مورد سم‌پاشی، خدمات پهپادی، ماشین‌آلات و مشاوره مزرعه راهنمایی می‌کنم.",
-      systemPrompt: `تو دستیار تخصصی ایران کشاورز هستی. هرگز توصیه گیاه‌پزشکی یا قیمت نده.`,
-      suggestions: [
-        { label: "سم‌پاشی می‌خواهم", answer: "دسته «سم‌پاشی و محلول‌پاشی» را انتخاب کنید. مساحت، محصول و نوع آفت را وارد کنید." },
-        { label: "اجاره پهپاد", answer: "دسته «خدمات پهپادی» مناسب مزارع ۵ هکتار به بالا است." },
-        { label: "مشاوره کاشت", answer: "دسته «مشاوره مزرعه» با کارشناسان مجرب." }
-      ]
-    },
-    fullPagePath: "/b/iran_keshavarz", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران کشاورز", avatar: "🚜", greeting: "سلام! من دستیار تخصصی ایران کشاورز هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_transport: {
     slug: "iran_transport", title: "ایران حمل‌ونقل", icon: "🚚",
     shortDescription: "درخواست حمل بار و جابه‌جایی",
-    description: "از حمل بار و وانت و کامیون گرفته تا اسباب‌کشی، حمل ماشین‌آلات و حمل بین‌شهری.",
+    description: "از حمل بار و وانت و کامیون گرفته تا اسباب‌کشی و حمل بین‌شهری.",
     categories: ["حمل بار", "وانت و کامیون", "حمل ماشین‌آلات", "بار برگشتی", "اسباب‌کشی", "حمل بین‌شهری", "پیگیری بار"],
     formsByCategoryIndex: {
       0: { title: "حمل بار عمومی", intro: "مبدأ، مقصد و مشخصات بار.", fields: [
@@ -390,18 +362,16 @@ const BRANCHES_DATA = {
         { id: "destination", label: "مقصد", type: "text", required: true, minLength: 3 },
         { id: "loadType", label: "نوع بار", type: "select", required: true, options: ["عمومی", "فسادپذیر", "شکستنی", "خطرناک"] },
         { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1, max: 30000 },
-        { id: "when", label: "تاریخ حمل", type: "date", minDate: new Date().toISOString().slice(0, 10) },
-        { id: "notes", label: "توضیحات", type: "textarea" }
+        { id: "when", label: "تاریخ حمل", type: "date", minDate: new Date().toISOString().slice(0, 10) }
       ]},
       1: { title: "وانت و کامیون", intro: "انتخاب خودرو متناسب با بار.", fields: [
         { id: "vehicleType", label: "نوع خودرو", type: "select", required: true, options: ["وانت (تا ۵۰۰kg)", "کامیون کوچک (تا ۳ تن)", "کامیون متوسط (تا ۸ تن)", "کامیون سنگین"] },
         { id: "origin", label: "مبدأ", type: "text", required: true },
         { id: "destination", label: "مقصد", type: "text", required: true },
-        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1 },
-        { id: "when", label: "تاریخ", type: "date" }
+        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1 }
       ]},
       2: { title: "حمل ماشین‌آلات", intro: "تراکتور، لودر و بیل مکانیکی.", fields: [
-        { id: "machineType", label: "نوع ماشین", type: "select", required: true, options: ["تراکتور", "لودر", "بیل مکانیکی", "جرثقیل", "غلتک", "سایر"] },
+        { id: "machineType", label: "نوع ماشین", type: "select", required: true, options: ["تراکتور", "لودر", "بیل مکانیکی", "جرثقیل", "غلتک"] },
         { id: "weight", label: "وزن (تن)", type: "number", required: true, min: 1, max: 60 },
         { id: "origin", label: "مبدأ", type: "text", required: true },
         { id: "destination", label: "مقصد", type: "text", required: true }
@@ -414,8 +384,6 @@ const BRANCHES_DATA = {
       4: { title: "اسباب‌کشی", intro: "اسباب‌کشی منزل یا دفتر.", fields: [
         { id: "origin", label: "آدرس مبدأ", type: "text", required: true },
         { id: "destination", label: "آدرس مقصد", type: "text", required: true },
-        { id: "originFloor", label: "طبقه مبدأ", type: "number", min: 0 },
-        { id: "destFloor", label: "طبقه مقصد", type: "number", min: 0 },
         { id: "volume", label: "حجم وسایل", type: "select", required: true, options: ["کم", "متوسط", "زیاد"] }
       ]},
       5: { title: "حمل بین‌شهری", intro: "حمل بار بین شهرها.", fields: [
@@ -429,17 +397,7 @@ const BRANCHES_DATA = {
         { id: "mobile", label: "شماره موبایل", type: "tel", required: true, pattern: "^09\\d{9}$" }
       ]}
     },
-    assistant: {
-      name: "دستیار ایران حمل‌ونقل", avatar: "🚚",
-      greeting: "سلام! من دستیار تخصصی ایران حمل‌ونقل هستم. برای حمل بار، وانت، کامیون و پیگیری بار راهنمایی می‌کنم.",
-      systemPrompt: `تو دستیار تخصصی ایران حمل‌ونقل هستی.`,
-      suggestions: [
-        { label: "حمل بار", answer: "دسته «حمل بار» را انتخاب کنید. مبدأ و مقصد را مشخص کنید." },
-        { label: "وانت یا کامیون؟", answer: "بستگی به وزن دارد. تا ۵۰۰ کیلو وانت، بالاتر کامیون." },
-        { label: "پیگیری بار", answer: "دسته «پیگیری بار» با شماره پیگیری." }
-      ]
-    },
-    fullPagePath: "/b/iran_transport", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران حمل‌ونقل", avatar: "🚚", greeting: "سلام! من دستیار ایران حمل‌ونقل هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_building: {
@@ -488,17 +446,7 @@ const BRANCHES_DATA = {
         { id: "quantity", label: "مقدار", type: "text", required: true }
       ]}
     },
-    assistant: {
-      name: "دستیار ایران ساختمان", avatar: "🏗️",
-      greeting: "سلام! من دستیار تخصصی ایران ساختمان هستم. برای ساخت، تعمیر و تأسیسات راهنمایی می‌کنم.",
-      systemPrompt: `تو دستیار تخصصی ایران ساختمان هستی.`,
-      suggestions: [
-        { label: "تعمیر لوله", answer: "دسته «لوله‌کشی» را انتخاب کنید." },
-        { label: "بازسازی", answer: "دسته «ساخت و بازسازی»." },
-        { label: "برق‌کشی", answer: "دسته «برق»." }
-      ]
-    },
-    fullPagePath: "/b/iran_building", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران ساختمان", avatar: "🏗️", greeting: "سلام! من دستیار ایران ساختمان هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_education: {
@@ -529,16 +477,7 @@ const BRANCHES_DATA = {
         { id: "examName", label: "نام آزمون", type: "text", required: true }
       ]}
     },
-    assistant: {
-      name: "دستیار ایران آموزش", avatar: "🎓",
-      greeting: "سلام! من دستیار تخصصی ایران آموزش هستم.",
-      systemPrompt: `تو دستیار تخصصی ایران آموزش هستی.`,
-      suggestions: [
-        { label: "کلاس زبان", answer: "دسته «زبان»." },
-        { label: "دوره فنی", answer: "دسته «مهارت فنی»." }
-      ]
-    },
-    fullPagePath: "/b/iran_education", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران آموزش", avatar: "🎓", greeting: "سلام! من دستیار ایران آموزش هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_health: {
@@ -552,13 +491,7 @@ const BRANCHES_DATA = {
       2: { title: "مراقبت", intro: "پرستار در منزل.", fields: [{ id: "careType", label: "نوع", type: "select", options: ["پرستار", "مراقب"] }] },
       3: { title: "نوبت", intro: "رزرو نوبت.", fields: [{ id: "specialty", label: "تخصص", type: "text", required: true }] }
     },
-    assistant: {
-      name: "دستیار ایران سلامت", avatar: "⚕️",
-      greeting: "سلام! من دستیار تخصصی ایران سلامت هستم. من جایگزین پزشک نیستم.",
-      systemPrompt: `تو دستیار تخصصی ایران سلامت هستی. در موارد اورژانسی ارجاع به ۱۱۵ بده.`,
-      suggestions: [{ label: "رزرو نوبت", answer: "دسته «رزرو نوبت»." }]
-    },
-    fullPagePath: "/b/iran_health", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران سلامت", avatar: "⚕️", greeting: "سلام! من دستیار ایران سلامت هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_ads: {
@@ -574,13 +507,7 @@ const BRANCHES_DATA = {
       4: { title: "استخدام", intro: "فرصت شغلی.", fields: [{ id: "jobTitle", label: "عنوان شغلی", type: "text", required: true }] },
       5: { title: "گزارش", intro: "گزارش آگهی.", fields: [{ id: "reason", label: "دلیل", type: "select", options: ["کلاهبرداری", "محتوای ممنوع"] }] }
     },
-    assistant: {
-      name: "دستیار ایران آگهی", avatar: "📢",
-      greeting: "سلام! من دستیار ایران آگهی هستم.",
-      systemPrompt: `تو دستیار ایران آگهی هستی.`,
-      suggestions: [{ label: "آگهی مؤثر", answer: "عنوان دقیق و عکس واضح." }]
-    },
-    fullPagePath: "/b/iran_ads", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران آگهی", avatar: "📢", greeting: "سلام! من دستیار ایران آگهی هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_accounting: {
@@ -595,13 +522,7 @@ const BRANCHES_DATA = {
       3: { title: "حقوق", intro: "محاسبه حقوق.", fields: [{ id: "employeeCount", label: "تعداد کارمندان", type: "number" }] },
       4: { title: "مشاوره", intro: "مشاوره مالی.", fields: [{ id: "topic", label: "موضوع", type: "text", required: true }] }
     },
-    assistant: {
-      name: "دستیار ایران حسابدار", avatar: "💼",
-      greeting: "سلام! من دستیار ایران حسابدار هستم. جایگزین حسابدار رسمی نیستم.",
-      systemPrompt: `تو دستیار ایران حسابدار هستی.`,
-      suggestions: [{ label: "حسابداری ماهانه", answer: "دسته «حسابداری»." }]
-    },
-    fullPagePath: "/b/iran_accounting", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران حسابدار", avatar: "💼", greeting: "سلام! من دستیار ایران حسابدار هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_legal: {
@@ -614,13 +535,7 @@ const BRANCHES_DATA = {
       1: { title: "معرفی وکیل", intro: "وکیل واجد صلاحیت.", fields: [{ id: "city", label: "شهر", type: "text" }] },
       2: { title: "پیگیری", intro: "پیگیری پرونده.", fields: [{ id: "caseNumber", label: "شماره پرونده", type: "text" }] }
     },
-    assistant: {
-      name: "دستیار ایران مشاوره قضایی", avatar: "⚖️",
-      greeting: "سلام! من دستیار ایران مشاوره قضایی هستم. نتیجه قضایی تضمین نمی‌شود.",
-      systemPrompt: `تو دستیار ایران مشاوره قضایی هستی.`,
-      suggestions: [{ label: "مشاوره قرارداد", answer: "دسته «مشاوره حقوقی»." }]
-    },
-    fullPagePath: "/b/iran_legal", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران مشاوره قضایی", avatar: "⚖️", greeting: "سلام! من دستیار ایران مشاوره قضایی هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_tourism: {
@@ -636,13 +551,7 @@ const BRANCHES_DATA = {
       4: { title: "تجربه محلی", intro: "آشپزی و صنایع دستی.", fields: [{ id: "experienceType", label: "نوع", type: "text" }] },
       5: { title: "برنامه سفر", intro: "طراحی مسیر.", fields: [{ id: "destination", label: "مقصد", type: "text" }] }
     },
-    assistant: {
-      name: "دستیار ایران گردشگر", avatar: "✈️",
-      greeting: "سلام! من دستیار ایران گردشگر هستم.",
-      systemPrompt: `تو دستیار ایران گردشگر هستی.`,
-      suggestions: [{ label: "اقامت شیراز", answer: "دسته «اقامت»." }]
-    },
-    fullPagePath: "/b/iran_tourism", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران گردشگر", avatar: "✈️", greeting: "سلام! من دستیار ایران گردشگر هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_bank: {
@@ -656,13 +565,7 @@ const BRANCHES_DATA = {
       2: { title: "هزینه خدمات", intro: "عوارض.", fields: [{ id: "serviceType", label: "نوع", type: "text" }] },
       3: { title: "PSP", intro: "سایر خدمات.", fields: [{ id: "serviceType", label: "خدمت", type: "text" }] }
     },
-    assistant: {
-      name: "دستیار ایران بانک", avatar: "💳",
-      greeting: "سلام! من دستیار ایران بانک هستم. Iran AI بانک نیست.",
-      systemPrompt: `تو دستیار ایران بانک هستی. اطلاعات کارت نگیر.`,
-      suggestions: [{ label: "پرداخت قبض", answer: "دسته «پرداخت قبض»." }]
-    },
-    fullPagePath: "/b/iran_bank", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران بانک", avatar: "💳", greeting: "سلام! من دستیار ایران بانک هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_mechanic: {
@@ -677,13 +580,7 @@ const BRANCHES_DATA = {
       3: { title: "امداد", intro: "فوری.", fields: [{ id: "emergencyType", label: "مشکل", type: "select", options: ["باتری", "لاستیک"] }] },
       4: { title: "صنعتی", intro: "تجهیزات.", fields: [{ id: "equipmentType", label: "تجهیز", type: "text" }] }
     },
-    assistant: {
-      name: "دستیار ایران مکانیک", avatar: "🔧",
-      greeting: "سلام! من دستیار ایران مکانیک هستم.",
-      systemPrompt: `تو دستیار ایران مکانیک هستی.`,
-      suggestions: [{ label: "خودرو روشن نمی‌شود", answer: "دسته «تعمیر خودرو»." }]
-    },
-    fullPagePath: "/b/iran_mechanic", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران مکانیک", avatar: "🔧", greeting: "سلام! من دستیار ایران مکانیک هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_production: {
@@ -699,34 +596,15 @@ const BRANCHES_DATA = {
       4: { title: "ظرفیت", intro: "استعلام.", fields: [{ id: "productName", label: "محصول", type: "text" }] },
       5: { title: "همکاری", intro: "مشترک.", fields: [{ id: "partnershipType", label: "نوع", type: "text" }] }
     },
-    assistant: {
-      name: "دستیار ایران تولید", avatar: "🏭",
-      greeting: "سلام! من دستیار ایران تولید هستم.",
-      systemPrompt: `تو دستیار ایران تولید هستی.`,
-      suggestions: [{ label: "سفارش عمده", answer: "دسته «سفارش عمده»." }]
-    },
-    fullPagePath: "/b/iran_production", origin: "spec-v1.0-§3.3"
+    assistant: { name: "دستیار ایران تولید", avatar: "🏭", greeting: "سلام! من دستیار ایران تولید هستم.", systemPrompt: ``, suggestions: [] }
   }
 };
-</script>
 
-<script>
-"use strict";
 
-/* =========================================
-   IRAN AI V10.0 — PART 3 (AI LOGIC)
-========================================= */
-
-// ---------------- 1. STATE & CONFIG ----------------
+// ---------------- 2. STATE & LOGIC (PROACTIVE AI) ----------------
 const appState = {
-  lang: "fa", // fa, ar, az, ku, en
-  isMuted: false,
-  user: { name: "مهمان", isGuest: true },
-  onboardingStep: 0, // 0: Start, 1: Name, 2: Last, 3: Mobile, 4: Done
-  chatMode: "idle", 
-  currentBranch: null,
-  currentCategory: null,
-  currentForm: null
+  lang: "fa", isMuted: false, user: { name: "مهمان", isGuest: true },
+  onboardingStep: 0, currentBranch: null, currentCategory: null, currentForm: null
 };
 
 const LANGUAGES = {
@@ -737,65 +615,49 @@ const LANGUAGES = {
   en: { code: "en-US", label: "English", hello: "Hello! I am the Iran AI assistant. What is your first name?" }
 };
 
-// تبدیل اعداد فارسی به انگلیسی برای تشخیص درست هوش مصنوعی
 function normalizeDigits(str) {
   if (typeof str !== "string") return "";
-  return str
-    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
-    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+  return str.replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
 }
 
-// ---------------- 2. VOICE ENGINE (STT & TTS) ----------------
+// --- Voice Engine ---
 const synth = window.speechSynthesis;
 let recognition = null;
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
-  recognition.continuous = false;
-  recognition.interimResults = false;
+  recognition.continuous = false; recognition.interimResults = false;
 }
 
 function speak(text) {
   if (appState.isMuted || !synth) return;
-  synth.cancel(); // قطع صدای قبلی
+  synth.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = LANGUAGES[appState.lang].code;
   utterance.rate = 1.0;
   synth.speak(utterance);
 }
 
-// دکمه میکروفون را به صورت داینامیک به کادرهای ورود اضافه می‌کنیم
 function injectMicButtons() {
   const style = document.createElement('style');
-  style.innerHTML = `.mic-btn { background: #F8F9FA; border: 1px solid var(--border-color); color: var(--text-muted); width: 46px; height: 46px; border-radius: 12px; font-size: 18px; display: grid; place-items: center; transition: 0.3s; cursor: pointer; } .mic-btn.recording { background: #ff5252; color: white; border-color: #ff5252; animation: pulse 1.5s infinite; } @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,82,82,0.5); } 70% { box-shadow: 0 0 0 10px rgba(255,82,82,0); } 100% { box-shadow: 0 0 0 0 rgba(255,82,82,0); } }`;
+  style.innerHTML = `.mic-btn { background: #F8F9FA; border: 1px solid var(--border-color); color: var(--text-muted); width: 46px; height: 46px; border-radius: 12px; font-size: 18px; display: grid; place-items: center; transition: 0.3s; cursor: pointer; } .mic-btn.recording { background: #ff5252; color: white; border-color: #ff5252; animation: pulse 1.5s infinite; }`;
   document.head.appendChild(style);
 
-  // دکمه میکروفون برای ثبت‌نام
   const onbForm = document.querySelector('.auth-form .input-group');
   if (onbForm && !document.getElementById('micBtnOnb')) {
-    const btn = document.createElement('button');
-    btn.id = 'micBtnOnb'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
-    btn.onclick = () => startListening('onboardingInput');
-    onbForm.insertBefore(btn, onbForm.firstChild);
+    const btn = document.createElement('button'); btn.id = 'micBtnOnb'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
+    btn.onclick = () => startListening('onboardingInput'); onbForm.insertBefore(btn, onbForm.firstChild);
   }
-
-  // دکمه میکروفون برای داشبورد
   const dashForm = document.querySelector('.chat-input-area');
   if (dashForm && !document.getElementById('micBtnDash')) {
-    const btn = document.createElement('button');
-    btn.id = 'micBtnDash'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
-    btn.onclick = () => startListening('dashChatInput');
-    dashForm.insertBefore(btn, dashForm.firstChild);
+    const btn = document.createElement('button'); btn.id = 'micBtnDash'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
+    btn.onclick = () => startListening('dashChatInput'); dashForm.insertBefore(btn, dashForm.firstChild);
   }
 }
 
 function startListening(inputId) {
-  if (!recognition) {
-    alert("مرورگر شما از میکروفون پشتیبانی نمی‌کند. لطفاً از مرورگر Chrome استفاده کنید.");
-    return;
-  }
-  recognition.lang = LANGUAGES[appState.lang].code;
-  recognition.start();
+  if (!recognition) return alert("مرورگر شما از میکروفون پشتیبانی نمی‌کند.");
+  recognition.lang = LANGUAGES[appState.lang].code; recognition.start();
   const micBtn = document.getElementById(inputId === "onboardingInput" ? "micBtnOnb" : "micBtnDash");
   if(micBtn) micBtn.classList.add("recording");
   
@@ -803,80 +665,47 @@ function startListening(inputId) {
     const transcript = event.results[0][0].transcript;
     document.getElementById(inputId).value = transcript;
     if(micBtn) micBtn.classList.remove("recording");
-    // ارسال خودکار بعد از صحبت
-    if(inputId === "onboardingInput") handleOnboardingInput();
-    else if(inputId === "dashChatInput") handleDashboardChat();
+    if(inputId === "onboardingInput") handleOnboardingInput(); else handleDashboardChat();
   };
-
   recognition.onerror = function() { if(micBtn) micBtn.classList.remove("recording"); };
   recognition.onend = function() { if(micBtn) micBtn.classList.remove("recording"); };
 }
 
-// ---------------- 3. ONBOARDING (LOGIN) LOGIC ----------------
+// --- Onboarding ---
 const onbChat = document.getElementById("onboardingChat");
 const onbInput = document.getElementById("onboardingInput");
 
 function renderLangSelector() {
-  const wrapper = document.getElementById("langSelector");
-  wrapper.innerHTML = "";
+  const wrapper = document.getElementById("langSelector"); wrapper.innerHTML = "";
   Object.keys(LANGUAGES).forEach(key => {
     const btn = document.createElement("button");
-    btn.className = `lang-btn ${appState.lang === key ? 'active' : ''}`;
-    btn.textContent = LANGUAGES[key].label;
+    btn.className = `lang-btn ${appState.lang === key ? 'active' : ''}`; btn.textContent = LANGUAGES[key].label;
     btn.style.cssText = `padding: 6px 14px; border-radius: 20px; font-size: 12px; border: 1px solid var(--border-color); background:${appState.lang === key ? 'var(--gold-main)' : '#fff'}; color:${appState.lang === key ? '#fff' : 'var(--text-muted)'}; cursor:pointer;`;
-    btn.onclick = () => {
-      appState.lang = key;
-      renderLangSelector();
-      // تغییر پیام خوش‌آمدگویی بر اساس زبان جدید
-      document.getElementById("initialGreeting").textContent = LANGUAGES[key].hello;
-      speak(LANGUAGES[key].hello);
-    };
+    btn.onclick = () => { appState.lang = key; renderLangSelector(); document.getElementById("initialGreeting").textContent = LANGUAGES[key].hello; speak(LANGUAGES[key].hello); };
     wrapper.appendChild(btn);
   });
 }
 
 function startOnboarding() {
-  injectMicButtons();
-  renderLangSelector();
-  appState.onboardingStep = 1;
-  
-  // سلام اولیه
+  injectMicButtons(); renderLangSelector(); appState.onboardingStep = 1;
   setTimeout(() => speak(LANGUAGES[appState.lang].hello), 1000);
 }
 
 function handleOnboardingInput() {
-  const val = onbInput.value.trim();
-  if (!val) return;
-  
-  addMsg(onbChat, val, "user");
-  onbInput.value = "";
-
+  const val = onbInput.value.trim(); if (!val) return;
+  addMsg(onbChat, val, "user"); onbInput.value = "";
   setTimeout(() => {
     if (appState.onboardingStep === 1) {
-      appState.user.name = val;
-      const reply = `خوشبختم ${val} جان! فامیلیت چیه؟`;
-      addMsg(onbChat, reply, "bot");
-      speak(reply);
-      appState.onboardingStep = 2;
+      appState.user.name = val; const reply = `خوشبختم ${val} جان! فامیلیت چیه؟`;
+      addMsg(onbChat, reply, "bot"); speak(reply); appState.onboardingStep = 2;
     } else if (appState.onboardingStep === 2) {
-      appState.user.last = val;
-      const reply = `ممنون. شماره موبایلت رو وارد کن (مثلاً 09123456789).`;
-      addMsg(onbChat, reply, "bot");
-      speak(reply);
-      appState.onboardingStep = 3;
+      appState.user.last = val; const reply = `ممنون. شماره موبایلت رو وارد کن.`;
+      addMsg(onbChat, reply, "bot"); speak(reply); appState.onboardingStep = 3;
     } else if (appState.onboardingStep === 3) {
-      if (val.length < 10) {
-        const reply = "شماره موبایل نامعتبره. دوباره وارد کن.";
-        addMsg(onbChat, reply, "bot");
-        speak(reply);
-      } else {
-        appState.user.mobile = val;
-        const reply = "✅ ثبت‌نام شما با موفقیت انجام شد! در حال ورود به داشبورد...";
-        addMsg(onbChat, reply, "bot");
-        speak(reply);
-        appState.onboardingStep = 4;
-        appState.user.isGuest = false;
-        setTimeout(goToMainScreen, 1500);
+      if (val.length < 10) { addMsg(onbChat, "شماره موبایل نامعتبره.", "bot"); speak("شماره موبایل نامعتبره"); } 
+      else {
+        appState.user.mobile = val; const reply = "✅ ثبت‌نام انجام شد! در حال ورود...";
+        addMsg(onbChat, reply, "bot"); speak(reply); appState.onboardingStep = 4; appState.user.isGuest = false; setTimeout(goToMainScreen, 1500);
       }
     }
   }, 600);
@@ -884,194 +713,91 @@ function handleOnboardingInput() {
 
 document.getElementById("onboardingSend").addEventListener("click", handleOnboardingInput);
 onbInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleOnboardingInput(); });
+document.getElementById("btnGuest").addEventListener("click", () => { appState.user.isGuest = true; appState.user.name = "مهمان"; goToMainScreen(); });
 
-// ورود مهمان
-document.getElementById("btnGuest").addEventListener("click", () => {
-  appState.user.isGuest = true;
-  appState.user.name = "مهمان";
-  goToMainScreen();
-});
-
-// ---------------- 4. MAIN SCREEN (DASHBOARD) ----------------
+// --- Main Screen ---
 function goToMainScreen() {
   document.getElementById("onboardingScreen").classList.add("hidden");
   document.getElementById("mainScreen").classList.add("active");
   document.getElementById("userLabel").textContent = appState.user.isGuest ? "مهمان" : appState.user.name + " عزیز";
-  
   renderDashboard();
 }
 
 function renderDashboard() {
-  // نوار افقی (Featured)
   const featured = ["iran_keshavarz", "iran_transport", "iran_legal", "iran_education"];
-  const strip = document.getElementById("featuredStrip");
-  strip.innerHTML = "";
+  const strip = document.getElementById("featuredStrip"); strip.innerHTML = "";
   featured.forEach(key => {
     const d = BRANCHES_DATA[key];
-    const div = document.createElement("div");
-    div.className = "featured-item";
+    const div = document.createElement("div"); div.className = "featured-item";
     div.innerHTML = `<div class="icon">${d.icon}</div><span>${d.title}</span>`;
-    div.onclick = () => openBranchInChat(d.title);
-    strip.appendChild(div);
+    div.onclick = () => openBranchInChat(d.title, key); strip.appendChild(div);
   });
 
-  // گرید ۱۲ آیکون
-  const grid = document.getElementById("branchGrid");
-  grid.innerHTML = "";
+  const grid = document.getElementById("branchGrid"); grid.innerHTML = "";
   Object.keys(BRANCHES_DATA).forEach(key => {
     const d = BRANCHES_DATA[key];
-    const card = document.createElement("div");
-    card.className = "branch-card";
+    const card = document.createElement("div"); card.className = "branch-card";
     card.innerHTML = `<div class="icon-circle"><span>${d.icon}</span></div><span class="branch-name">${d.title}</span>`;
-    card.onclick = () => openBranchInChat(d.title);
-    grid.appendChild(card);
+    card.onclick = () => openBranchInChat(d.title, key); grid.appendChild(card);
   });
 }
 
-// ---------------- 5. HYBRID CHAT & AI ----------------
+// --- Hybrid Chat & Form ---
 const dashChatModal = document.getElementById("chatModal");
+const formModal = document.getElementById("formModal");
 const dashChatBox = document.getElementById("dashChatMessages");
 const dashInput = document.getElementById("dashChatInput");
 
 function addMsg(box, text, role) {
-  const div = document.createElement("div");
-  div.className = `msg ${role}`;
-  div.textContent = text;
-  box.appendChild(div);
-  box.scrollTop = box.scrollHeight;
+  const div = document.createElement("div"); div.className = `msg ${role}`; div.textContent = text;
+  box.appendChild(div); box.scrollTop = box.scrollHeight;
 }
 
-document.getElementById("fabChat").addEventListener("click", () => {
-  dashChatModal.classList.add("show");
-  dashInput.focus();
-});
-document.getElementById("closeChatModal").addEventListener("click", () => {
-  dashChatModal.classList.remove("show");
-});
+document.getElementById("fabChat").addEventListener("click", () => { dashChatModal.classList.add("show"); dashInput.focus(); });
+document.getElementById("closeChatModal").addEventListener("click", () => { dashChatModal.classList.remove("show"); });
 
-// اگر کاربر روی کارت‌های شاخه کلیک کرد (دستی)
-function openBranchInChat(branchTitle) {
-  appState.currentBranch = null; 
-  appState.currentCategory = null;
-  appState.currentForm = null;
-  
-  dashChatModal.classList.add("show");
-  addMsg(dashChatBox, `کاربر روی ${branchTitle} کلیک کرد.`, "user");
-  
-  setTimeout(() => {
-    const key = Object.keys(BRANCHES_DATA).find(k => BRANCHES_DATA[k].title === branchTitle);
-    appState.currentBranch = key;
-    const data = BRANCHES_DATA[key];
-    const reply = `عالیه! وارد بخش ${data.title} شدیم. چه کاری از این بخش می‌خوای انجام بدیم؟ (${data.categories.slice(0,3).join("، ")} و...)`;
-    addMsg(dashChatBox, reply, "bot");
-    speak(reply);
-  }, 600);
-}
-
-// ارسال پیام در داشبورد
-function handleDashboardChat() {
-  const text = dashInput.value.trim();
-  if (!text) return;
-  addMsg(dashChatBox, text, "user");
-  dashInput.value = "";
-  
-  setTimeout(() => {
-    processAILogic(text);
-  }, 800);
-}
-
-document.getElementById("dashChatSend").addEventListener("click", handleDashboardChat);
-dashInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleDashboardChat(); });
-
-// مغز هوش مصنوعی (شبیه‌ساز)
-function processAILogic(text) {
-  const cleanText = normalizeDigits(text);
-
-  // ۱. تشخیص شاخه
-  if (!appState.currentBranch) {
-    let found = null;
-    if (cleanText.includes("کشاورزی") || cleanText.includes("سم") || cleanText.includes("پهپاد")) found = "iran_keshavarz";
-    else if (cleanText.includes("ماشین") || cleanText.includes("حمل") || cleanText.includes("بار")) found = "iran_transport";
-    else if (cleanText.includes("خانه") || cleanText.includes("لوله") || cleanText.includes("برق")) found = "iran_building";
-    
-    if (found) {
-      appState.currentBranch = found;
-      const data = BRANCHES_DATA[found];
-      const reply = `عالیه! وارد بخش ${data.title} شدیم. چه خدمتی می‌خوای؟ (${data.categories.join("، ")})`;
-      addMsg(dashChatBox, reply, "bot");
-      speak(reply);
-    } else {
-      const reply = "متوجه نشدم. لطفاً یکی از شاخه‌ها رو بگو (مثلاً کشاورزی، حمل‌ونقل) یا روی کارت‌های پایین کلیک کن.";
-      addMsg(dashChatBox, reply, "bot");
-      speak(reply);
-    }
-    return;
+// تابعی که ربات را همیشه فعال نگه می‌دارد
+function proactiveAI(text, openChat = true) {
+  if (openChat) {
+    dashChatModal.classList.add("show");
   }
-
-  // ۲. تشخیص دسته
-  if (appState.currentBranch && appState.currentCategory === null) {
-    const data = BRANCHES_DATA[appState.currentBranch];
-    let foundIdx = -1;
-    data.categories.forEach((cat, i) => {
-      if (cleanText.includes(cat) || cat.includes(cleanText)) foundIdx = i;
-    });
-    // کیووردهای خاص
-    if (appState.currentBranch === "iran_keshavarz" && cleanText.includes("سم")) foundIdx = 0;
-    if (appState.currentBranch === "iran_keshavarz" && cleanText.includes("پهپاد")) foundIdx = 1;
-
-    if (foundIdx > -1) {
-      appState.currentCategory = foundIdx;
-      const reply = `انتخاب خوبی کردی! فرم «${data.categories[foundIdx]}» رو برات باز می‌کنم. اطلاعات رو بگو تا پر کنم...`;
-      addMsg(dashChatBox, reply, "bot");
-      speak(reply);
-      renderForm(appState.currentBranch, foundIdx);
-    } else {
-      const reply = `دسته‌های موجود در این بخش: ${data.categories.join("، ")}. کدوم رو می‌خوای؟`;
-      addMsg(dashChatBox, reply, "bot");
-      speak(reply);
-    }
-    return;
-  }
-
-  // ۳. اگر فرم باز است، تلاش برای پر کردن فیلدها با حرف کاربر
-  if (appState.currentForm) {
-    const form = appState.currentForm;
-    let filled = false;
-    
-    // جستجوی عدد برای فیلدهای Number
-    const numMatch = cleanText.match(/\d+/);
-    if (numMatch) {
-      const numField = form.fields.find(f => f.type === "number" && document.getElementById(`field-${f.id}`) && !document.getElementById(`field-${f.id}`).value);
-      if (numField) {
-        document.getElementById(`field-${numField.id}`).value = numMatch[0];
-        const reply = `عدد ${numMatch[0]} رو توی فیلد «${numField.label}» ثبت کردم.`;
-        addMsg(dashChatBox, reply, "bot");
-        speak(reply);
-        filled = true;
-      }
-    }
-    
-    if (!filled) {
-      const reply = "فرم برات بازه. می‌تونی خودت دستی پر کنی یا اگر فیلدی مونده بهم بگو تا پر کنم. در نهایت روی «ثبت نهایی» بزن.";
-      addMsg(dashChatBox, reply, "bot");
-      speak(reply);
-    }
-  }
+  addMsg(dashChatBox, text, "bot");
+  speak(text);
 }
 
-// ---------------- 6. DYNAMIC FORM ENGINE ----------------
+// کلیک روی کارت‌های شاخه
+function openBranchInChat(branchTitle, branchKey) {
+  appState.currentBranch = branchKey; appState.currentCategory = null; appState.currentForm = null;
+  const data = BRANCHES_DATA[branchKey];
+  
+  // باز کردن فرم با لیست دسته‌ها
+  document.getElementById("formTitle").textContent = data.title + " - انتخاب دسته";
+  const content = document.getElementById("formContent");
+  let buttonsHtml = data.categories.map((cat, idx) => 
+    `<button style="background:#fff; color:var(--text-dark); border:1px solid var(--border-color); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; cursor:pointer; text-align:right; margin-bottom:8px;" onclick="selectCategoryFromModal('${branchKey}', ${idx})">${cat}</button>`
+  ).join("");
+  content.innerHTML = `<p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">لطفاً دسته مورد نظر خود را انتخاب کنید:</p><div style="display:flex; flex-direction:column;">${buttonsHtml}</div>`;
+  
+  formModal.classList.add("show");
+  injectBotButtonToForm();
+  
+  // ربات فعال می‌شود و توضیح می‌دهد
+  proactiveAI(`شما وارد بخش ${data.title} شدید. لطفاً از پنجره باز شده، دسته مورد نظر خود را انتخاب کنید تا فرم مربوطه را برایتان باز کنم.`, false);
+}
+
+window.selectCategoryFromModal = function(branchSlug, categoryIndex) {
+  renderForm(branchSlug, categoryIndex);
+};
+
 function renderForm(branchSlug, categoryIndex) {
   const data = BRANCHES_DATA[branchSlug];
   const form = data.formsByCategoryIndex[categoryIndex];
   if (!form) return;
 
-  appState.currentBranch = branchSlug;
-  appState.currentCategory = categoryIndex;
-  appState.currentForm = form;
+  appState.currentBranch = branchSlug; appState.currentCategory = categoryIndex; appState.currentForm = form;
 
   document.getElementById("formTitle").textContent = form.title;
   const content = document.getElementById("formContent");
-  
   content.innerHTML = `
     <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">${form.intro}</p>
     <form id="dynamicForm">
@@ -1080,8 +806,7 @@ function renderForm(branchSlug, categoryIndex) {
           <label>${f.label} ${f.required ? '<span style="color:red">*</span>' : ''}</label>
           ${f.type === "select" 
             ? `<select id="field-${f.id}" ${f.required ? "required" : ""}><option value="">انتخاب کنید</option>${f.options.map(o => `<option value="${o}">${o}</option>`).join("")}</select>`
-            : f.type === "textarea"
-              ? `<textarea id="field-${f.id}" rows="3" ${f.required ? "required" : ""}></textarea>`
+            : f.type === "textarea" ? `<textarea id="field-${f.id}" rows="3" ${f.required ? "required" : ""}></textarea>`
               : `<input id="field-${f.id}" type="${f.type}" ${f.required ? "required" : ""} min="${f.min || ""}" max="${f.max || ""}">`
           }
         </div>
@@ -1089,40 +814,83 @@ function renderForm(branchSlug, categoryIndex) {
       <button type="submit" class="btn-submit">ثبت نهایی درخواست</button>
     </form>
   `;
+  formModal.classList.add("show");
 
-  document.getElementById("formModal").classList.add("show");
-  dashChatModal.classList.remove("show"); // بستن چت تا کاربر فرم رو ببینه
+  // ربات فعال می‌شود و فرم را توضیح می‌دهد
+  proactiveAI(`فرم ${form.title} باز شد. لطفاً اطلاعات را وارد کنید یا اگر می‌خواهید من برایتان پر کنم، به من بگویید.`, false);
 
-  // ثبت فرم
   document.getElementById("dynamicForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    document.getElementById("formModal").classList.remove("show");
-    
-    // باز کردن مجدد چت و پیام موفقیت
-    dashChatModal.classList.add("show");
+    e.preventDefault(); formModal.classList.remove("show");
     const reply = "✅ درخواست شما با موفقیت ثبت شد! کد پیگیری: IR-" + Math.floor(Math.random()*90000+10000);
-    addMsg(dashChatBox, reply, "bot");
-    speak(reply);
-    
-    // ریست برای سفارش بعدی
-    appState.currentBranch = null;
-    appState.currentCategory = null;
-    appState.currentForm = null;
+    proactiveAI(reply, true);
+    appState.currentBranch = null; appState.currentCategory = null; appState.currentForm = null;
   });
 }
 
 document.getElementById("closeFormModal").addEventListener("click", () => {
-  document.getElementById("formModal").classList.remove("show");
-  dashChatModal.classList.add("show");
-  const reply = "فرم رو بستم. اگر خواستی دوباره پر کنیم بگو.";
-  addMsg(dashChatBox, reply, "bot");
-  speak(reply);
+  formModal.classList.remove("show");
+  addMsg(dashChatBox, "فرم رو بستم. اگر خواستی دوباره پر کنیم بگو.", "bot"); speak("فرم بسته شد");
 });
+
+function injectBotButtonToForm() {
+  const formHeader = document.querySelector("#formModal .modal-header");
+  let existingBtn = document.getElementById("botInFormBtn");
+  if (existingBtn) existingBtn.remove();
+  
+  const botBtn = document.createElement("button");
+  botBtn.id = "botInFormBtn"; botBtn.innerHTML = "🤖 دستیار";
+  botBtn.style = "background:var(--gold-main); color:#fff; border:none; border-radius:8px; padding:6px 12px; font-size:12px; cursor:pointer; margin-left:auto;";
+  botBtn.onclick = () => {
+    formModal.classList.remove("show"); dashChatModal.classList.add("show");
+    const reply = "من اینجام! اگر می‌خوای فیلدی رو پر کنم، فقط بگو (مثلاً: مساحت ۱۰ هکتار).";
+    addMsg(dashChatBox, reply, "bot"); speak(reply);
+  };
+  formHeader.insertBefore(botBtn, document.getElementById("closeFormModal"));
+}
+
+// --- Chat Logic ---
+function handleDashboardChat() {
+  const text = dashInput.value.trim(); if (!text) return;
+  addMsg(dashChatBox, text, "user"); dashInput.value = "";
+  setTimeout(() => { processAILogic(text); }, 800);
+}
+
+document.getElementById("dashChatSend").addEventListener("click", handleDashboardChat);
+dashInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleDashboardChat(); });
+
+function processAILogic(text) {
+  const cleanText = normalizeDigits(text);
+  if (appState.currentForm) {
+    const numMatch = cleanText.match(/\d+/);
+    if (numMatch) {
+      const numField = appState.currentForm.fields.find(f => f.type === "number" && document.getElementById(`field-${f.id}`) && !document.getElementById(`field-${f.id}`).value);
+      if (numField) {
+        document.getElementById(`field-${numField.id}`).value = numMatch[0];
+        const reply = `عدد ${numMatch[0]} رو توی فیلد «${numField.label}» ثبت کردم. حالا می‌تونی برگردی به فرم.`;
+        addMsg(dashChatBox, reply, "bot"); speak(reply); return;
+      }
+    }
+    const reply = "فرم برات بازه. می‌تونی خودت پر کنی یا اگر فیلدی مونده بهم بگو تا پر کنم.";
+    addMsg(dashChatBox, reply, "bot"); speak(reply); return;
+  }
+
+  if (!appState.currentBranch) {
+    let found = null;
+    if (cleanText.includes("کشاورزی") || cleanText.includes("سم") || cleanText.includes("پهپاد")) found = "iran_keshavarz";
+    else if (cleanText.includes("ماشین") || cleanText.includes("حمل") || cleanText.includes("بار")) found = "iran_transport";
+    if (found) {
+      openBranchInChat(BRANCHES_DATA[found].title, found);
+    } else {
+      const reply = "متوجه نشدم. لطفاً یکی از شاخه‌ها رو بگو یا روی کارت‌های پایین کلیک کن.";
+      addMsg(dashChatBox, reply, "bot"); speak(reply);
+    }
+    return;
+  }
+}
 
 // ---------------- INITIALIZATION ----------------
 document.addEventListener("DOMContentLoaded", () => {
   startOnboarding();
-  console.log("%c[Iran AI] System Ready ✨", "color: #D4AF37; font-size: 16px; font-weight: bold;");
 });
 </script>
 </body>
