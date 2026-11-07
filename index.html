@@ -7,29 +7,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-body: #F8FAFC;
-  --bg-card: #FFFFFF;
-  --gold-main: #D4AF37;
-  --gold-light: #F5D76E;
-  --text-dark: #0F172A;
-  --text-muted: #475569;
-  --border-color: rgba(0,0,0,0.05);
-  --radius: 20px;
+  --bg-body: #F8FAFC; --bg-card: #FFFFFF; --gold-main: #D4AF37;
+  --text-dark: #0F172A; --text-muted: #475569; --border-color: rgba(0,0,0,0.08);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; }
 body { background: var(--bg-body); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 button { cursor: pointer; border: none; outline: none; background: transparent; transition: 0.3s; }
 
-/* ================= صفحه ۱: ورود ================= */
-#onboardingScreen {
-  position: absolute; inset: 0; z-index: 100; background: var(--bg-body);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
-}
+/* ================= صفحه ورود ================= */
+#onboardingScreen { position: absolute; inset: 0; z-index: 100; background: var(--bg-body); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
 #onboardingScreen.hidden { opacity: 0; pointer-events: none; }
 
 .robot-wrapper { position: relative; margin-bottom: 20px; animation: float 4s ease-in-out infinite; display: flex; flex-direction: column; align-items: center; }
-.ask-text { font-size: 22px; font-weight: 900; color: var(--text-dark); margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.ask-text { font-size: 22px; font-weight: 900; color: var(--text-dark); margin-bottom: 10px; }
 .robot-svg { width: 120px; height: 120px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15)); }
 @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .eye-glow { animation: blink 4s infinite; transform-origin: center; }
@@ -37,8 +27,7 @@ button { cursor: pointer; border: none; outline: none; background: transparent; 
 .waving-arm { transform-origin: 145px 105px; animation: wave 1.5s ease-in-out infinite alternate; }
 @keyframes wave { 0% { transform: rotate(0deg); } 100% { transform: rotate(-15deg); } }
 
-/* کادر چت و فرم */
-.auth-container { width: 100%; max-width: 400px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; }
+.auth-container { width: 100%; max-width: 400px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; }
 .chat-messages { padding: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 200px; overflow-y: auto; }
 .msg { max-width: 90%; padding: 12px 16px; border-radius: 16px; font-size: 13px; line-height: 1.6; }
 .msg.bot { align-self: flex-start; background: #F1F5F9; color: var(--text-dark); border-bottom-right-radius: 4px; }
@@ -47,183 +36,109 @@ button { cursor: pointer; border: none; outline: none; background: transparent; 
 .auth-form { padding: 16px; border-top: 1px solid var(--border-color); background: #FAFAFA; }
 .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
 .input-group input { flex: 1; background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; color: var(--text-dark); font-size: 13px; outline: none; }
-.input-group input:focus { border-color: var(--gold-main); }
-.btn-primary { width: 100%; background: linear-gradient(135deg, var(--gold-main), #B8860B); color: #fff; font-weight: 900; padding: 14px; border-radius: 12px; font-size: 14px; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); }
-.btn-primary:hover { transform: translateY(-2px); }
-
+.btn-primary { width: 100%; background: linear-gradient(135deg, var(--gold-main), #B8860B); color: #fff; font-weight: 900; padding: 14px; border-radius: 12px; font-size: 14px; }
 .auth-links { display: flex; justify-content: space-between; width: 100%; max-width: 400px; margin-top: 15px; }
 .auth-link { font-size: 12px; color: var(--text-muted); text-decoration: underline; cursor: pointer; }
-.auth-link:hover { color: var(--gold-main); }
 
 /* ================= صفحه ۲: داشبورد ================= */
-#mainScreen {
-  position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10;
-  transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); background: var(--bg-body);
-}
+#mainScreen { position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10; transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); background: var(--bg-body); }
 #mainScreen.active { transform: translateY(0); }
-
 header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #fff; z-index: 20; }
 .logo { font-weight: 900; color: var(--text-dark); font-size: 18px; letter-spacing: 1px; }
 .logo span { color: var(--gold-main); }
 #userLabel { font-size: 12px; color: var(--gold-main); background: #FFFBEB; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
 
-/* ربات داشبورد */
 .dash-robot-area { display: flex; flex-direction: column; align-items: center; padding: 5px 0; }
 .dash-robot-area .ask-text { font-size: 14px; margin-bottom: 0px; color: var(--text-muted); }
 .dash-robot-area .robot-svg { width: 70px; height: 70px; }
 
-/* نوار افقی (کاملا مشخص و جدا شده) */
 .featured-section { background: #fff; padding: 12px 16px; margin: 10px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
-.featured-title { font-size: 12px; font-weight: 800; color: var(--gold-main); margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+.featured-title { font-size: 12px; font-weight: 800; color: var(--gold-main); margin-bottom: 8px; }
 .featured-strip-wrapper { overflow-x: auto; scrollbar-width: none; }
 .featured-strip-wrapper::-webkit-scrollbar { display: none; }
 .featured-strip { display: flex; gap: 10px; width: max-content; }
-.featured-item {
-  background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 12px; padding: 8px 14px;
-  display: flex; flex-direction: row; align-items: center; gap: 6px;
-  cursor: pointer; transition: 0.3s;
-}
-.featured-item:hover { border-color: var(--gold-main); background: #fff; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.15); }
+.featured-item { background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 12px; padding: 8px 14px; display: flex; flex-direction: row; align-items: center; gap: 6px; cursor: pointer; }
 .featured-item .icon { font-size: 20px; }
 .featured-item span { font-size: 11px; font-weight: 700; color: var(--text-dark); }
 
-/* گرید ۱۲ آیکون (بدون هیچ مربعی، فقط دایره 3D) */
-.branches-grid {
-  flex: 1; padding: 10px 16px 80px; 
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 8px; align-content: start;
-  overflow-y: auto;
-}
+.branches-grid { flex: 1; padding: 10px 16px 80px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 8px; align-content: start; overflow-y: auto; }
 @media(max-width: 380px) { .branches-grid { grid-template-columns: repeat(3, 1fr); } }
-
-.branch-card {
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px;
-  cursor: pointer; background: transparent; border: none; box-shadow: none;
-  padding: 5px 0; transition: 0.3s;
-}
+.branch-card { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px; cursor: pointer; background: transparent; border: none; padding: 5px 0; transition: 0.3s; }
 .branch-card:hover { transform: translateY(-5px); }
-
-/* دایره 3D واقعی */
-.icon-circle {
-  width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center;
-  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
-  box-shadow: 
-    4px 4px 10px rgba(0,0,0,0.1), 
-    -4px -4px 10px rgba(255,255,255,1),
-    inset 2px 2px 5px rgba(255,255,255,0.8),
-    inset -2px -2px 5px rgba(0,0,0,0.05);
-  border: 1px solid rgba(255,255,255,0.5);
-  font-size: 30px;
-  transition: 0.3s;
-}
-.branch-card:hover .icon-circle {
-  box-shadow: 
-    6px 6px 15px rgba(212, 175, 55, 0.25), 
-    -4px -4px 10px rgba(255,255,255,1),
-    inset 2px 2px 5px rgba(255,255,255,0.8),
-    inset -2px -2px 5px rgba(0,0,0,0.05);
-}
+.icon-circle { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%); box-shadow: 4px 4px 10px rgba(0,0,0,0.1), -4px -4px 10px rgba(255,255,255,1), inset 2px 2px 5px rgba(255,255,255,0.8), inset -2px -2px 5px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.5); font-size: 30px; }
 .icon-circle span { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
+.branch-card .branch-name { font-size: 11px; font-weight: 800; color: #1E293B; text-align: center; }
 
-/* متن زیر آیکون (سرمه‌ای شیک) */
-.branch-card .branch-name { font-size: 11px; font-weight: 800; color: #1E293B; text-align: center; line-height: 1.3; }
+/* ================= سیستم اپلیکیشن‌های تمام‌صفحه ================= */
+#appScreen { position: absolute; inset: 0; z-index: 500; background: var(--bg-body); transform: translateX(100%); transition: transform 0.3s ease-out; display: flex; flex-direction: column; }
+#appScreen.active { transform: translateX(0); }
+.app-header { background: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.02); z-index: 10; }
+.btn-back { width: 34px; height: 34px; border-radius: 50%; background: #F1F5F9; display: grid; place-items: center; font-size: 18px; color: var(--text-dark); }
+.app-title { font-size: 16px; font-weight: 900; flex: 1; }
+.app-content { flex: 1; overflow-y: auto; padding: 20px; position: relative; }
 
-/* دکمه شناور چت */
-.fab-chat {
-  position: fixed; bottom: 20px; left: 20px; z-index: 50;
-  width: 56px; height: 56px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--gold-main), #B8860B);
-  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4); display: grid; place-items: center; font-size: 24px; color: #fff;
-  border: 2px solid #fff;
-}
-.fab-chat:hover { transform: scale(1.1); }
+/* --- استایل‌های اختصاصی اسنپ (سفر) --- */
+.snapp-map { width: 100%; height: 250px; background: #E5E9EC url('https://www.transparenttextures.com/patterns/cubes.png'); border-radius: 16px; position: relative; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--border-color); }
+.snapp-marker { position: absolute; width: 14px; height: 14px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+.snapp-marker.origin { background: #10B981; top: 70%; left: 20%; }
+.snapp-marker.dest { background: #EF4444; top: 30%; left: 80%; }
+.snapp-line { position: absolute; top: 30%; left: 20%; width: 60%; height: 40%; border-bottom: 3px dashed #9CA3AF; border-left: 3px dashed #9CA3AF; transform: skewY(-15deg); }
+.snapp-inputs { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.snapp-input-row { display: flex; align-items: center; gap: 10px; background: #F8FAFC; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); }
+.snapp-input-row input { flex: 1; background: transparent; border: none; outline: none; font-size: 14px; font-weight: bold; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.green { background: #10B981; } .dot.red { background: #EF4444; }
+.car-options { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; }
+.car-card { min-width: 100px; background: #fff; border: 2px solid var(--border-color); border-radius: 16px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+.car-card.active { border-color: var(--gold-main); background: #FFFBEB; }
+.car-card .c-icon { font-size: 36px; }
+.car-card span { font-size: 13px; font-weight: bold; }
+.btn-action { background: #10B981; color: #fff; font-weight: 900; padding: 16px; border-radius: 14px; width: 100%; font-size: 16px; margin-top: 10px; }
 
-/* مودال‌ها */
-.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: none; align-items: flex-end; justify-content: center; z-index: 200; }
-.modal-backdrop.show { display: flex; }
-.modal { background: var(--bg-card); width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 20px; max-height: 90vh; display: flex; flex-direction: column; animation: slideUp 0.3s ease-out; }
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.modal-title { font-size: 16px; font-weight: 900; color: var(--text-dark); }
-.close-btn { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #F1F5F9; color: var(--text-muted); font-size: 20px; }
-.close-btn:hover { background: #E2E8F0; color: #ef4444; }
-.form-content { overflow-y: auto; padding-bottom: 20px; }
-.field { margin-bottom: 12px; }
-.field label { display: block; font-size: 12px; color: var(--text-dark); margin-bottom: 6px; font-weight: bold; }
-.field input, .field select, .field textarea { width: 100%; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; color: var(--text-dark); font-size: 13px; outline: none; }
-.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold-main); background: #fff; }
-.btn-submit { width: 100%; padding: 14px; border-radius: 12px; background: linear-gradient(135deg, var(--gold-main), #B8860B); color: #fff; font-weight: 900; font-size: 14px; margin-top: 10px; }
+/* --- استایل‌های اختصاصی دیوار (آگهی) --- */
+.divar-header { background: #fff; padding: 16px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 10; }
+.divar-categories { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+.divar-cat { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #F8FAFC; padding: 12px; border-radius: 12px; min-width: 80px; cursor: pointer; }
+.divar-cat span { font-size: 20px; }
+.divar-cat small { font-size: 11px; font-weight: bold; }
+.ad-feed { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.ad-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; display: flex; gap: 12px; cursor: pointer; }
+.ad-img { width: 90px; height: 90px; background: #E2E8F0; border-radius: 10px; display: grid; place-items: center; font-size: 30px; }
+.ad-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.ad-info h4 { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+.ad-info p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.ad-info strong { font-size: 13px; color: var(--gold-main); }
+.fab-add { position: absolute; bottom: 24px; left: 24px; width: 60px; height: 60px; border-radius: 50%; background: #EF4444; color: #fff; font-size: 30px; display: grid; place-items: center; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); }
 
-.chat-box-dash { height: 65vh; border-radius: 24px 24px 0 0; width: 100%; max-width: 500px; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-card); }
-.chat-box-dash .chat-messages { flex: 1; max-height: none; }
+/* --- استایل‌های مکانیک --- */
+.mechanic-issue-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.mechanic-issue-card:hover { border-color: var(--gold-main); }
+.payment-box { background: #F0FDF4; border: 2px solid #10B981; border-radius: 16px; padding: 20px; text-align: center; margin-top: 20px; }
+.payment-box h3 { color: #10B981; margin-bottom: 10px; font-size: 16px; }
+.payment-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+.btn-pay-green { background: #10B981; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; width: 100%; font-size: 15px; cursor: pointer; }
+
+/* دکمه چت شناور در همه صفحات */
+.fab-chat { position: fixed; bottom: 20px; left: 20px; z-index: 50; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-main), #B8860B); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4); display: grid; place-items: center; font-size: 24px; color: #fff; border: 2px solid #fff; }
+
+/* مودال چت */
+#chatModal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: none; align-items: flex-end; justify-content: center; z-index: 1000; }
+#chatModal.show { display: flex; }
+.chat-box { height: 60vh; border-radius: 24px 24px 0 0; width: 100%; max-width: 500px; display: flex; flex-direction: column; overflow: hidden; background: var(--bg-card); }
+.chat-header { padding: 16px; background: #fff; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
 .chat-input-area { display: flex; padding: 12px; background: #FAFAFA; border-top: 1px solid var(--border-color); gap: 8px; }
-.chat-input-area input { flex: 1; background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; color: var(--text-dark); font-size: 13px; outline: none; }
+.chat-input-area input { flex: 1; background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; font-size: 13px; outline: none; }
 .chat-input-area button { background: var(--gold-main); color: #fff; width: 44px; height: 44px; border-radius: 10px; font-weight: 900; font-size: 18px; }
 </style>
 </head>
 <body>
 
-<!-- ================= صفحه ورود ================= -->
+<!-- صفحه ورود -->
 <div id="onboardingScreen">
-  
   <div class="robot-wrapper">
     <div class="ask-text">و از من بپرس...</div>
-    
-    <!-- ربات Iran AI -->
     <svg class="robot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="100" cy="185" rx="50" ry="10" fill="rgba(0,0,0,0.08)" />
-      <path d="M 50 120 C 50 170, 70 180, 100 180 C 130 180, 150 170, 150 120 C 150 90, 140 60, 100 60 C 60 60, 50 90, 50 120 Z" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/>
-      <path d="M 60 105 C 80 125, 120 125, 140 105 C 145 115, 130 140, 100 140 C 70 140, 55 115, 60 105 Z" fill="#82CDB9"/>
-      <text x="100" y="128" font-family="Arial, sans-serif" font-size="11" fill="#64748B" text-anchor="middle" font-weight="900">Iran AI</text>
-      <path d="M 50 115 C 30 120, 35 145, 55 150 C 55 135, 50 125, 50 115 Z" fill="#82CDB9"/>
-      <circle cx="43" cy="145" r="8" fill="#F8FAFC" />
-      <g class="waving-arm">
-        <path d="M 150 115 C 170 105, 180 80, 170 70 C 165 80, 155 100, 150 115 Z" fill="#82CDB9"/>
-        <circle cx="168" cy="72" r="8" fill="#F8FAFC" />
-      </g>
-      <rect x="55" y="35" width="90" height="60" rx="30" fill="#1A1A1A" />
-      <g class="eye-glow">
-        <path d="M 75 65 Q 75 55 85 55 Q 95 55 95 65 Q 95 75 85 75 Q 75 75 75 65 Z" fill="#00E5FF" />
-        <path d="M 105 65 Q 105 55 115 55 Q 125 55 125 65 Q 125 75 115 75 Q 105 75 105 65 Z" fill="#00E5FF" />
-        <circle cx="80" cy="60" r="2" fill="#FFF" opacity="0.8"/>
-        <circle cx="110" cy="60" r="2" fill="#FFF" opacity="0.8"/>
-      </g>
-      <ellipse cx="50" cy="65" rx="6" ry="15" fill="#82CDB9" />
-      <ellipse cx="150" cy="65" rx="6" ry="15" fill="#82CDB9" />
-    </svg>
-  </div>
-
-  <div class="lang-selector" id="langSelector" style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; justify-content:center;"></div>
-
-  <div class="auth-container">
-    <div class="chat-messages" id="onboardingChat">
-      <div class="msg bot" id="initialGreeting">سلام! من دستیار هوش مصنوعی Iran AI هستم. لطفاً برای ساخت حساب، نام خود را وارد کنید.</div>
-    </div>
-    <div class="auth-form">
-      <div class="input-group">
-        <input type="text" id="onboardingInput" placeholder="نام خود را وارد کنید...">
-      </div>
-      <button class="btn-primary" id="onboardingSend">مرحله بعد ←</button>
-    </div>
-  </div>
-
-  <div class="auth-links">
-    <button class="auth-link" id="btnGuest">ورود به عنوان مهمان</button>
-    <button class="auth-link" onclick="alert('به زودی...')">ورود با رمز عبور</button>
-  </div>
-
-</div>
-
-<!-- ================= داشبورد اصلی ================= -->
-<div id="mainScreen">
-  <header>
-    <div class="logo">Iran <span>AI</span></div>
-    <div id="userLabel">مهمان</div>
-  </header>
-
-  <!-- ربات داشبورد -->
-  <div class="dash-robot-area">
-    <div class="ask-text">و از من بپرس...</div>
-    <svg class="robot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <path d="M 50 120 C 50 170, 70 180, 100 180 C 130 180, 150 170, 150 120 C 150 90, 140 60, 100 60 C 60 60, 50 90, 50 120 Z" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/>
       <path d="M 60 105 C 80 125, 120 125, 140 105 C 145 115, 130 140, 100 140 C 70 140, 55 115, 60 105 Z" fill="#82CDB9"/>
       <text x="100" y="128" font-family="Arial, sans-serif" font-size="11" fill="#64748B" text-anchor="middle" font-weight="900">Iran AI</text>
@@ -233,72 +148,66 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
       <g class="eye-glow"><path d="M 75 65 Q 75 55 85 55 Q 95 55 95 65 Q 95 75 85 75 Q 75 75 75 65 Z" fill="#00E5FF" /><path d="M 105 65 Q 105 55 115 55 Q 125 55 125 65 Q 125 75 115 75 Q 105 75 105 65 Z" fill="#00E5FF" /></g>
     </svg>
   </div>
-
-  <!-- نوار افقی -->
-  <div class="featured-section">
-    <div class="featured-title">⭐ خدمات پرطرفدار</div>
-    <div class="featured-strip-wrapper">
-      <div class="featured-strip" id="featuredStrip"></div>
+  <div class="auth-container">
+    <div class="chat-messages" id="onboardingChat">
+      <div class="msg bot" id="initialGreeting">سلام! من دستیار هوش مصنوعی Iran AI هستم. نام خود را وارد کنید.</div>
+    </div>
+    <div class="auth-form">
+      <div class="input-group"><input type="text" id="onboardingInput" placeholder="نام شما..."></div>
+      <button class="btn-primary" id="onboardingSend">مرحله بعد ←</button>
     </div>
   </div>
+  <div class="auth-links">
+    <button class="auth-link" id="btnGuest">ورود به عنوان مهمان</button>
+  </div>
+</div>
 
-  <!-- گرید 12 آیکون -->
+<!-- داشبورد اصلی -->
+<div id="mainScreen">
+  <header><div class="logo">Iran <span>AI</span></div><div id="userLabel">مهمان</div></header>
+  <div class="dash-robot-area">
+    <div class="ask-text">و از من بپرس...</div>
+    <svg class="robot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+       <path d="M 50 120 C 50 170, 70 180, 100 180 C 130 180, 150 170, 150 120 C 150 90, 140 60, 100 60 C 60 60, 50 90, 50 120 Z" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/><path d="M 60 105 C 80 125, 120 125, 140 105 C 145 115, 130 140, 100 140 C 70 140, 55 115, 60 105 Z" fill="#82CDB9"/><text x="100" y="128" font-family="Arial" font-size="11" fill="#64748B" text-anchor="middle" font-weight="900">Iran AI</text><rect x="55" y="35" width="90" height="60" rx="30" fill="#1A1A1A" /><g class="eye-glow"><path d="M 75 65 Q 75 55 85 55 Q 95 55 95 65 Q 95 75 85 75 Q 75 75 75 65 Z" fill="#00E5FF" /><path d="M 105 65 Q 105 55 115 55 Q 125 55 125 65 Q 125 75 115 75 Q 105 75 105 65 Z" fill="#00E5FF" /></g>
+    </svg>
+  </div>
+  <div class="featured-section">
+    <div class="featured-title">⭐ خدمات پرطرفدار</div>
+    <div class="featured-strip-wrapper"><div class="featured-strip" id="featuredStrip"></div></div>
+  </div>
   <div class="branches-grid" id="branchGrid"></div>
-
   <button class="fab-chat" id="fabChat">◈</button>
 </div>
 
-<!-- مودال چت داشبورد -->
-<div class="modal-backdrop" id="chatModal">
-  <div class="chat-box-dash">
-    <div class="modal-header" style="padding:16px; background:#fff; margin:0; border-bottom:1px solid var(--border-color);">
-      <span class="modal-title" style="color: var(--gold-main);">✨ سوال بپرس...</span>
-      <button class="close-btn" id="closeChatModal">×</button>
-    </div>
-    <div class="chat-messages" id="dashChatMessages">
-      <div class="msg bot">سلام! چه خدمتی نیاز دارید؟ من می‌توانم راهنمایی‌تان کنم.</div>
-    </div>
-    <div class="chat-input-area">
-      <input type="text" id="dashChatInput" placeholder="اینجا بنویسید...">
-      <button id="dashChatSend">↑</button>
-    </div>
+<!-- اپلیکیشن تمام صفحه (برای همه فرم‌ها) -->
+<div id="appScreen">
+  <div class="app-header">
+    <button class="btn-back" id="closeApp">→</button>
+    <div class="app-title" id="appTitle">خدمت</div>
   </div>
+  <div class="app-content" id="appContent"></div>
 </div>
 
-<!-- مودال فرم دستی -->
-<div class="modal-backdrop" id="formModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 class="modal-title" id="formTitle">فرم درخواست</h2>
-      <button class="close-btn" id="closeFormModal">×</button>
-    </div>
-    <div class="form-content" id="formContent"></div>
+<!-- مودال چت -->
+<div id="chatModal">
+  <div class="chat-box">
+    <div class="chat-header"><span style="color: var(--gold-main); font-weight:bold;">✨ سوال بپرس...</span><button id="closeChatModal" style="font-size:20px;">×</button></div>
+    <div class="chat-messages" id="dashChatMessages"><div class="msg bot">سلام! چه کمکی می‌توانم بکنم؟</div></div>
+    <div class="chat-input-area"><input type="text" id="dashChatInput" placeholder="اینجا بنویسید..."><button id="dashChatSend">↑</button></div>
   </div>
 </div>
 <script>
 "use strict";
 
 /* =========================================
-   IRAN AI V12.0 — PART 2: FULL DATA (NO COMPRESSION)
-   Central Assistant + 12 Branches (68 Forms)
+   IRAN AI V13.0 — PART 2: FULL DATA + UI TYPES
 ========================================= */
 
 const CENTRAL_ASSISTANT = {
-  id: "central",
-  name: "دستیار Iran AI",
-  avatar: "◈",
-  greeting: "سلام! من دستیار هوش مصنوعی Iran AI هستم. می‌توانم در انتخاب شاخه مناسب، نحوه ثبت درخواست، کیف پول و همکاری به‌عنوان همکار راهنمایی‌تان کنم. چه کمکی می‌توانم بکنم؟",
-  systemPrompt: `تو دستیار مرکزی هوش مصنوعی پلتفرم Iran AI هستی.
-پلتفرم Iran AI یک اکوسیستم جامع خدمات هوشمند با ۱۲ شاخه تخصصی است. یک حساب کاربری و یک کیف پول مشترک دارد.
-شاخه‌ها: کشاورزی، حمل‌ونقل، ساختمان، آموزش، سلامت، آگهی، حسابداری، مشاوره قضایی، گردشگری، پرداخت، مکانیک و تولید.
-وظایف تو: راهنمایی کاربر برای انتخاب شاخه، توضیح نحوه ثبت درخواست، هدایت به دستیار تخصصی شاخه.
-محدودیت‌ها: هرگز قیمت دقیق اعلام نکن، ادعای انجام خدمت نکن، اطلاعات شخصی درخواست نکن.`,
-  suggestions: [
-    { label: "چطور درخواست ثبت کنم؟", answer: "برای ثبت درخواست ۳ گام ساده: ۱) شاخه موردنظر را انتخاب کنید. ۲) دسته خدمت را انتخاب کنید تا فرم باز شود. ۳) فرم را پر کنید و ثبت کنید." },
-    { label: "چه شاخه‌ای مناسب من است؟", answer: "بستگی به نیاز شما دارد. ما ۱۲ شاخه داریم: کشاورزی، حمل‌ونقل، ساختمان، آموزش، سلامت، آگهی، حسابداری، حقوقی، گردشگری، بانک، مکانیک و تولید. اگر بگویید دنبال چه هستید، دقیق‌تر راهنمایی می‌کنم." },
-    { label: "کیف پول چطور کار می‌کند؟", answer: "Iran AI یک کیف پول مشترک بین همه شاخه‌ها دارد. شارژ از درگاه مجاز، بدون تاریخ انقضا، و قابل انتقال بین کاربران است." },
-    { label: "چطور همکار شوم؟", answer: "از دکمه «همکاری با ما» در هدر درخواست دهید. تیم Iran AI پس از بررسی، مدارک را تأیید و پروفایل شما را فعال می‌کند." }
-  ]
+  id: "central", name: "دستیار Iran AI", avatar: "◈",
+  greeting: "سلام! من دستیار هوش مصنوعی Iran AI هستم. چه کمکی می‌توانم بکنم؟",
+  systemPrompt: `تو دستیار مرکزی هوش مصنوعی Iran AI هستی.`,
+  suggestions: []
 };
 
 const BRANCHES_DATA = {
@@ -306,6 +215,7 @@ const BRANCHES_DATA = {
     slug: "iran_keshavarz", title: "ایران کشاورز", icon: "🚜",
     shortDescription: "خدمات و راهکارهای تخصصی کشاورزی",
     description: "از سم‌پاشی و خدمات پهپادی گرفته تا اجاره ماشین‌آلات، تأمین نهاده، آبیاری و مشاوره مزرعه.",
+    uiType: "normal",
     categories: ["سم‌پاشی (پهپادی/تراکتوری)", "ادوات کشاورزی و ماشین‌آلات", "اجاره تجهیزات", "نهاده و بذر", "آبیاری", "مشاوره مزرعه", "خرید و فروش محصول"],
     formsByCategoryIndex: {
       0: { title: "درخواست سم‌پاشی", intro: "مشخصات مزرعه و نوع آفت را وارد کنید.", fields: [
@@ -359,255 +269,161 @@ const BRANCHES_DATA = {
         { id: "location", label: "محل تحویل", type: "text", required: true }
       ]}
     },
-    assistant: { name: "دستیار ایران کشاورز", avatar: "🚜", greeting: "سلام! من دستیار تخصصی ایران کشاورز هستم. در مورد سم‌پاشی، ادوات و مشاوره مزرعه راهنمایی می‌کنم.", systemPrompt: `تو دستیار تخصصی ایران کشاورز هستی.`, suggestions: [] }
+    assistant: { name: "دستیار ایران کشاورز", avatar: "🚜", greeting: "سلام! من دستیار تخصصی ایران کشاورز هستم.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_transport: {
-    slug: "iran_transport", title: "ایران حمل‌ونقل", icon: "🚚",
-    shortDescription: "درخواست حمل بار و جابه‌جایی",
-    description: "از حمل بار و وانت و کامیون گرفته تا اسباب‌کشی، حمل ماشین‌آلات و حمل بین‌شهری.",
-    categories: ["حمل بار", "وانت و کامیون", "حمل ماشین‌آلات", "بار برگشتی", "اسباب‌کشی", "حمل بین‌شهری", "پیگیری بار"],
+    slug: "iran_transport", title: "ایران سفر", icon: "🚕",
+    shortDescription: "سفر درون شهری و حمل بار",
+    description: "درخواست تاکسی اینترنتی (مثل اسنپ) و حمل بار.",
+    uiType: "snapp",
+    categories: ["تاکسی درون شهری", "وانت بار", "حمل بین شهری"],
     formsByCategoryIndex: {
-      0: { title: "حمل بار عمومی", intro: "مبدأ، مقصد و مشخصات بار.", fields: [
-        { id: "origin", label: "مبدأ", type: "text", required: true, minLength: 3 },
-        { id: "destination", label: "مقصد", type: "text", required: true, minLength: 3 },
-        { id: "loadType", label: "نوع بار", type: "select", required: true, options: ["عمومی", "فسادپذیر", "شکستنی", "خطرناک"] },
-        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1, max: 30000 },
-        { id: "when", label: "تاریخ حمل", type: "date", minDate: new Date().toISOString().slice(0, 10) }
-      ]},
-      1: { title: "وانت و کامیون", intro: "انتخاب خودرو متناسب با بار.", fields: [
-        { id: "vehicleType", label: "نوع خودرو", type: "select", required: true, options: ["وانت (تا ۵۰۰kg)", "کامیون کوچک (تا ۳ تن)", "کامیون متوسط (تا ۸ تن)", "کامیون سنگین"] },
-        { id: "origin", label: "مبدأ", type: "text", required: true },
-        { id: "destination", label: "مقصد", type: "text", required: true },
-        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1 }
-      ]},
-      2: { title: "حمل ماشین‌آلات", intro: "تراکتور، لودر و بیل مکانیکی.", fields: [
-        { id: "machineType", label: "نوع ماشین", type: "select", required: true, options: ["تراکتور", "لودر", "بیل مکانیکی", "جرثقیل", "غلتک"] },
-        { id: "weight", label: "وزن (تن)", type: "number", required: true, min: 1, max: 60 },
-        { id: "origin", label: "مبدأ", type: "text", required: true },
-        { id: "destination", label: "مقصد", type: "text", required: true }
-      ]},
-      3: { title: "بار برگشتی", intro: "استفاده از ظرفیت خالی کامیون.", fields: [
-        { id: "route", label: "مسیر موردنظر", type: "text", required: true },
-        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true, min: 1 },
-        { id: "loadType", label: "نوع بار", type: "select", required: true, options: ["عمومی", "فسادپذیر", "شکستنی"] }
-      ]},
-      4: { title: "اسباب‌کشی", intro: "اسباب‌کشی منزل یا دفتر.", fields: [
-        { id: "origin", label: "آدرس مبدأ", type: "text", required: true },
-        { id: "destination", label: "آدرس مقصد", type: "text", required: true },
-        { id: "volume", label: "حجم وسایل", type: "select", required: true, options: ["کم", "متوسط", "زیاد"] }
-      ]},
-      5: { title: "حمل بین‌شهری", intro: "حمل بار بین شهرها.", fields: [
-        { id: "origin", label: "مبدأ", type: "text", required: true },
-        { id: "destination", label: "مقصد", type: "text", required: true },
-        { id: "weight", label: "وزن (کیلوگرم)", type: "number", required: true },
-        { id: "when", label: "تاریخ", type: "date", required: true }
-      ]},
-      6: { title: "پیگیری بار", intro: "استعلام وضعیت حمل.", fields: [
-        { id: "trackingCode", label: "شماره پیگیری", type: "text", required: true, pattern: "^[A-Za-z0-9\\-]{6,30}$" },
-        { id: "mobile", label: "شماره موبایل", type: "tel", required: true, pattern: "^09\\d{9}$" }
-      ]}
+      0: { title: "تاکسی درون شهری", intro: "", fields: [] },
+      1: { title: "وانت بار", intro: "حمل بار سبک", fields: [{ id: "weight", label: "وزن (کیلوگرم)", type: "number" }] },
+      2: { title: "حمل بین شهری", intro: "سفر بین شهرها", fields: [{ id: "dest", label: "شهر مقصد", type: "text" }] }
     },
-    assistant: { name: "دستیار ایران حمل‌ونقل", avatar: "🚚", greeting: "سلام! من دستیار ایران حمل‌ونقل هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار سفر", avatar: "🚕", greeting: "سلام! کجا می‌خواید برید؟", systemPrompt: ``, suggestions: [] }
   },
 
   iran_building: {
     slug: "iran_building", title: "ایران ساختمان", icon: "🏗️",
-    shortDescription: "خدمات ساخت، تعمیر و تأسیسات",
-    description: "از ساخت و بازسازی تا برق، لوله‌کشی، تأسیسات، نقاشی، نما و آسانسور.",
-    categories: ["ساخت و بازسازی", "برق", "لوله‌کشی", "تأسیسات", "نقاشی", "نما", "آسانسور", "مصالح"],
+    shortDescription: "خدمات تعمیرات ساختمان",
+    description: "لوله‌کشی، برق‌کشی، گچ‌کاری، نقاشی و تعمیرات جزئی.",
+    uiType: "normal",
+    categories: ["لوله‌کشی", "برق‌کشی", "گچ‌کاری و نقاشی", "تعمیرات جزئی"],
     formsByCategoryIndex: {
-      0: { title: "ساخت / بازسازی", intro: "جزئیات کار را وارد کنید.", fields: [
-        { id: "serviceType", label: "نوع کار", type: "select", required: true, options: ["ساخت از ابتدا", "بازسازی کامل", "بازسازی جزئی", "تعمیر"] },
-        { id: "area", label: "متراژ (متر مربع)", type: "number", required: true, min: 1 },
-        { id: "floors", label: "تعداد طبقات", type: "number" },
-        { id: "location", label: "آدرس", type: "text", required: true },
-        { id: "description", label: "شرح جزئیات", type: "textarea", required: true }
-      ]},
-      1: { title: "خدمات برق", intro: "سیم‌کشی یا تعمیرات.", fields: [
-        { id: "serviceType", label: "نوع خدمت", type: "select", required: true, options: ["سیم‌کشی جدید", "تعمیر", "تابلو برق", "بازرسی"] },
-        { id: "area", label: "متراژ", type: "number", required: true },
-        { id: "problem", label: "شرح مشکل", type: "textarea" },
-        { id: "location", label: "آدرس", type: "text", required: true }
-      ]},
-      2: { title: "لوله‌کشی", intro: "نصب یا رفع نشتی.", fields: [
-        { id: "pipeType", label: "نوع لوله", type: "select", required: true, options: ["آب", "فاضلاب", "گاز", "شوفاژ"] },
-        { id: "problemLocation", label: "محل مشکل", type: "select", options: ["آشپزخانه", "حمام", "حیاط", "سایر"] },
-        { id: "description", label: "شرح مشکل", type: "textarea", required: true }
-      ]},
-      3: { title: "تأسیسات", intro: "پکیج، کولر، شوفاژ.", fields: [
-        { id: "systemType", label: "سیستم", type: "select", required: true, options: ["پکیج", "کولر گازی", "کولر آبی", "شوفاژ", "آبگرمکن"] },
-        { id: "serviceType", label: "خدمت", type: "select", required: true, options: ["نصب", "تعمیر", "سرویس"] }
-      ]},
-      4: { title: "نقاشی", intro: "داخلی یا خارجی.", fields: [
-        { id: "paintType", label: "نوع نقاشی", type: "select", required: true, options: ["داخلی", "خارجی", "کنیتکس", "کاغذ دیواری"] },
-        { id: "area", label: "متراژ دیوارها", type: "number", required: true },
-        { id: "location", label: "آدرس", type: "text", required: true }
-      ]},
-      5: { title: "نما", intro: "ساخت نما.", fields: [
-        { id: "facadeType", label: "نوع نما", type: "select", required: true, options: ["سنگ", "آجر", "کامپوزیت", "رومی"] },
-        { id: "area", label: "متراژ", type: "number", required: true }
-      ]},
-      6: { title: "آسانسور", intro: "نصب یا سرویس.", fields: [
-        { id: "serviceType", label: "خدمت", type: "select", required: true, options: ["نصب", "سرویس", "تعمیر"] },
-        { id: "stops", label: "تعداد توقف", type: "number" }
-      ]},
-      7: { title: "مصالح", intro: "خرید مصالح.", fields: [
-        { id: "materialType", label: "مصالح", type: "text", required: true },
-        { id: "quantity", label: "مقدار", type: "text", required: true }
-      ]}
+      0: { title: "لوله‌کشی", intro: "رفع نشتی یا نصب", fields: [{ id: "issue", label: "شرح مشکل", type: "textarea", required: true }] },
+      1: { title: "برق‌کشی", intro: "سیم‌کشی یا تعمیر", fields: [{ id: "issue", label: "شرح مشکل", type: "textarea", required: true }] },
+      2: { title: "گچ‌کاری و نقاشی", intro: "متراژ و نوع کار", fields: [{ id: "area", label: "متراژ", type: "number" }] },
+      3: { title: "تعمیرات جزئی", intro: "چه کاری نیاز دارید؟", fields: [{ id: "desc", label: "توضیحات", type: "textarea" }] }
     },
-    assistant: { name: "دستیار ایران ساختمان", avatar: "🏗️", greeting: "سلام! من دستیار ایران ساختمان هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار ساختمان", avatar: "🏗️", greeting: "سلام! چه کاری در منزل دارید؟", systemPrompt: ``, suggestions: [] }
   },
 
   iran_education: {
     slug: "iran_education", title: "ایران آموزش", icon: "🎓",
     shortDescription: "آموزش و خدمات یادگیری",
     description: "دوره، کلاس خصوصی، آموزش آنلاین و مهارت فنی.",
-    categories: ["دوره تخصصی", "کلاس خصوصی", "آموزش آنلاین", "مهارت فنی", "زبان", "آزمون"],
+    uiType: "normal",
+    categories: ["دوره تخصصی", "کلاس خصوصی", "مهارت فنی", "زبان"],
     formsByCategoryIndex: {
-      0: { title: "دوره تخصصی", intro: "ثبت‌نام در دوره.", fields: [
-        { id: "subject", label: "موضوع", type: "text", required: true },
-        { id: "level", label: "سطح", type: "select", required: true, options: ["مقدماتی", "متوسط", "پیشرفته"] }
-      ]},
-      1: { title: "کلاس خصوصی", intro: "مدرس اختصاصی.", fields: [
-        { id: "subject", label: "موضوع", type: "text", required: true },
-        { id: "sessions", label: "جلسات در هفته", type: "number" }
-      ]},
-      2: { title: "آموزش آنلاین", intro: "دوره آنلاین.", fields: [
-        { id: "subject", label: "موضوع", type: "text", required: true },
-        { id: "format", label: "قالب", type: "select", options: ["زنده", "ضبط‌شده"] }
-      ]},
-      3: { title: "مهارت فنی", intro: "آموزش برای اشتغال.", fields: [
-        { id: "skill", label: "مهارت", type: "select", required: true, options: ["تعمیرات", "برنامه‌نویسی", "طراحی", "برق"] }
-      ]},
-      4: { title: "زبان", intro: "کلاس زبان خارجی.", fields: [
-        { id: "language", label: "زبان", type: "select", required: true, options: ["انگلیسی", "آلمانی", "فرانسه"] }
-      ]},
-      5: { title: "آزمون", intro: "آمادگی آزمون.", fields: [
-        { id: "examName", label: "نام آزمون", type: "text", required: true }
-      ]}
+      0: { title: "دوره تخصصی", intro: "ثبت‌نام در دوره.", fields: [{ id: "subject", label: "موضوع", type: "text", required: true }] },
+      1: { title: "کلاس خصوصی", intro: "مدرس اختصاصی.", fields: [{ id: "subject", label: "موضوع", type: "text", required: true }] },
+      2: { title: "مهارت فنی", intro: "آموزش برای اشتغال.", fields: [{ id: "skill", label: "مهارت", type: "text", required: true }] },
+      3: { title: "زبان", intro: "کلاس زبان خارجی.", fields: [{ id: "language", label: "زبان", type: "select", options: ["انگلیسی", "آلمانی", "فرانسه"] }] }
     },
-    assistant: { name: "دستیار ایران آموزش", avatar: "🎓", greeting: "سلام! من دستیار ایران آموزش هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار آموزش", avatar: "🎓", greeting: "سلام! چه مهارتی می‌خواید یاد بگیرید؟", systemPrompt: ``, suggestions: [] }
   },
 
   iran_health: {
     slug: "iran_health", title: "ایران سلامت", icon: "⚕️",
     shortDescription: "خدمات سلامت و مراقبت",
     description: "معرفی مراکز مجاز، خدمات مراقبتی و رزرو نوبت.",
-    categories: ["مراکز مجاز", "متخصصان", "مراقبت در منزل", "رزرو نوبت"],
+    uiType: "normal",
+    categories: ["رزرو نوبت", "مشاوره پزشکی", "مراقبت در منزل"],
     formsByCategoryIndex: {
-      0: { title: "مراکز مجاز", intro: "بیمارستان و کلینیک.", fields: [{ id: "centerType", label: "نوع", type: "select", options: ["بیمارستان", "کلینیک"] }] },
-      1: { title: "متخصص", intro: "پزشکان.", fields: [{ id: "specialty", label: "تخصص", type: "text", required: true }] },
-      2: { title: "مراقبت", intro: "پرستار در منزل.", fields: [{ id: "careType", label: "نوع", type: "select", options: ["پرستار", "مراقب"] }] },
-      3: { title: "نوبت", intro: "رزرو نوبت.", fields: [{ id: "specialty", label: "تخصص", type: "text", required: true }] }
+      0: { title: "رزرو نوبت", intro: "رزرو نوبت پزشک.", fields: [{ id: "specialty", label: "تخصص", type: "text", required: true }] },
+      1: { title: "مشاوره پزشکی", intro: "مشاوره آنلاین", fields: [{ id: "desc", label: "شرح مشکل", type: "textarea" }] },
+      2: { title: "مراقبت", intro: "پرستار در منزل.", fields: [{ id: "careType", label: "نوع", type: "select", options: ["پرستار", "مراقب"] }] }
     },
-    assistant: { name: "دستیار ایران سلامت", avatar: "⚕️", greeting: "سلام! من دستیار ایران سلامت هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار سلامت", avatar: "⚕️", greeting: "سلام! به چه تخصصی نیاز دارید؟", systemPrompt: ``, suggestions: [] }
   },
 
   iran_ads: {
     slug: "iran_ads", title: "ایران آگهی", icon: "📢",
     shortDescription: "ثبت و جست‌وجوی آگهی",
     description: "کالا، خدمات، ملک، ماشین‌آلات و استخدام.",
-    categories: ["کالا", "خدمات", "ملک", "ماشین‌آلات", "استخدام", "گزارش"],
+    uiType: "divar",
+    categories: ["کالای نو/دست دوم", "مسکن (ملک)", "وسایل نقلیه"],
     formsByCategoryIndex: {
-      0: { title: "آگهی کالا", intro: "فروش کالا.", fields: [{ id: "title", label: "عنوان", type: "text", required: true }] },
-      1: { title: "آگهی خدمات", intro: "ارائه خدمات.", fields: [{ id: "title", label: "عنوان", type: "text", required: true }] },
-      2: { title: "آگهی ملک", intro: "فروش یا اجاره.", fields: [{ id: "dealType", label: "نوع", type: "select", options: ["فروش", "اجاره"] }] },
-      3: { title: "آگهی ماشین‌آلات", intro: "ماشین‌آلات.", fields: [{ id: "machine", label: "ماشین", type: "text", required: true }] },
-      4: { title: "استخدام", intro: "فرصت شغلی.", fields: [{ id: "jobTitle", label: "عنوان شغلی", type: "text", required: true }] },
-      5: { title: "گزارش", intro: "گزارش آگهی.", fields: [{ id: "reason", label: "دلیل", type: "select", options: ["کلاهبرداری", "محتوای ممنوع"] }] }
+      0: { title: "ثبت آگهی کالا", intro: "اطلاعات کالا", fields: [] },
+      1: { title: "ثبت آگهی مسکن", intro: "اطلاعات ملک", fields: [] },
+      2: { title: "ثبت آگهی وسایل نقلیه", intro: "اطلاعات خودرو", fields: [] }
     },
-    assistant: { name: "دستیار ایران آگهی", avatar: "📢", greeting: "سلام! من دستیار ایران آگهی هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار آگهی", avatar: "📢", greeting: "دنبال چه چیزی می‌گردی؟", systemPrompt: ``, suggestions: [] }
   },
 
   iran_accounting: {
     slug: "iran_accounting", title: "ایران حسابدار", icon: "💼",
-    shortDescription: "خدمات حسابداری و مالی",
+    shortDescription: "نرم‌افزار حسابداری و AI",
     description: "حسابداری، مالیات، دفاتر و حقوق.",
-    categories: ["حسابداری", "مالیات", "دفاتر", "حقوق و دستمزد", "مشاوره"],
+    uiType: "accounting",
+    categories: ["حسابداری", "مالیات", "انبارداری"],
     formsByCategoryIndex: {
-      0: { title: "حسابداری", intro: "حسابداری دوره‌ای.", fields: [{ id: "serviceType", label: "نوع", type: "select", options: ["ماهانه", "فصلی", "سالانه"] }] },
-      1: { title: "مالیات", intro: "اظهارنامه.", fields: [{ id: "serviceType", label: "نوع", type: "select", options: ["اظهارنامه", "مشاوره"] }] },
-      2: { title: "دفاتر", intro: "دفاتر قانونی.", fields: [{ id: "serviceType", label: "خدمت", type: "select", options: ["تنظیم", "پلمب"] }] },
-      3: { title: "حقوق", intro: "محاسبه حقوق.", fields: [{ id: "employeeCount", label: "تعداد کارمندان", type: "number" }] },
-      4: { title: "مشاوره", intro: "مشاوره مالی.", fields: [{ id: "topic", label: "موضوع", type: "text", required: true }] }
+      0: { title: "حسابداری", intro: "ثبت سند", fields: [] },
+      1: { title: "مالیات", intro: "اظهارنامه", fields: [] },
+      2: { title: "انبارداری", intro: "مدیریت کالا", fields: [] }
     },
-    assistant: { name: "دستیار ایران حسابدار", avatar: "💼", greeting: "سلام! من دستیار ایران حسابدار هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار حسابدار", avatar: "💼", greeting: "سلام مدیر! امروز چه سندی رو ثبت کنیم؟", systemPrompt: ``, suggestions: [] }
   },
 
   iran_legal: {
     slug: "iran_legal", title: "ایران مشاوره قضایی", icon: "⚖️",
     shortDescription: "راهنمایی و خدمات حقوقی",
     description: "مشاوره حقوقی، معرفی وکیل و پیگیری.",
-    categories: ["مشاوره حقوقی", "معرفی وکیل", "پیگیری"],
+    uiType: "legal",
+    categories: ["مشاوره حقوقی", "معرفی وکیل"],
     formsByCategoryIndex: {
-      0: { title: "مشاوره حقوقی", intro: "با وکیل.", fields: [{ id: "legalArea", label: "حوزه", type: "select", options: ["قرارداد", "خانواده", "کیفری", "ملکی"] }] },
-      1: { title: "معرفی وکیل", intro: "وکیل واجد صلاحیت.", fields: [{ id: "city", label: "شهر", type: "text" }] },
-      2: { title: "پیگیری", intro: "پیگیری پرونده.", fields: [{ id: "caseNumber", label: "شماره پرونده", type: "text" }] }
+      0: { title: "مشاوره حقوقی", intro: "با وکیل.", fields: [] },
+      1: { title: "معرفی وکیل", intro: "وکیل واجد صلاحیت.", fields: [] }
     },
-    assistant: { name: "دستیار ایران مشاوره قضایی", avatar: "⚖️", greeting: "سلام! من دستیار ایران مشاوره قضایی هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار حقوقی", avatar: "⚖️", greeting: "سلام! سوال حقوقی خود را بپرسید.", systemPrompt: ``, suggestions: [] }
   },
 
   iran_tourism: {
     slug: "iran_tourism", title: "ایران گردشگر", icon: "✈️",
     shortDescription: "خدمات سفر و گردشگری",
     description: "اقامت، راهنما، تور و برنامه سفر.",
-    categories: ["اقامت", "راهنما", "تور", "حمل‌ونقل", "تجربه محلی", "برنامه سفر"],
+    uiType: "tourism",
+    categories: ["اقامت", "راهنما", "جاذبه‌های گردشگری"],
     formsByCategoryIndex: {
-      0: { title: "اقامت", intro: "هتل و بومگردی.", fields: [{ id: "accommodationType", label: "نوع", type: "select", options: ["هتل", "بومگردی"] }] },
-      1: { title: "راهنما", intro: "راهنمای تور.", fields: [{ id: "city", label: "شهر", type: "text" }] },
-      2: { title: "تور", intro: "تور مسافرتی.", fields: [{ id: "tourType", label: "نوع", type: "select", options: ["یک‌روزه", "چندروزه"] }] },
-      3: { title: "حمل‌ونقل", intro: "خودرو سفر.", fields: [{ id: "vehicleType", label: "خودرو", type: "select", options: ["سواری", "ون"] }] },
-      4: { title: "تجربه محلی", intro: "آشپزی و صنایع دستی.", fields: [{ id: "experienceType", label: "نوع", type: "text" }] },
-      5: { title: "برنامه سفر", intro: "طراحی مسیر.", fields: [{ id: "destination", label: "مقصد", type: "text" }] }
+      0: { title: "اقامت", intro: "هتل و بومگردی.", fields: [] },
+      1: { title: "راهنما", intro: "راهنمای تور.", fields: [] },
+      2: { title: "جاذبه‌ها", intro: "مکان‌های دیدنی", fields: [] }
     },
-    assistant: { name: "دستیار ایران گردشگر", avatar: "✈️", greeting: "سلام! من دستیار ایران گردشگر هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار گردشگر", avatar: "✈️", greeting: "کجای ایران رو می‌خواید ببینید؟", systemPrompt: ``, suggestions: [] }
   },
 
   iran_bank: {
     slug: "iran_bank", title: "ایران بانک", icon: "💳",
     shortDescription: "خدمات پرداخت مجاز",
     description: "پرداخت قبض، شارژ و هزینه‌های خدمات.",
-    categories: ["پرداخت قبض", "شارژ", "هزینه خدمات", "PSP"],
+    uiType: "bank",
+    categories: ["پرداخت قبض", "شارژ"],
     formsByCategoryIndex: {
-      0: { title: "پرداخت قبض", intro: "قبض‌ها.", fields: [{ id: "billType", label: "نوع", type: "select", options: ["برق", "آب", "گاز"] }] },
-      1: { title: "شارژ", intro: "موبایل.", fields: [{ id: "operator", label: "اپراتور", type: "select", options: ["ایرانسل", "همراه اول"] }] },
-      2: { title: "هزینه خدمات", intro: "عوارض.", fields: [{ id: "serviceType", label: "نوع", type: "text" }] },
-      3: { title: "PSP", intro: "سایر خدمات.", fields: [{ id: "serviceType", label: "خدمت", type: "text" }] }
+      0: { title: "پرداخت قبض", intro: "قبض‌ها.", fields: [] },
+      1: { title: "شارژ", intro: "موبایل.", fields: [] }
     },
-    assistant: { name: "دستیار ایران بانک", avatar: "💳", greeting: "سلام! من دستیار ایران بانک هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار بانک", avatar: "💳", greeting: "چه قبضی رو می‌خواید پرداخت کنید؟", systemPrompt: ``, suggestions: [] }
   },
 
   iran_mechanic: {
     slug: "iran_mechanic", title: "ایران مکانیک", icon: "🔧",
-    shortDescription: "عیب‌یابی و تعمیرات",
-    description: "تعمیر خودرو، ماشین‌آلات و امداد.",
-    categories: ["تعمیر خودرو", "تعمیر ماشین‌آلات", "سرویس", "امداد", "صنعتی"],
+    shortDescription: "تعمیرکار در محل و امداد خودرو",
+    description: "عیب‌یابی، تعمیر و امداد خودرو در محل.",
+    uiType: "mechanic",
+    categories: ["تعمیر در محل", "امداد خودرو", "برق خودرو"],
     formsByCategoryIndex: {
-      0: { title: "تعمیر خودرو", intro: "تعمیرگاه.", fields: [{ id: "vehicleType", label: "خودرو", type: "text" }] },
-      1: { title: "ماشین‌آلات", intro: "صنعتی.", fields: [{ id: "machineType", label: "ماشین", type: "text" }] },
-      2: { title: "سرویس", intro: "روغن.", fields: [{ id: "serviceType", label: "سرویس", type: "select", options: ["کامل", "روغن"] }] },
-      3: { title: "امداد", intro: "فوری.", fields: [{ id: "emergencyType", label: "مشکل", type: "select", options: ["باتری", "لاستیک"] }] },
-      4: { title: "صنعتی", intro: "تجهیزات.", fields: [{ id: "equipmentType", label: "تجهیز", type: "text" }] }
+      0: { title: "تعمیر در محل", intro: "مشکل خودرو را انتخاب کنید.", fields: [] },
+      1: { title: "امداد خودرو", intro: "در محل", fields: [] },
+      2: { title: "برق خودرو", intro: "در محل", fields: [] }
     },
-    assistant: { name: "دستیار ایران مکانیک", avatar: "🔧", greeting: "سلام! من دستیار ایران مکانیک هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار مکانیک", avatar: "🔧", greeting: "سلام! چه مشکلی برای خودروت پیش اومده؟", systemPrompt: ``, suggestions: [] }
   },
 
   iran_production: {
     slug: "iran_production", title: "ایران تولید", icon: "🏭",
-    shortDescription: "خدمات تولید و صنعت",
-    description: "تولیدکنندگان، سفارش عمده و ظرفیت.",
-    categories: ["تولیدکنندگان", "کارخانه‌ها", "سفارش عمده", "محصولات", "ظرفیت", "همکاری"],
+    shortDescription: "زنجیره تامین B2B",
+    description: "تولیدکنندگان، عمده‌فروش و خرده‌فروش.",
+    uiType: "b2b",
+    categories: ["تولیدکننده", "عمده‌فروش", "خرده‌فروش"],
     formsByCategoryIndex: {
-      0: { title: "تولیدکننده", intro: "جست‌وجو.", fields: [{ id: "industry", label: "صنعت", type: "text" }] },
-      1: { title: "کارخانه", intro: "کارخانه.", fields: [{ id: "industry", label: "صنعت", type: "text" }] },
-      2: { title: "سفارش عمده", intro: "تولید.", fields: [{ id: "productName", label: "محصول", type: "text" }] },
-      3: { title: "محصولات", intro: "محصول خاص.", fields: [{ id: "productType", label: "محصول", type: "text" }] },
-      4: { title: "ظرفیت", intro: "استعلام.", fields: [{ id: "productName", label: "محصول", type: "text" }] },
-      5: { title: "همکاری", intro: "مشترک.", fields: [{ id: "partnershipType", label: "نوع", type: "text" }] }
+      0: { title: "تولیدکننده", intro: "ثبت محصول و مجوز", fields: [] },
+      1: { title: "عمده‌فروش", intro: "خرید عمده", fields: [] },
+      2: { title: "خرده‌فروش", intro: "خرید خرد", fields: [] }
     },
-    assistant: { name: "دستیار ایران تولید", avatar: "🏭", greeting: "سلام! من دستیار ایران تولید هستم.", systemPrompt: ``, suggestions: [] }
+    assistant: { name: "دستیار تولید", avatar: "🏭", greeting: "شما تولیدکننده هستید یا فروشنده؟", systemPrompt: ``, suggestions: [] }
   }
 };
 </script>
@@ -615,18 +431,16 @@ const BRANCHES_DATA = {
 "use strict";
 
 /* =========================================
-   IRAN AI V12.0 — PART 3: LOGIC & PROACTIVE AI
+   IRAN AI V13.0 — PART 3: APP ROUTER & LOGIC
 ========================================= */
 
-// ---------------- 1. STATE & CONFIG ----------------
 const appState = {
   lang: "fa", 
-  isMuted: false,
+  isMuted: false, 
   user: { name: "مهمان", isGuest: true },
-  onboardingStep: 0, // 0: Start, 1: Name, 2: Last, 3: Mobile, 4: Done
+  onboardingStep: 0, 
   currentBranch: null,
-  currentCategory: null,
-  currentForm: null
+  currentCategory: null
 };
 
 const LANGUAGES = {
@@ -640,98 +454,37 @@ const LANGUAGES = {
 // تبدیل اعداد فارسی به انگلیسی برای درک بهتر هوش مصنوعی
 function normalizeDigits(str) {
   if (typeof str !== "string") return "";
-  return str
-    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
-    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+  return str.replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
 }
 
-// ---------------- 2. VOICE ENGINE (STT & TTS) ----------------
+// ---------------- VOICE ENGINE (TTS) ----------------
 const synth = window.speechSynthesis;
-let recognition = null;
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SpeechRecognition();
-  recognition.continuous = false; 
-  recognition.interimResults = false;
-}
-
 function speak(text) {
   if (appState.isMuted || !synth) return;
-  synth.cancel(); // قطع صدای قبلی
+  synth.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = LANGUAGES[appState.lang].code;
   utterance.rate = 1.0;
   synth.speak(utterance);
 }
 
-// تزریق خودکار دکمه میکروفون به کادرهای ورود
-function injectMicButtons() {
-  const style = document.createElement('style');
-  style.innerHTML = `.mic-btn { background: #F8F9FA; border: 1px solid var(--border-color); color: var(--text-muted); width: 46px; height: 46px; border-radius: 12px; font-size: 18px; display: grid; place-items: center; transition: 0.3s; cursor: pointer; } .mic-btn.recording { background: #ff5252; color: white; border-color: #ff5252; animation: pulse 1.5s infinite; } @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,82,82,0.5); } 70% { box-shadow: 0 0 0 10px rgba(255,82,82,0); } 100% { box-shadow: 0 0 0 0 rgba(255,82,82,0); } }`;
-  document.head.appendChild(style);
-
-  const onbForm = document.querySelector('.auth-form .input-group');
-  if (onbForm && !document.getElementById('micBtnOnb')) {
-    const btn = document.createElement('button');
-    btn.id = 'micBtnOnb'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
-    btn.onclick = () => startListening('onboardingInput');
-    onbForm.insertBefore(btn, onbForm.firstChild);
-  }
-
-  const dashForm = document.querySelector('.chat-input-area');
-  if (dashForm && !document.getElementById('micBtnDash')) {
-    const btn = document.createElement('button');
-    btn.id = 'micBtnDash'; btn.className = 'mic-btn'; btn.type = 'button'; btn.innerHTML = '🎤';
-    btn.onclick = () => startListening('dashChatInput');
-    dashForm.insertBefore(btn, dashForm.firstChild);
-  }
+function addMsg(box, text, role) {
+  const div = document.createElement("div");
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  box.appendChild(div); box.scrollTop = box.scrollHeight;
 }
 
-function startListening(inputId) {
-  if (!recognition) return alert("مرورگر شما از میکروفون پشتیبانی نمی‌کند. لطفاً از کروم استفاده کنید.");
-  
-  recognition.lang = LANGUAGES[appState.lang].code;
-  recognition.start();
-  const micBtn = document.getElementById(inputId === "onboardingInput" ? "micBtnOnb" : "micBtnDash");
-  if(micBtn) micBtn.classList.add("recording");
-  
-  recognition.onresult = function(event) {
-    const transcript = event.results[0][0].transcript;
-    document.getElementById(inputId).value = transcript;
-    if(micBtn) micBtn.classList.remove("recording");
-    if(inputId === "onboardingInput") handleOnboardingInput();
-    else if(inputId === "dashChatInput") handleDashboardChat();
-  };
-
-  recognition.onerror = function() { if(micBtn) micBtn.classList.remove("recording"); };
-  recognition.onend = function() { if(micBtn) micBtn.classList.remove("recording"); };
+function proactiveAI(text) {
+  addMsg(document.getElementById("dashChatMessages"), text, "bot");
+  speak(text);
 }
 
-// ---------------- 3. ONBOARDING (LOGIN) ----------------
+// ---------------- 1. ONBOARDING (LOGIN) ----------------
 const onbChat = document.getElementById("onboardingChat");
 const onbInput = document.getElementById("onboardingInput");
 
-function renderLangSelector() {
-  const wrapper = document.getElementById("langSelector");
-  wrapper.innerHTML = "";
-  Object.keys(LANGUAGES).forEach(key => {
-    const btn = document.createElement("button");
-    btn.className = `lang-btn ${appState.lang === key ? 'active' : ''}`;
-    btn.textContent = LANGUAGES[key].label;
-    btn.style.cssText = `padding: 6px 14px; border-radius: 20px; font-size: 12px; border: 1px solid var(--border-color); background:${appState.lang === key ? 'var(--gold-main)' : '#fff'}; color:${appState.lang === key ? '#fff' : 'var(--text-muted)'}; cursor:pointer;`;
-    btn.onclick = () => {
-      appState.lang = key;
-      renderLangSelector();
-      document.getElementById("initialGreeting").textContent = LANGUAGES[key].hello;
-      speak(LANGUAGES[key].hello);
-    };
-    wrapper.appendChild(btn);
-  });
-}
-
 function startOnboarding() {
-  injectMicButtons();
-  renderLangSelector();
   appState.onboardingStep = 1;
   setTimeout(() => speak(LANGUAGES[appState.lang].hello), 1000);
 }
@@ -739,7 +492,6 @@ function startOnboarding() {
 function handleOnboardingInput() {
   const val = onbInput.value.trim();
   if (!val) return;
-  
   addMsg(onbChat, val, "user");
   onbInput.value = "";
 
@@ -751,7 +503,7 @@ function handleOnboardingInput() {
       appState.onboardingStep = 2;
     } else if (appState.onboardingStep === 2) {
       appState.user.last = val;
-      const reply = `ممنون. شماره موبایلت رو وارد کن (مثلاً 09123456789).`;
+      const reply = `ممنون. شماره موبایلت رو وارد کن.`;
       addMsg(onbChat, reply, "bot"); speak(reply);
       appState.onboardingStep = 3;
     } else if (appState.onboardingStep === 3) {
@@ -759,8 +511,7 @@ function handleOnboardingInput() {
         const reply = "شماره موبایل نامعتبره. دوباره وارد کن.";
         addMsg(onbChat, reply, "bot"); speak(reply);
       } else {
-        appState.user.mobile = val;
-        const reply = "✅ ثبت‌نام شما با موفقیت انجام شد! در حال ورود به داشبورد...";
+        const reply = "✅ ثبت‌نام شما با موفقیت انجام شد! در حال ورود...";
         addMsg(onbChat, reply, "bot"); speak(reply);
         appState.onboardingStep = 4;
         appState.user.isGuest = false;
@@ -772,247 +523,303 @@ function handleOnboardingInput() {
 
 document.getElementById("onboardingSend").addEventListener("click", handleOnboardingInput);
 onbInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleOnboardingInput(); });
+document.getElementById("btnGuest").addEventListener("click", () => { appState.user.isGuest = true; appState.user.name = "مهمان"; goToMainScreen(); });
 
-document.getElementById("btnGuest").addEventListener("click", () => {
-  appState.user.isGuest = true;
-  appState.user.name = "مهمان";
-  goToMainScreen();
-});
-
-// ---------------- 4. MAIN SCREEN (DASHBOARD) ----------------
+// ---------------- 2. MAIN SCREEN (DASHBOARD) ----------------
 function goToMainScreen() {
   document.getElementById("onboardingScreen").classList.add("hidden");
   document.getElementById("mainScreen").classList.add("active");
   document.getElementById("userLabel").textContent = appState.user.isGuest ? "مهمان" : appState.user.name + " عزیز";
+  
+  // ساخت هدر داشبورد (با کیف پول)
+  const header = document.querySelector("#mainScreen header");
+  if (!document.getElementById("walletBtn")) {
+    const walletDiv = document.createElement("div");
+    walletDiv.id = "walletBtn";
+    walletDiv.style.cssText = "display:flex; align-items:center; gap:5px; background:#FFF8E7; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:bold; color:var(--gold-main); cursor:pointer;";
+    walletDiv.innerHTML = "💳 کیف پول: ۱,۲۵۰,۰۰۰ تومان";
+    walletDiv.onclick = () => alert("کیف پول شما شارژ شد (شبیه‌سازی).");
+    header.insertBefore(walletDiv, document.getElementById("userLabel"));
+  }
+
   renderDashboard();
 }
 
 function renderDashboard() {
-  // نوار افقی (Featured)
-  const featured = ["iran_keshavarz", "iran_transport", "iran_legal", "iran_education"];
-  const strip = document.getElementById("featuredStrip");
-  strip.innerHTML = "";
+  const featured = ["iran_transport", "iran_ads", "iran_mechanic", "iran_accounting"];
+  const strip = document.getElementById("featuredStrip"); strip.innerHTML = "";
   featured.forEach(key => {
     const d = BRANCHES_DATA[key];
-    const div = document.createElement("div");
-    div.className = "featured-item";
+    const div = document.createElement("div"); div.className = "featured-item";
     div.innerHTML = `<div class="icon">${d.icon}</div><span>${d.title}</span>`;
-    div.onclick = () => openBranchInChat(d.title, key);
-    strip.appendChild(div);
+    div.onclick = () => openFullScreenApp(key); strip.appendChild(div);
   });
 
-  // گرید ۱۲ آیکون
-  const grid = document.getElementById("branchGrid");
-  grid.innerHTML = "";
+  const grid = document.getElementById("branchGrid"); grid.innerHTML = "";
   Object.keys(BRANCHES_DATA).forEach(key => {
     const d = BRANCHES_DATA[key];
-    const card = document.createElement("div");
-    card.className = "branch-card";
+    const card = document.createElement("div"); card.className = "branch-card";
     card.innerHTML = `<div class="icon-circle"><span>${d.icon}</span></div><span class="branch-name">${d.title}</span>`;
-    card.onclick = () => openBranchInChat(d.title, key);
-    grid.appendChild(card);
+    card.onclick = () => openFullScreenApp(key); grid.appendChild(card);
   });
 }
 
-// ---------------- 5. HYBRID CHAT & FORM ----------------
-const dashChatModal = document.getElementById("chatModal");
-const formModal = document.getElementById("formModal");
-const dashChatBox = document.getElementById("dashChatMessages");
-const dashInput = document.getElementById("dashChatInput");
+// ---------------- 3. APP ROUTER (FULL SCREEN) ----------------
+const appScreen = document.getElementById("appScreen");
+const appContent = document.getElementById("appContent");
 
-function addMsg(box, text, role) {
-  const div = document.createElement("div");
-  div.className = `msg ${role}`;
-  div.textContent = text;
-  box.appendChild(div);
-  box.scrollTop = box.scrollHeight;
-}
-
-document.getElementById("fabChat").addEventListener("click", () => {
-  dashChatModal.classList.add("show");
-  dashInput.focus();
-});
-document.getElementById("closeChatModal").addEventListener("click", () => {
-  dashChatModal.classList.remove("show");
-});
-
-// تابعی که ربات را همیشه فعال نگه می‌دارد
-function proactiveAI(text, openChat = false) {
-  if (openChat) {
-    dashChatModal.classList.add("show");
-  }
-  addMsg(dashChatBox, text, "bot");
-  speak(text);
-}
-
-// کلیک روی کارت‌های شاخه
-function openBranchInChat(branchTitle, branchKey) {
-  appState.currentBranch = branchKey; 
-  appState.currentCategory = null;
-  appState.currentForm = null;
-  
+function openFullScreenApp(branchKey) {
+  appState.currentBranch = branchKey;
   const data = BRANCHES_DATA[branchKey];
   
-  // ۱. باز کردن فرم با لیست دسته‌ها
-  document.getElementById("formTitle").textContent = data.title + " - انتخاب دسته";
-  const content = document.getElementById("formContent");
-  
-  let buttonsHtml = data.categories.map((cat, idx) => 
-    `<button style="background:#fff; color:var(--text-dark); border:1px solid var(--border-color); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; cursor:pointer; text-align:right; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;" onclick="selectCategoryFromModal('${branchKey}', ${idx})">
-      <span>${cat}</span> <span style="color:var(--gold-main)">←</span>
-    </button>`
-  ).join("");
-  
-  content.innerHTML = `
-    <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">لطفاً دسته مورد نظر خود را انتخاب کنید:</p>
-    <div style="display:flex; flex-direction:column;">${buttonsHtml}</div>
-  `;
-  
-  formModal.classList.add("show");
-  injectBotButtonToForm();
-  
-  // ۲. ربات فعال می‌شود و توضیح می‌دهد
-  proactiveAI(`شما وارد بخش ${data.title} شدید. لطفاً از پنجره باز شده، دسته مورد نظر خود را انتخاب کنید تا فرم مربوطه را برایتان باز کنم.`, false);
+  document.getElementById("appTitle").textContent = data.title;
+  appScreen.classList.add("active");
+  appContent.innerHTML = ""; // پاک کردن صفحه
+
+  // رندر کردن صفحه بر اساس نوع UI
+  if (data.uiType === "snapp") renderSnappApp(data);
+  else if (data.uiType === "divar") renderDivarApp(data);
+  else if (data.uiType === "mechanic") renderMechanicApp(data);
+  else if (data.uiType === "accounting") renderAccountingApp(data);
+  else if (data.uiType === "legal") renderLegalApp(data);
+  else if (data.uiType === "tourism") renderTourismApp(data);
+  else if (data.uiType === "b2b") renderB2BApp(data);
+  else renderNormalApp(data);
+
+  // پیام پیش‌دستانه هوش مصنوعی
+  proactiveAI(`وارد بخش ${data.title} شدیم. ${data.assistant.greeting}`);
 }
 
-// وقتی کاربر روی یک دسته کلیک می‌کند
-window.selectCategoryFromModal = function(branchSlug, categoryIndex) {
-  renderForm(branchSlug, categoryIndex);
-};
-
-// رندر کردن فرم تخصصی
-function renderForm(branchSlug, categoryIndex) {
-  const data = BRANCHES_DATA[branchSlug];
-  const form = data.formsByCategoryIndex[categoryIndex];
-  if (!form) return;
-
-  appState.currentBranch = branchSlug;
-  appState.currentCategory = categoryIndex;
-  appState.currentForm = form;
-
-  document.getElementById("formTitle").textContent = form.title;
-  const content = document.getElementById("formContent");
-  
-  content.innerHTML = `
-    <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">${form.intro}</p>
-    <form id="dynamicForm">
-      ${form.fields.map(f => `
-        <div class="field">
-          <label>${f.label} ${f.required ? '<span style="color:red">*</span>' : ''}</label>
-          ${f.type === "select" 
-            ? `<select id="field-${f.id}" ${f.required ? "required" : ""}><option value="">انتخاب کنید</option>${f.options.map(o => `<option value="${o}">${o}</option>`).join("")}</select>`
-            : f.type === "textarea"
-              ? `<textarea id="field-${f.id}" rows="3" ${f.required ? "required" : ""}></textarea>`
-              : `<input id="field-${f.id}" type="${f.type}" ${f.required ? "required" : ""} min="${f.min || ""}" max="${f.max || ""}">`
-          }
-        </div>
-      `).join("")}
-      <button type="submit" class="btn-submit">ثبت نهایی درخواست</button>
-    </form>
-  `;
-
-  formModal.classList.add("show");
-
-  // ربات فعال می‌شود و فرم را توضیح می‌دهد
-  proactiveAI(`فرم ${form.title} باز شد. لطفاً اطلاعات را وارد کنید یا اگر می‌خواهید من برایتان پر کنم، به من بگویید.`, false);
-
-  // ثبت فرم
-  document.getElementById("dynamicForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    formModal.classList.remove("show");
-    
-    const reply = "✅ درخواست شما با موفقیت ثبت شد! کد پیگیری: IR-" + Math.floor(Math.random()*90000+10000);
-    proactiveAI(reply, true);
-    
-    appState.currentBranch = null;
-    appState.currentCategory = null;
-    appState.currentForm = null;
-  });
-}
-
-// بستن فرم
-document.getElementById("closeFormModal").addEventListener("click", () => {
-  formModal.classList.remove("show");
-  const reply = "فرم رو بستم. اگر خواستی دوباره پر کنیم بگو.";
-  addMsg(dashChatBox, reply, "bot"); 
-  speak(reply);
+document.getElementById("closeApp").addEventListener("click", () => {
+  appScreen.classList.remove("active");
+  proactiveAI("از بخش خارج شدی. چه کار دیگه‌ای می‌تونم برات انجام بدم؟");
 });
 
-// دکمه دستیار در هدر فرم
-function injectBotButtonToForm() {
-  const formHeader = document.querySelector("#formModal .modal-header");
-  let existingBtn = document.getElementById("botInFormBtn");
-  if (existingBtn) existingBtn.remove();
+// ---------------- 4. SPECIFIC APP RENDERERS ----------------
+
+// 🚕 1. اسنپ (ایران سفر)
+function renderSnappApp(data) {
+  appContent.innerHTML = `
+    <div class="snapp-map">
+      <div class="snapp-marker origin"></div>
+      <div class="snapp-marker dest"></div>
+      <div class="snapp-line"></div>
+    </div>
+    <div class="snapp-inputs">
+      <div class="snapp-input-row"><div class="dot green"></div><input type="text" id="s-origin" placeholder="مبدا را وارد کنید..."></div>
+      <div class="snapp-input-row"><div class="dot red"></div><input type="text" id="s-dest" placeholder="مقصد را وارد کنید..."></div>
+    </div>
+    <div style="font-size:14px; font-weight:bold; margin-bottom:10px;">انتخاب خودرو</div>
+    <div class="car-options">
+      <div class="car-card active" onclick="selectCar(this)"><div class="c-icon">🚗</div><span>اقتصادی</span><small>اسنپ</small></div>
+      <div class="car-card" onclick="selectCar(this)"><div class="c-icon">🚙</div><span>پلاس</span><small>اسنپ</small></div>
+      <div class="car-card" onclick="selectCar(this)"><div class="c-icon">🏍️</div><span>موتور</span><small>اسنپ‌بایک</small></div>
+    </div>
+    <button class="btn-action" onclick="submitSnapp()">درخواست سفر</button>
+  `;
+}
+
+window.selectCar = function(el) { document.querySelectorAll('.car-card').forEach(c => c.classList.remove('active')); el.classList.add('active'); };
+window.submitSnapp = function() {
+  const orig = document.getElementById("s-origin").value || "مبدا";
+  const dest = document.getElementById("s-dest").value || "مقصد";
+  appScreen.classList.remove("active");
+  proactiveAI(`✅ سفر شما از «${orig}» به «${dest}» ثبت شد. مبلغ ۸۵,۰۰۰ تومان از کیف پول کسر شد. راننده در حال یافتن مسیر است.`);
+};
+
+// 📢 2. دیوار (ایران آگهی)
+function renderDivarApp(data) {
+  // هدر و دسته‌بندی‌ها
+  let catHtml = data.categories.map(c => `<div class="divar-cat"><span>📦</span><small>${c}</small></div>`).join("");
   
-  const botBtn = document.createElement("button");
-  botBtn.id = "botInFormBtn"; botBtn.innerHTML = "🤖 دستیار";
-  botBtn.style = "background:var(--gold-main); color:#fff; border:none; border-radius:8px; padding:6px 12px; font-size:12px; cursor:pointer; margin-left:auto;";
-  botBtn.onclick = () => {
-    formModal.classList.remove("show"); 
-    dashChatModal.classList.add("show");
-    const reply = "من اینجام! اگر می‌خوای فیلدی رو پر کنم، فقط بگو (مثلاً: مساحت ۱۰ هکتار).";
-    addMsg(dashChatBox, reply, "bot"); 
-    speak(reply);
-  };
-  formHeader.insertBefore(botBtn, document.getElementById("closeFormModal"));
+  // آگهی‌های فیک برای نمایش
+  const mockAds = [
+    { title: "پژو ۲۰۶ مدل ۹۵", price: "۴۵۰,۰۰۰,۰۰۰", icon: "🚗" },
+    { title: "آپارتمان ۸۰ متری", price: "۲,۵۰۰,۰۰۰,۰۰۰", icon: "🏢" },
+    { title: "گوشی سامسونگ S21", price: "۱۸,۰۰۰,۰۰۰", icon: "📱" }
+  ];
+  let adsHtml = mockAds.map(ad => `
+    <div class="ad-card">
+      <div class="ad-img">${ad.icon}</div>
+      <div class="ad-info"><h4>${ad.title}</h4><p>تهران، امروز</p><strong>${ad.price} تومان</strong></div>
+    </div>
+  `).join("");
+
+  appContent.innerHTML = `
+    <div class="divar-categories">${catHtml}</div>
+    <h3 style="margin-top:20px; font-size:15px;">آگهی‌های شهر شما</h3>
+    <div class="ad-feed">${adsHtml}</div>
+    <button class="fab-add" onclick="openNewAdForm()">+</button>
+  `;
 }
 
-// ---------------- 6. CHAT AI LOGIC ----------------
-function handleDashboardChat() {
-  const text = dashInput.value.trim(); if (!text) return;
-  addMsg(dashChatBox, text, "user"); 
-  dashInput.value = "";
-  setTimeout(() => { processAILogic(text); }, 800);
+window.openNewAdForm = function() {
+  appContent.innerHTML = `
+    <h3 style="margin-bottom:16px;">ثبت آگهی جدید</h3>
+    <div class="divar-upload" onclick="alert('انتخاب عکس از گالری...')">
+      <span>📸</span><p>افزودن عکس (عکس اصلی)</p>
+    </div>
+    <div style="margin-bottom:12px;"><input type="text" placeholder="عنوان آگهی" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc;"></div>
+    <div style="margin-bottom:12px;"><input type="text" placeholder="قیمت (تومان)" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc;"></div>
+    <div style="margin-bottom:16px;"><textarea placeholder="توضیحات..." rows="4" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc;"></textarea></div>
+    <button class="btn-action" style="background:#EF4444;" onclick="submitAd()">ثبت آگهی</button>
+  `;
+};
+
+window.submitAd = function() {
+  appScreen.classList.remove("active");
+  proactiveAI("✅ آگهی شما با موفقیت ثبت شد و پس از تایید در صفحه نمایش داده می‌شود.");
+};
+
+// 🔧 3. مکانیک
+function renderMechanicApp(data) {
+  appContent.innerHTML = `
+    <h3 style="margin-bottom:16px;">مشکل خودروی شما چیست؟</h3>
+    <div class="mechanic-issue-card" onclick="showMechanicPayment()"><span>روشن نمی‌شود (باتری/استارت)</span> <span>←</span></div>
+    <div class="mechanic-issue-card" onclick="showMechanicPayment()"><span>موتور جوش آورده است</span> <span>←</span></div>
+    <div class="mechanic-issue-card" onclick="showMechanicPayment()"><span>لاستیک پنچر شده است</span> <span>←</span></div>
+    <div class="mechanic-issue-card" onclick="showMechanicPayment()"><span>مشکل برقی دارد</span> <span>←</span></div>
+  `;
 }
 
-document.getElementById("dashChatSend").addEventListener("click", handleDashboardChat);
-dashInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleDashboardChat(); });
+window.showMechanicPayment = function() {
+  appContent.innerHTML = `
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:50px;">🔧</div>
+      <h3>مشکل ثبت شد</h3>
+    </div>
+    <div class="payment-box">
+      <h3>هزینه ایاب و ذهاب مکانیک</h3>
+      <p>برای اعزام مکانیک به محل، مبلغ ۵۰,۰۰۰ تومان باید از کیف پول پرداخت شود.</p>
+      <button class="btn-pay-green" onclick="payMechanicFee()">پرداخت از کیف پول</button>
+    </div>
+  `;
+};
 
-function processAILogic(text) {
-  const cleanText = normalizeDigits(text);
+window.payMechanicFee = function() {
+  appScreen.classList.remove("active");
+  proactiveAI("✅ پرداخت ۵۰,۰۰۰ تومان با موفقیت انجام شد. مکانیک به سمت شما در حال حرکت است.");
+};
+
+// 💼 4. حسابدار
+function renderAccountingApp(data) {
+  appContent.innerHTML = `
+    <div style="background:#fff; padding:20px; border-radius:16px; border:1px solid #ddd; text-align:center; margin-bottom:16px;">
+      <h3 style="color:#10B981; margin-bottom:8px;">موجودی صندوق</h3>
+      <h2 style="font-size:24px; margin-bottom:16px;">۱۲,۵۰۰,۰۰۰ تومان</h2>
+      <button style="background:var(--gold-main); color:#fff; padding:10px 20px; border-radius:10px; border:none; font-weight:bold; cursor:pointer;" onclick="alert('دوربین باز شد... (شبیه‌سازی)')">📸 آپلود فاکتور با هوش مصنوعی</button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="background:#fff; padding:16px; border-radius:12px; text-align:center; border:1px solid #ddd;">
+        <span style="font-size:24px;">📦</span><br><small>انبارداری</small>
+      </div>
+      <div style="background:#fff; padding:16px; border-radius:12px; text-align:center; border:1px solid #ddd;">
+        <span style="font-size:24px;">📊</span><br><small>گزارش سود</small>
+      </div>
+    </div>
+  `;
+}
+
+// ⚖️ 5. مشاوره حقوقی
+function renderLegalApp(data) {
+  appContent.innerHTML = `
+    <div style="text-align:center; padding:40px 20px;">
+      <div style="font-size:60px; margin-bottom:16px;">⚖️</div>
+      <h3>مشاوره حقوقی هوشمند</h3>
+      <p style="color:var(--text-muted); font-size:13px; margin:12px 0;">سوال خود را در چت بپرسید تا بر اساس قوانین راهنمایی شوید.</p>
+      <button style="background:var(--gold-main); color:#fff; padding:12px 24px; border-radius:12px; border:none; font-weight:bold; cursor:pointer;" onclick="openLegalChat()">شروع چت با هوش مصنوعی</button>
+    </div>
+  `;
+}
+window.openLegalChat = function() {
+  appScreen.classList.remove("active");
+  document.getElementById("chatModal").classList.add("show");
+  proactiveAI("بفرمایید، سوال حقوقی خود را بپرسید. من طبق قوانین کشور راهنمایی‌تان می‌کنم.");
+};
+
+// ✈️ 6. گردشگری
+function renderTourismApp(data) {
+  appContent.innerHTML = `
+    <h3 style="margin-bottom:16px;">کجای ایران رو می‌خواید ببینید؟</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="background:#fff; border-radius:12px; overflow:hidden; border:1px solid #ddd; cursor:pointer;">
+        <div style="height:100px; background:#87CEEB; display:grid; place-items:center; font-size:40px;">🕌</div>
+        <div style="padding:10px; text-align:center; font-weight:bold;">شیراز</div>
+      </div>
+      <div style="background:#fff; border-radius:12px; overflow:hidden; border:1px solid #ddd; cursor:pointer;">
+        <div style="height:100px; background:#F4A460; display:grid; place-items:center; font-size:40px;">🏜️</div>
+        <div style="padding:10px; text-align:center; font-weight:bold;">اصفهان</div>
+      </div>
+    </div>
+  `;
+}
+
+// 🏭 7. B2B تولید
+function renderB2BApp(data) {
+  appContent.innerHTML = `
+    <h3 style="margin-bottom:16px;">شما چه نقشی دارید؟</h3>
+    <div class="mechanic-issue-card" onclick="selectB2BRole('تولیدکننده')"><span>🏭 تولیدکننده (کارخانه)</span> <span>←</span></div>
+    <div class="mechanic-issue-card" onclick="selectB2BRole('عمده‌فروش')"><span>📦 عمده‌فروش</span> <span>←</span></div>
+    <div class="mechanic-issue-card" onclick="selectB2BRole('خرده‌فروش')"><span>🛒 مغازه‌دار (خرده‌فروش)</span> <span>←</span></div>
+  `;
+}
+window.selectB2BRole = function(role) {
+  appScreen.classList.remove("active");
+  proactiveAI(`شما به عنوان «${role}» وارد شدید. فرم مربوطه در حال بارگذاری است.`);
+};
+
+// 🏗️ 8. فرم‌های عادی (بقیه شاخه‌ها)
+function renderNormalApp(data) {
+  let catHtml = data.categories.map((c, i) => `<div class="mechanic-issue-card" onclick="renderNormalForm(${i})"><span>${c}</span> <span>←</span></div>`).join("");
+  appContent.innerHTML = `<h3 style="margin-bottom:16px;">انتخاب خدمت</h3>${catHtml}`;
+}
+
+window.renderNormalForm = function(catIdx) {
+  const data = BRANCHES_DATA[appState.currentBranch];
+  const form = data.formsByCategoryIndex[catIdx];
   
-  // اگر فرم باز است، تلاش برای پر کردن خودکار
-  if (appState.currentForm) {
-    const numMatch = cleanText.match(/\d+/);
-    if (numMatch) {
-      const numField = appState.currentForm.fields.find(f => f.type === "number" && document.getElementById(`field-${f.id}`) && !document.getElementById(`field-${f.id}`).value);
-      if (numField) {
-        document.getElementById(`field-${numField.id}`).value = numMatch[0];
-        const reply = `عدد ${numMatch[0]} رو توی فیلد «${numField.label}» ثبت کردم. حالا می‌تونی برگردی به فرم.`;
-        addMsg(dashChatBox, reply, "bot"); 
-        speak(reply); 
-        return;
-      }
-    }
-    
-    const reply = "فرم برات بازه. می‌تونی خودت پر کنی یا اگر فیلدی مونده بهم بگو تا پر کنم.";
-    addMsg(dashChatBox, reply, "bot"); 
-    speak(reply); 
-    return;
-  }
+  let fieldsHtml = form.fields.map(f => `
+    <div style="margin-bottom:12px;">
+      <label style="display:block; font-size:12px; margin-bottom:4px; font-weight:bold;">${f.label}</label>
+      <input type="text" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;">
+    </div>
+  `).join("");
 
-  // اگر فرم باز نیست، شاخه رو تشخیص بده
-  if (!appState.currentBranch) {
-    let found = null;
-    if (cleanText.includes("کشاورزی") || cleanText.includes("سم") || cleanText.includes("پهپاد")) found = "iran_keshavarz";
-    else if (cleanText.includes("ماشین") || cleanText.includes("حمل") || cleanText.includes("بار")) found = "iran_transport";
-    else if (cleanText.includes("تعمیر") || cleanText.includes("مکانیک")) found = "iran_mechanic";
-    
-    if (found) {
-      openBranchInChat(BRANCHES_DATA[found].title, found);
-    } else {
-      const reply = "متوجه نشدم. لطفاً یکی از شاخه‌ها رو بگو یا روی کارت‌های پایین کلیک کن.";
-      addMsg(dashChatBox, reply, "bot"); 
-      speak(reply);
-    }
-    return;
-  }
-}
+  appContent.innerHTML = `
+    <h3>${form.title}</h3>
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">${form.intro}</p>
+    ${fieldsHtml}
+    <button class="btn-action" onclick="submitNormalForm()">ثبت نهایی درخواست</button>
+  `;
+};
+
+window.submitNormalForm = function() {
+  appScreen.classList.remove("active");
+  proactiveAI("✅ درخواست شما با موفقیت ثبت شد! کد پیگیری: IR-" + Math.floor(Math.random()*90000+10000));
+};
+
+// ---------------- 5. CHAT LOGIC ----------------
+document.getElementById("fabChat").addEventListener("click", () => {
+  document.getElementById("chatModal").classList.add("show");
+});
+document.getElementById("closeChatModal").addEventListener("click", () => {
+  document.getElementById("chatModal").classList.remove("show");
+});
+
+document.getElementById("dashChatSend").addEventListener("click", () => {
+  const text = document.getElementById("dashChatInput").value.trim();
+  if (!text) return;
+  addMsg(document.getElementById("dashChatMessages"), text, "user");
+  document.getElementById("dashChatInput").value = "";
+  
+  setTimeout(() => {
+    proactiveAI("من در حال حاضر در حالت شبیه‌سازی هستم. لطفاً از طریق آیکون‌های اصلی سرویس مورد نظر خود را انتخاب کنید.");
+  }, 600);
+});
 
 // ---------------- INITIALIZATION ----------------
 document.addEventListener("DOMContentLoaded", () => {
   startOnboarding();
-  console.log("%c[Iran AI] System Ready ✨", "color: #D4AF37; font-size: 16px; font-weight: bold;");
 });
 </script>
 </body>
