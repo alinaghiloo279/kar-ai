@@ -9,13 +9,15 @@
 :root {
   --bg-body: #F8FAFC; --bg-card: #FFFFFF; --gold-main: #D4AF37;
   --text-dark: #0F172A; --text-muted: #475569; --border-color: rgba(0,0,0,0.08);
+  --danger: #EF4444; --success: #10B981;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; }
 body { background: var(--bg-body); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 button { cursor: pointer; border: none; outline: none; background: transparent; transition: 0.3s; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
 
 /* ================= صفحه ورود ================= */
-#onboardingScreen { position: absolute; inset: 0; z-index: 100; background: var(--bg-body); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+#onboardingScreen { position: absolute; inset: 0; z-index: 100; background: var(--bg-body); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 #onboardingScreen.hidden { opacity: 0; pointer-events: none; }
 
 .robot-wrapper { position: relative; margin-bottom: 20px; animation: float 4s ease-in-out infinite; display: flex; flex-direction: column; align-items: center; }
@@ -33,20 +35,35 @@ button { cursor: pointer; border: none; outline: none; background: transparent; 
 .msg.bot { align-self: flex-start; background: #F1F5F9; color: var(--text-dark); border-bottom-right-radius: 4px; }
 .msg.user { align-self: flex-end; background: var(--gold-main); color: #fff; font-weight: bold; border-bottom-left-radius: 4px; }
 
-.auth-form { padding: 16px; border-top: 1px solid var(--border-color); background: #FAFAFA; }
-.input-group { display: flex; gap: 8px; margin-bottom: 12px; }
-.input-group input { flex: 1; background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; color: var(--text-dark); font-size: 13px; outline: none; }
-.btn-primary { width: 100%; background: linear-gradient(135deg, var(--gold-main), #B8860B); color: #fff; font-weight: 900; padding: 14px; border-radius: 12px; font-size: 14px; }
-.auth-links { display: flex; justify-content: space-between; width: 100%; max-width: 400px; margin-top: 15px; }
-.auth-link { font-size: 12px; color: var(--text-muted); text-decoration: underline; cursor: pointer; }
+.auth-form { padding: 16px; border-top: 1px solid var(--border-color); background: #FAFAFA; display: flex; flex-direction: column; gap: 10px; }
+.input-group { display: flex; flex-direction: column; gap: 4px; }
+.input-group label { font-size: 12px; font-weight: bold; color: var(--text-muted); }
+.input-group input, .input-group select { width: 100%; background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; color: var(--text-dark); font-size: 13px; outline: none; transition: border-color 0.2s; font-family: inherit; }
+.input-group input:focus, .input-group select:focus { border-color: var(--gold-main); }
+.input-group input.invalid { border-color: var(--danger); }
+.field-error { font-size: 11px; color: var(--danger); margin-top: 2px; }
+.btn-primary { width: 100%; background: linear-gradient(135deg, var(--gold-main), #B8860B); color: #fff; font-weight: 900; padding: 14px; border-radius: 12px; font-size: 14px; position: relative; overflow: hidden; min-height: 48px; display: flex; align-items: center; justify-content: center; }
+.btn-primary.loading .btn-label { opacity: 0.5; }
+.btn-spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; position: absolute; }
+.btn-primary.loading .btn-spinner { display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.auth-links { display: flex; justify-content: space-between; width: 100%; max-width: 400px; margin-top: 15px; gap: 10px; flex-wrap: wrap; }
+.auth-link { font-size: 12px; color: var(--text-muted); text-decoration: underline; cursor: pointer; background: none; border: none; padding: 0; }
+.auth-link:hover { color: var(--gold-main); }
+.auth-link.danger { color: var(--danger); }
+#authSecondary { display: flex; justify-content: space-between; width: 100%; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
 
 /* ================= صفحه ۲: داشبورد ================= */
 #mainScreen { position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10; transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); background: var(--bg-body); }
 #mainScreen.active { transform: translateY(0); }
-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #fff; z-index: 20; }
+header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background: #fff; z-index: 20; gap: 8px; }
 .logo { font-weight: 900; color: var(--text-dark); font-size: 18px; letter-spacing: 1px; }
 .logo span { color: var(--gold-main); }
+.header-right { display: flex; align-items: center; gap: 8px; }
 #userLabel { font-size: 12px; color: var(--gold-main); background: #FFFBEB; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+.btn-icon { width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; display: grid; place-items: center; font-size: 16px; color: var(--text-dark); }
+.btn-icon:hover { background: #E2E8F0; }
 
 .dash-robot-area { display: flex; flex-direction: column; align-items: center; padding: 5px 0; }
 .dash-robot-area .ask-text { font-size: 14px; margin-bottom: 0px; color: var(--text-muted); }
@@ -69,7 +86,7 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
 .icon-circle span { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
 .branch-card .branch-name { font-size: 11px; font-weight: 800; color: #1E293B; text-align: center; }
 
-/* ================= سیستم اپلیکیشن‌های تمام‌صفحه ================= */
+/* ================= اپلیکیشن تمام‌صفحه ================= */
 #appScreen { position: absolute; inset: 0; z-index: 500; background: var(--bg-body); transform: translateX(100%); transition: transform 0.3s ease-out; display: flex; flex-direction: column; }
 #appScreen.active { transform: translateX(0); }
 .app-header { background: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.02); z-index: 10; }
@@ -77,7 +94,7 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
 .app-title { font-size: 16px; font-weight: 900; flex: 1; }
 .app-content { flex: 1; overflow-y: auto; padding: 20px; position: relative; }
 
-/* --- استایل‌های اختصاصی اسنپ (سفر) --- */
+/* اسنپ */
 .snapp-map { width: 100%; height: 250px; background: #E5E9EC url('https://www.transparenttextures.com/patterns/cubes.png'); border-radius: 16px; position: relative; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--border-color); }
 .snapp-marker { position: absolute; width: 14px; height: 14px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
 .snapp-marker.origin { background: #10B981; top: 70%; left: 20%; }
@@ -94,8 +111,9 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
 .car-card .c-icon { font-size: 36px; }
 .car-card span { font-size: 13px; font-weight: bold; }
 .btn-action { background: #10B981; color: #fff; font-weight: 900; padding: 16px; border-radius: 14px; width: 100%; font-size: 16px; margin-top: 10px; }
+.btn-action:hover { filter: brightness(0.95); }
 
-/* --- استایل‌های اختصاصی دیوار (آگهی) --- */
+/* دیوار */
 .divar-header { background: #fff; padding: 16px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 10; }
 .divar-categories { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
 .divar-cat { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #F8FAFC; padding: 12px; border-radius: 12px; min-width: 80px; cursor: pointer; }
@@ -110,15 +128,15 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
 .ad-info strong { font-size: 13px; color: var(--gold-main); }
 .fab-add { position: absolute; bottom: 24px; left: 24px; width: 60px; height: 60px; border-radius: 50%; background: #EF4444; color: #fff; font-size: 30px; display: grid; place-items: center; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); }
 
-/* --- استایل‌های مکانیک --- */
-.mechanic-issue-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+/* مکانیک */
+.mechanic-issue-card { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; width: 100%; text-align: right; font-size: 14px; }
 .mechanic-issue-card:hover { border-color: var(--gold-main); }
 .payment-box { background: #F0FDF4; border: 2px solid #10B981; border-radius: 16px; padding: 20px; text-align: center; margin-top: 20px; }
 .payment-box h3 { color: #10B981; margin-bottom: 10px; font-size: 16px; }
 .payment-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
 .btn-pay-green { background: #10B981; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; width: 100%; font-size: 15px; cursor: pointer; }
 
-/* دکمه چت شناور در همه صفحات */
+/* دکمه چت شناور */
 .fab-chat { position: fixed; bottom: 20px; left: 20px; z-index: 50; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-main), #B8860B); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4); display: grid; place-items: center; font-size: 24px; color: #fff; border: 2px solid #fff; }
 
 /* مودال چت */
@@ -129,11 +147,24 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
 .chat-input-area { display: flex; padding: 12px; background: #FAFAFA; border-top: 1px solid var(--border-color); gap: 8px; }
 .chat-input-area input { flex: 1; background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; font-size: 13px; outline: none; }
 .chat-input-area button { background: var(--gold-main); color: #fff; width: 44px; height: 44px; border-radius: 10px; font-weight: 900; font-size: 18px; }
+.chat-input-area button.loading { opacity: 0.5; }
+
+/* toast */
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text-dark); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: bold; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 2000; max-width: 90%; text-align: center; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+.toast.warning { background: #F59E0B; }
+
+/* حالت‌های Auth (ورود/ثبت‌نام/فراموشی) */
+.auth-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border-color); }
+.auth-tab { flex: 1; padding: 12px; font-size: 12px; font-weight: bold; text-align: center; color: var(--text-muted); background: #fff; border-bottom: 2px solid transparent; }
+.auth-tab.active { color: var(--gold-main); border-bottom-color: var(--gold-main); }
 </style>
 </head>
 <body>
 
-<!-- صفحه ورود -->
+<!-- ================= صفحه ورود / ثبت‌نام / فراموشی ================= -->
 <div id="onboardingScreen">
   <div class="robot-wrapper">
     <div class="ask-text">و از من بپرس...</div>
@@ -148,23 +179,74 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
       <g class="eye-glow"><path d="M 75 65 Q 75 55 85 55 Q 95 55 95 65 Q 95 75 85 75 Q 75 75 75 65 Z" fill="#00E5FF" /><path d="M 105 65 Q 105 55 115 55 Q 125 55 125 65 Q 125 75 115 75 Q 105 75 105 65 Z" fill="#00E5FF" /></g>
     </svg>
   </div>
+
   <div class="auth-container">
-    <div class="chat-messages" id="onboardingChat">
-      <div class="msg bot" id="initialGreeting">سلام! من دستیار هوش مصنوعی Iran AI هستم. نام خود را وارد کنید.</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" data-tab="login">ورود</button>
+      <button class="auth-tab" id="tabRegister" data-tab="register">ثبت‌نام</button>
+      <button class="auth-tab" id="tabReset" data-tab="reset">فراموشی رمز</button>
     </div>
-    <div class="auth-form">
-      <div class="input-group"><input type="text" id="onboardingInput" placeholder="نام شما..."></div>
-      <button class="btn-primary" id="onboardingSend">مرحله بعد ←</button>
+    <div class="chat-messages" id="authMessages">
+      <div class="msg bot" id="authGreeting">سلام! برای استفاده از Iran AI وارد شوید یا به عنوان مهمان ادامه دهید.</div>
     </div>
+    <form class="auth-form" id="authForm" autocomplete="off">
+      <!-- mobile -->
+      <div class="input-group" id="mobileGroup">
+        <label for="mobileInput">شماره موبایل</label>
+        <input type="tel" id="mobileInput" inputmode="numeric" placeholder="۰۹۱۲۳۴۵۶۷۸۹" maxlength="11" dir="ltr" />
+        <div class="field-error" id="mobileError" hidden></div>
+      </div>
+      <!-- otp -->
+      <div class="input-group" id="otpGroup" hidden>
+        <label for="otpInput">کد پیامکی (۶ رقم)</label>
+        <input type="text" id="otpInput" inputmode="numeric" placeholder="------" maxlength="6" dir="ltr" />
+        <div class="field-error" id="otpError" hidden></div>
+        <div id="otpResend" hidden style="font-size:11px;margin-top:6px;color:var(--text-muted);">
+          <span>کد را دریافت نکردید؟</span>
+          <button type="button" id="resendOtpBtn" class="auth-link" style="padding:0;margin-right:4px;">ارسال مجدد</button>
+          <span id="resendTimer"></span>
+        </div>
+      </div>
+      <!-- username -->
+      <div class="input-group" id="usernameGroup" hidden>
+        <label for="usernameInput">نام کاربری</label>
+        <input type="text" id="usernameInput" placeholder="username" dir="ltr" maxlength="40" />
+        <div class="field-error" id="usernameError" hidden></div>
+      </div>
+      <!-- password -->
+      <div class="input-group" id="passwordGroup" hidden>
+        <label for="passwordInput">رمز عبور</label>
+        <input type="password" id="passwordInput" placeholder="حداقل ۱۰ کاراکتر" dir="ltr" maxlength="128" />
+        <div class="field-error" id="passwordError" hidden></div>
+      </div>
+      <!-- password confirm -->
+      <div class="input-group" id="passwordConfirmGroup" hidden>
+        <label for="passwordConfirmInput">تکرار رمز عبور</label>
+        <input type="password" id="passwordConfirmInput" placeholder="تکرار رمز" dir="ltr" maxlength="128" />
+        <div class="field-error" id="passwordConfirmError" hidden></div>
+      </div>
+      <button type="submit" class="btn-primary" id="authSubmit">
+        <span class="btn-label" id="authSubmitLabel">ادامه ←</span>
+        <span class="btn-spinner"></span>
+      </button>
+    </form>
   </div>
+
   <div class="auth-links">
-    <button class="auth-link" id="btnGuest">ورود به عنوان مهمان</button>
+    <button type="button" class="auth-link" id="btnGuest">ورود به عنوان مهمان</button>
+    <button type="button" class="auth-link" id="btnCancelStep" hidden>بازگشت</button>
   </div>
 </div>
 
-<!-- داشبورد اصلی -->
+<!-- ================= داشبورد ================= -->
 <div id="mainScreen">
-  <header><div class="logo">Iran <span>AI</span></div><div id="userLabel">مهمان</div></header>
+  <header>
+    <div class="logo">Iran <span>AI</span></div>
+    <div class="header-right">
+      <div id="userLabel">مهمان</div>
+      <button class="btn-icon" id="logoutBtn" title="خروج" style="display:none;">⎋</button>
+    </div>
+  </header>
   <div class="dash-robot-area">
     <div class="ask-text">و از من بپرس...</div>
     <svg class="robot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -179,7 +261,7 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
   <button class="fab-chat" id="fabChat">◈</button>
 </div>
 
-<!-- اپلیکیشن تمام صفحه (برای همه فرم‌ها) -->
+<!-- ================= اپلیکیشن تمام‌صفحه ================= -->
 <div id="appScreen">
   <div class="app-header">
     <button class="btn-back" id="closeApp">→</button>
@@ -188,20 +270,30 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
   <div class="app-content" id="appContent"></div>
 </div>
 
-<!-- مودال چت -->
+<!-- ================= مودال چت ================= -->
 <div id="chatModal">
   <div class="chat-box">
-    <div class="chat-header"><span style="color: var(--gold-main); font-weight:bold;">✨ سوال بپرس...</span><button id="closeChatModal" style="font-size:20px;">×</button></div>
-    <div class="chat-messages" id="dashChatMessages"><div class="msg bot">سلام! چه کمکی می‌توانم بکنم؟</div></div>
-    <div class="chat-input-area"><input type="text" id="dashChatInput" placeholder="اینجا بنویسید..."><button id="dashChatSend">↑</button></div>
+    <div class="chat-header">
+      <span style="color: var(--gold-main); font-weight:bold;">✨ سوال بپرس...</span>
+      <button id="closeChatModal" style="font-size:20px;">×</button>
+    </div>
+    <div class="chat-messages" id="dashChatMessages">
+      <div class="msg bot">سلام! چه کمکی می‌توانم بکنم؟</div>
+    </div>
+    <form class="chat-input-area" id="chatForm">
+      <input type="text" id="chatInput" placeholder="اینجا بنویسید..." maxlength="2000" />
+      <button type="submit" id="chatSendBtn">↑</button>
+    </form>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ================= SCRIPT PART 1: DATA ================= -->
 <script>
 "use strict";
 
-/* =========================================
-   IRAN AI V13.0 — PART 2: FULL DATA + UI TYPES
-========================================= */
+const WORKER_BASE_URL = 'https://kar-ai-core-api.ali-naghiloo279.workers.dev';
 
 const CENTRAL_ASSISTANT = {
   id: "central", name: "دستیار Iran AI", avatar: "◈",
@@ -426,22 +518,6 @@ const BRANCHES_DATA = {
     assistant: { name: "دستیار تولید", avatar: "🏭", greeting: "شما تولیدکننده هستید یا فروشنده؟", systemPrompt: ``, suggestions: [] }
   }
 };
-</script>
-<script>
-"use strict";
-
-/* =========================================
-   IRAN AI V13.0 — PART 3: APP ROUTER & LOGIC
-========================================= */
-
-const appState = {
-  lang: "fa", 
-  isMuted: false, 
-  user: { name: "مهمان", isGuest: true },
-  onboardingStep: 0, 
-  currentBranch: null,
-  currentCategory: null
-};
 
 const LANGUAGES = {
   fa: { code: "fa-IR", label: "فارسی", hello: "سلام! من دستیار هوش مصنوعی Iran AI هستم. اسم کوچیکت چیه تا حسابت رو بسازیم؟" },
@@ -451,21 +527,51 @@ const LANGUAGES = {
   en: { code: "en-US", label: "English", hello: "Hello! I am the Iran AI assistant. What is your first name?" }
 };
 
-// تبدیل اعداد فارسی به انگلیسی برای درک بهتر هوش مصنوعی
 function normalizeDigits(str) {
   if (typeof str !== "string") return "";
   return str.replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
 }
+</script>
 
-// ---------------- VOICE ENGINE (TTS) ----------------
+<!-- ================= SCRIPT PART 2: AUTH + API ================= -->
+<script>
+"use strict";
+
+const appState = {
+  lang: "fa",
+  isMuted: false,
+  user: { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null },
+  onboardingStep: 0,
+  currentBranch: null,
+  currentCategory: null,
+  // auth
+  authTab: 'login', // login | register | reset
+  mode: 'login',
+  step: 'mobile',
+  isGuest: true,
+  accessToken: localStorage.getItem('kar_access_token') || null,
+  refreshToken: localStorage.getItem('kar_refresh_token') || null,
+  mobile: '',
+  otpCode: '',
+  isSending: false,
+  resendCountdown: 0,
+  resendInterval: null,
+  isCentral: false,
+  memberships: [],
+  // chat
+  chatHistory: []
+};
+
 const synth = window.speechSynthesis;
 function speak(text) {
   if (appState.isMuted || !synth) return;
-  synth.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = LANGUAGES[appState.lang].code;
-  utterance.rate = 1.0;
-  synth.speak(utterance);
+  try {
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = LANGUAGES[appState.lang].code;
+    u.rate = 1.0;
+    synth.speak(u);
+  } catch {}
 }
 
 function addMsg(box, text, role) {
@@ -473,73 +579,1193 @@ function addMsg(box, text, role) {
   div.className = `msg ${role}`;
   div.textContent = text;
   box.appendChild(div); box.scrollTop = box.scrollHeight;
+  if (role === "bot") speak(text);
+  return div;
 }
 
 function proactiveAI(text) {
   addMsg(document.getElementById("dashChatMessages"), text, "bot");
-  speak(text);
 }
 
-// ---------------- 1. ONBOARDING (LOGIN) ----------------
-const onbChat = document.getElementById("onboardingChat");
-const onbInput = document.getElementById("onboardingInput");
-
-function startOnboarding() {
-  appState.onboardingStep = 1;
-  setTimeout(() => speak(LANGUAGES[appState.lang].hello), 1000);
+const toastEl = document.getElementById('toast');
+function showToast(msg, type = 'info') {
+  toastEl.textContent = msg;
+  toastEl.className = `toast show ${type}`;
+  clearTimeout(toastEl._timer);
+  toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 4000);
 }
 
-function handleOnboardingInput() {
-  const val = onbInput.value.trim();
-  if (!val) return;
-  addMsg(onbChat, val, "user");
-  onbInput.value = "";
+function setLoading(btn, loading) {
+  if (!btn) return;
+  if (loading) { btn.classList.add('loading'); btn.disabled = true; }
+  else { btn.classList.remove('loading'); btn.disabled = false; }
+}
 
-  setTimeout(() => {
-    if (appState.onboardingStep === 1) {
-      appState.user.name = val;
-      const reply = `خوشبختم ${val} جان! فامیلیت چیه؟`;
-      addMsg(onbChat, reply, "bot"); speak(reply);
-      appState.onboardingStep = 2;
-    } else if (appState.onboardingStep === 2) {
-      appState.user.last = val;
-      const reply = `ممنون. شماره موبایلت رو وارد کن.`;
-      addMsg(onbChat, reply, "bot"); speak(reply);
-      appState.onboardingStep = 3;
-    } else if (appState.onboardingStep === 3) {
-      if (val.length < 10) {
-        const reply = "شماره موبایل نامعتبره. دوباره وارد کن.";
-        addMsg(onbChat, reply, "bot"); speak(reply);
-      } else {
-        const reply = "✅ ثبت‌نام شما با موفقیت انجام شد! در حال ورود...";
-        addMsg(onbChat, reply, "bot"); speak(reply);
-        appState.onboardingStep = 4;
-        appState.user.isGuest = false;
-        setTimeout(goToMainScreen, 1500);
+function showFieldError(id, msg) {
+  const err = document.getElementById(id + 'Error');
+  const inp = document.getElementById(id + 'Input');
+  if (err) { err.textContent = msg; err.hidden = false; }
+  if (inp) inp.classList.add('invalid');
+}
+function clearFieldError(id) {
+  const err = document.getElementById(id + 'Error');
+  const inp = document.getElementById(id + 'Input');
+  if (err) err.hidden = true;
+  if (inp) inp.classList.remove('invalid');
+}
+function clearAllFieldErrors() {
+  ['mobile','otp','username','password','passwordConfirm'].forEach(clearFieldError);
+}
+
+/* ---------- API ---------- */
+async function apiFetch(url, options = {}, retry = true) {
+  const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+  if (appState.accessToken) headers['Authorization'] = `Bearer ${appState.accessToken}`;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+  let res;
+  try {
+    res = await fetch(`${WORKER_BASE_URL}${url}`, { ...options, headers, signal: controller.signal });
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') throw new Error('درخواست طول کشید. دوباره تلاش کنید.');
+    throw new Error('اتصال به سرور برقرار نشد.');
+  }
+  clearTimeout(timeoutId);
+
+  if (res.status === 404) {
+    throw new Error('این قابلیت روی سرور فعال نیست.');
+  }
+
+  if (res.status === 401 && retry && appState.refreshToken && url !== '/api/v1/auth/refresh') {
+    const ok = await tryRefreshToken();
+    if (ok) return apiFetch(url, options, false);
+    await handleLogout(true);
+    throw new Error('نشست شما منقضی شده است.');
+  }
+  return res;
+}
+
+async function tryRefreshToken() {
+  try {
+    const res = await fetch(`${WORKER_BASE_URL}/api/v1/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: appState.refreshToken })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.access_token) {
+      appState.accessToken = data.access_token;
+      appState.refreshToken = data.refresh_token;
+      localStorage.setItem('kar_access_token', data.access_token);
+      localStorage.setItem('kar_refresh_token', data.refresh_token);
+      if (data.user) {
+        appState.user = {
+          name: data.user.display_name || data.user.username || 'کاربر',
+          display_name: data.user.display_name || null,
+          username: data.user.username || null,
+          mobile_e164: data.user.mobile_e164 || null,
+          isGuest: false
+        };
+        appState.isGuest = false;
       }
+      return true;
     }
-  }, 600);
+    return false;
+  } catch { return false; }
 }
 
-document.getElementById("onboardingSend").addEventListener("click", handleOnboardingInput);
-onbInput.addEventListener("keypress", (e) => { if(e.key === "Enter") handleOnboardingInput(); });
-document.getElementById("btnGuest").addEventListener("click", () => { appState.user.isGuest = true; appState.user.name = "مهمان"; goToMainScreen(); });
+async function probeCoreApi() {
+  try {
+    const res = await fetch(`${WORKER_BASE_URL}/health`, { method: 'GET' });
+    if (!res.ok) {
+      console.warn('[IranAI] /health پاسخ', res.status, 'داد. آیا Worker Core مستقر است؟');
+      return;
+    }
+    const data = await res.json().catch(() => null);
+    if (data && data.version) {
+      console.log('[IranAI] نسخه Core API:', data.version, '— سرویس:', data.service);
+      if (String(data.version).indexOf('1.1') === -1) {
+        console.warn('[IranAI] نسخه گزارش‌شده', data.version, 'است، نه 1.1.0-secured. برخی endpointها (password-reset, ai/chat) ممکن است موجود نباشند.');
+      }
+    } else {
+      console.log('[IranAI] /health پاسخ داد ولی version ندارد.');
+    }
+  } catch (err) {
+    console.warn('[IranAI] /health در دسترس نیست:', err.message);
+  }
+}
 
-// ---------------- 2. MAIN SCREEN (DASHBOARD) ----------------
+/* ---------- AUTH UI ---------- */
+const authForm = document.getElementById('authForm');
+const authSubmit = document.getElementById('authSubmit');
+const authSubmitLabel = document.getElementById('authSubmitLabel');
+const otpResend = document.getElementById('otpResend');
+const resendOtpBtn = document.getElementById('resendOtpBtn');
+const resendTimer = document.getElementById('resendTimer');
+const btnCancelStep = document.getElementById('btnCancelStep');
+const tabLogin = document.getElementById('tabLogin');
+const tabRegister = document.getElementById('tabRegister');
+const tabReset = document.getElementById('tabReset');
+
+function setAuthTab(tab) {
+  appState.authTab = tab;
+  appState.step = 'mobile';
+  appState.mobile = '';
+  appState.otpCode = '';
+  clearAllFieldErrors();
+  [tabLogin, tabRegister, tabReset].forEach(t => t.classList.remove('active'));
+  if (tab === 'login') tabLogin.classList.add('active');
+  if (tab === 'register') tabRegister.classList.add('active');
+  if (tab === 'reset') tabReset.classList.add('active');
+
+  const greeting = document.getElementById('authGreeting');
+  if (tab === 'login') {
+    appState.mode = 'login';
+    greeting.textContent = 'سلام! برای ورود، شماره موبایل و نام کاربری و رمز عبور خود را وارد کنید.';
+  } else if (tab === 'register') {
+    appState.mode = 'register';
+    greeting.textContent = 'سلام! برای ثبت‌نام، ابتدا شماره موبایل خود را وارد کنید.';
+  } else {
+    appState.mode = 'reset';
+    greeting.textContent = 'برای بازیابی رمز عبور، شماره موبایل خود را وارد کنید.';
+  }
+  updateAuthUI();
+}
+
+tabLogin.addEventListener('click', () => setAuthTab('login'));
+tabRegister.addEventListener('click', () => setAuthTab('register'));
+tabReset.addEventListener('click', () => setAuthTab('reset'));
+
+function updateAuthUI() {
+  clearAllFieldErrors();
+  ['mobileGroup','otpGroup','usernameGroup','passwordGroup','passwordConfirmGroup'].forEach(id => {
+    document.getElementById(id).hidden = true;
+  });
+  otpResend.hidden = true;
+  document.getElementById('mobileInput').disabled = false;
+  btnCancelStep.hidden = (appState.step === 'mobile');
+
+  if (appState.step === 'mobile') {
+    document.getElementById('mobileGroup').hidden = false;
+    if (appState.authTab === 'reset') authSubmitLabel.textContent = 'ارسال کد بازیابی ←';
+    else if (appState.authTab === 'register') authSubmitLabel.textContent = 'ارسال کد ثبت‌نام ←';
+    else authSubmitLabel.textContent = 'ادامه ←';
+  } else if (appState.step === 'otp') {
+    document.getElementById('otpGroup').hidden = false;
+    otpResend.hidden = false;
+    authSubmitLabel.textContent = 'تایید کد ←';
+  } else if (appState.step === 'username') {
+    document.getElementById('mobileGroup').hidden = false;
+    document.getElementById('mobileInput').disabled = true;
+    document.getElementById('usernameGroup').hidden = false;
+    document.getElementById('passwordGroup').hidden = false;
+    if (appState.authTab === 'register') {
+      document.getElementById('passwordConfirmGroup').hidden = false;
+      authSubmitLabel.textContent = 'ثبت‌نام ←';
+    } else {
+      authSubmitLabel.textContent = 'ورود ←';
+    }
+  } else if (appState.step === 'newPassword') {
+    // برای فراموشی رمز
+    document.getElementById('passwordGroup').hidden = false;
+    document.getElementById('passwordConfirmGroup').hidden = false;
+    document.getElementById('passwordGroup').querySelector('label').textContent = 'رمز جدید';
+    document.getElementById('passwordConfirmGroup').querySelector('label').textContent = 'تکرار رمز جدید';
+    authSubmitLabel.textContent = 'تغییر رمز ←';
+  }
+}
+
+btnCancelStep.addEventListener('click', () => {
+  if (appState.step === 'otp' || appState.step === 'newPassword') {
+    appState.step = 'mobile';
+    updateAuthUI();
+  } else if (appState.step === 'username') {
+    appState.step = 'mobile';
+    document.getElementById('mobileInput').disabled = false;
+    updateAuthUI();
+  }
+});
+
+authForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  setLoading(authSubmit, true);
+  try {
+    if (appState.step === 'mobile') {
+      if (appState.authTab === 'login') {
+        await handleLoginMobile();
+      } else if (appState.authTab === 'register') {
+        await handleRegisterMobile();
+      } else if (appState.authTab === 'reset') {
+        await handleResetMobile();
+      }
+    } else if (appState.step === 'otp') {
+      await handleOtpSubmit();
+    } else if (appState.step === 'username') {
+      await handleCredentialsSubmit();
+    } else if (appState.step === 'newPassword') {
+      await handleNewPasswordSubmit();
+    }
+  } catch (err) {
+    showToast(err.message || 'خطا در ارتباط با سرور.', 'error');
+  } finally {
+    setLoading(authSubmit, false);
+  }
+});
+
+async function handleLoginMobile() {
+  const mobile = normalizeDigits(document.getElementById('mobileInput').value.trim());
+  clearFieldError('mobile');
+  if (!/^09\d{9}$/.test(mobile)) {
+    showFieldError('mobile', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
+    return;
+  }
+  appState.mobile = mobile;
+  appState.step = 'username';
+  updateAuthUI();
+}
+
+async function handleRegisterMobile() {
+  const mobile = normalizeDigits(document.getElementById('mobileInput').value.trim());
+  clearFieldError('mobile');
+  if (!/^09\d{9}$/.test(mobile)) {
+    showFieldError('mobile', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
+    return;
+  }
+  appState.mobile = mobile;
+
+  const res = await apiFetch('/api/v1/auth/otp/send', {
+    method: 'POST',
+    body: JSON.stringify({ mobile, purpose: 'signup' })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    if (data.code === 'account_exists') {
+      showToast('این شماره قبلاً ثبت شده. به صفحه ورود منتقل می‌شوید...', 'warning');
+      setTimeout(() => setAuthTab('login'), 1500);
+      return;
+    }
+    throw new Error(data.message_fa || 'خطا در ارسال پیامک');
+  }
+  appState.step = 'otp';
+  updateAuthUI();
+  startResendCountdown(120);
+}
+
+async function handleResetMobile() {
+  const mobile = normalizeDigits(document.getElementById('mobileInput').value.trim());
+  clearFieldError('mobile');
+  if (!/^09\d{9}$/.test(mobile)) {
+    showFieldError('mobile', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
+    return;
+  }
+  appState.mobile = mobile;
+
+  const res = await apiFetch('/api/v1/auth/otp/send', {
+    method: 'POST',
+    body: JSON.stringify({ mobile, purpose: 'password_reset' })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok && res.status !== 404) {
+    throw new Error(data.message_fa || 'خطا در ارسال کد بازیابی');
+  }
+  if (res.status === 404) {
+    showToast('بازیابی رمز روی سرور فعال نیست.', 'warning');
+    return;
+  }
+  appState.step = 'otp';
+  updateAuthUI();
+  startResendCountdown(120);
+}
+
+async function handleOtpSubmit() {
+  const code = normalizeDigits(document.getElementById('otpInput').value.trim());
+  clearFieldError('otp');
+  if (!/^\d{6}$/.test(code)) {
+    showFieldError('otp', 'کد باید ۶ رقم باشد.');
+    return;
+  }
+  appState.otpCode = code;
+  if (appState.authTab === 'reset') {
+    appState.step = 'newPassword';
+  } else {
+    appState.step = 'username';
+  }
+  updateAuthUI();
+}
+
+async function handleCredentialsSubmit() {
+  const username = document.getElementById('usernameInput').value.trim();
+  const password = document.getElementById('passwordInput').value;
+  const passwordConfirmEl = document.getElementById('passwordConfirmInput');
+  const passwordConfirm = passwordConfirmEl ? passwordConfirmEl.value : password;
+
+  clearFieldError('username'); clearFieldError('password'); clearFieldError('passwordConfirm');
+
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]{3,39}$/.test(username)) {
+    showFieldError('username', 'نام کاربری ۴-۴۰ کاراکتر لاتین.');
+    return;
+  }
+  if (password.length < 10) {
+    showFieldError('password', 'رمز حداقل ۱۰ کاراکتر.');
+    return;
+  }
+  if (appState.authTab === 'register' && password !== passwordConfirm) {
+    showFieldError('passwordConfirm', 'رمزها یکسان نیستند.');
+    return;
+  }
+
+  if (appState.authTab === 'login') {
+    const res = await apiFetch('/api/v1/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password, device_label: 'web' })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message_fa || 'نام کاربری یا رمز نادرست است.');
+    if (data.two_factor_required) { showTOTPLogin(); return; }
+    await handleLoginSuccess(data);
+    return;
+  }
+
+  // register
+  const res = await apiFetch('/api/v1/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ mobile: appState.mobile, code: appState.otpCode, username, password })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message_fa || 'ثبت‌نام ناموفق بود.');
+
+  // auto-login
+  const loginRes = await apiFetch('/api/v1/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ username, password, device_label: 'web' })
+  });
+  const loginData = await loginRes.json().catch(() => ({}));
+  if (loginRes.ok && loginData.access_token) {
+    showToast('ثبت‌نام موفق!', 'success');
+    await handleLoginSuccess(loginData);
+  } else {
+    showToast('ثبت‌نام انجام شد. لطفاً وارد شوید.', 'success');
+    setAuthTab('login');
+  }
+}
+
+async function handleNewPasswordSubmit() {
+  const password = document.getElementById('passwordInput').value;
+  const passwordConfirmEl = document.getElementById('passwordConfirmInput');
+  const passwordConfirm = passwordConfirmEl ? passwordConfirmEl.value : password;
+
+  clearFieldError('password'); clearFieldError('passwordConfirm');
+
+  if (password.length < 10) {
+    showFieldError('password', 'رمز حداقل ۱۰ کاراکتر.');
+    return;
+  }
+  if (password !== passwordConfirm) {
+    showFieldError('passwordConfirm', 'رمزها یکسان نیستند.');
+    return;
+  }
+
+  const res = await apiFetch('/api/v1/auth/password-reset', {
+    method: 'POST',
+    body: JSON.stringify({
+      mobile: appState.mobile,
+      code: appState.otpCode,
+      new_password: password
+    })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message_fa || 'تغییر رمز ناموفق بود.');
+  showToast('رمز عبور با موفقیت تغییر کرد.', 'success');
+  setAuthTab('login');
+}
+
+async function handleLoginSuccess(data) {
+  appState.accessToken = data.access_token;
+  appState.refreshToken = data.refresh_token;
+  appState.user = {
+    name: data.user?.display_name || data.user?.username || 'کاربر',
+    display_name: data.user?.display_name || null,
+    username: data.user?.username || null,
+    mobile_e164: data.user?.mobile_e164 || null,
+    isGuest: false
+  };
+  appState.isGuest = false;
+  localStorage.setItem('kar_access_token', data.access_token);
+  localStorage.setItem('kar_refresh_token', data.refresh_token);
+  await loadMe();
+  goToMainScreen();
+}
+
+async function loadMe() {
+  try {
+    const res = await apiFetch('/api/v1/me');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.user) {
+      appState.user.display_name = data.user.display_name || appState.user.display_name;
+      appState.user.mobile_e164 = data.user.mobile_e164 || appState.user.mobile_e164;
+    }
+    appState.isCentral = !!data.is_central;
+    appState.memberships = data.memberships || [];
+  } catch {}
+}
+
+function showTOTPLogin() {
+  const container = document.querySelector('.auth-container');
+  container.innerHTML = '';
+  const msgBox = document.createElement('div');
+  msgBox.className = 'chat-messages';
+  const greet = document.createElement('div');
+  greet.className = 'msg bot';
+  greet.textContent = 'ورود دو مرحله‌ای فعال است. کد پیامکی و کد Google Authenticator را وارد کنید.';
+  msgBox.appendChild(greet);
+  container.appendChild(msgBox);
+
+  const form = document.createElement('form');
+  form.className = 'auth-form';
+
+  const g1 = document.createElement('div'); g1.className = 'input-group';
+  const l1 = document.createElement('label'); l1.textContent = 'کد پیامکی';
+  const i1 = document.createElement('input'); i1.id = 'totpMobileCode'; i1.type = 'text'; i1.maxLength = 6; i1.dir = 'ltr'; i1.placeholder = '------';
+  g1.appendChild(l1); g1.appendChild(i1); form.appendChild(g1);
+
+  const g2 = document.createElement('div'); g2.className = 'input-group';
+  const l2 = document.createElement('label'); l2.textContent = 'کد Google Authenticator';
+  const i2 = document.createElement('input'); i2.id = 'totpAuthCode'; i2.type = 'text'; i2.maxLength = 6; i2.dir = 'ltr'; i2.placeholder = '------';
+  g2.appendChild(l2); g2.appendChild(i2); form.appendChild(g2);
+
+  const btn = document.createElement('button');
+  btn.type = 'submit'; btn.className = 'btn-primary';
+  btn.innerHTML = '<span class="btn-label">ورود ←</span><span class="btn-spinner"></span>';
+  form.appendChild(btn);
+  container.appendChild(form);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    setLoading(btn, true);
+    try {
+      const code = normalizeDigits(document.getElementById('totpMobileCode').value.trim());
+      const totp = normalizeDigits(document.getElementById('totpAuthCode').value.trim());
+      const res = await apiFetch('/api/v1/auth/login/verify', {
+        method: 'POST',
+        body: JSON.stringify({ mobile: appState.mobile, code, totp, device_label: 'web' })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message_fa || 'خطا در ورود');
+      await handleLoginSuccess(data);
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      setLoading(btn, false);
+    }
+  });
+}
+
+function startResendCountdown(seconds) {
+  appState.resendCountdown = seconds;
+  resendOtpBtn.disabled = true;
+  const upd = () => {
+    const m = Math.floor(appState.resendCountdown / 60);
+    const s = appState.resendCountdown % 60;
+    resendTimer.textContent = `(${m}:${s.toString().padStart(2, '0')})`;
+  };
+  upd();
+  clearInterval(appState.resendInterval);
+  appState.resendInterval = setInterval(() => {
+    appState.resendCountdown--;
+    if (appState.resendCountdown <= 0) {
+      clearInterval(appState.resendInterval);
+      resendOtpBtn.disabled = false;
+      resendTimer.textContent = '';
+    } else upd();
+  }, 1000);
+}
+
+resendOtpBtn.addEventListener('click', async () => {
+  try {
+    const purpose = appState.authTab === 'reset' ? 'password_reset' : 'signup';
+    const res = await apiFetch('/api/v1/auth/otp/send', {
+      method: 'POST',
+      body: JSON.stringify({ mobile: appState.mobile, purpose })
+    });
+    if (!res.ok) throw new Error('خطا در ارسال');
+    showToast('کد جدید ارسال شد.', 'success');
+    startResendCountdown(120);
+  } catch (err) { showToast(err.message, 'error'); }
+});
+
+/* ---------- GUEST / LOGOUT / SESSION ---------- */
+document.getElementById('btnGuest').addEventListener('click', () => {
+  appState.isGuest = true;
+  appState.user = { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null };
+  goToMainScreen();
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => handleLogout(false));
+
+async function handleLogout(silent = false) {
+  try {
+    if (!silent && appState.accessToken) await apiFetch('/api/v1/auth/logout', { method: 'POST' });
+  } catch {}
+  appState.accessToken = null;
+  appState.refreshToken = null;
+  appState.user = { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null };
+  appState.isGuest = true;
+  appState.isCentral = false;
+  appState.memberships = [];
+  localStorage.removeItem('kar_access_token');
+  localStorage.removeItem('kar_refresh_token');
+  location.reload();
+}
+
+async function restoreSession() {
+  if (!appState.accessToken) return false;
+  try {
+    const res = await apiFetch('/api/v1/me');
+    if (!res.ok) { await handleLogout(true); return false; }
+    const data = await res.json();
+    appState.user = {
+      name: data.user?.display_name || 'کاربر',
+      display_name: data.user?.display_name || null,
+      username: data.user?.username || null,
+      mobile_e164: data.user?.mobile_e164 || null,
+      isGuest: false
+    };
+    appState.isCentral = !!data.is_central;
+    appState.memberships = data.memberships || [];
+    appState.isGuest = false;
+    return true;
+  } catch { return false; }
+}
+</script>
+<!-- ================= SCRIPT PART 2: AUTH + API ================= -->
+<script>
+"use strict";
+
+const appState = {
+  lang: "fa",
+  isMuted: false,
+  user: { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null },
+  onboardingStep: 0,
+  currentBranch: null,
+  currentCategory: null,
+  authTab: 'login',
+  mode: 'login',
+  step: 'mobile',
+  isGuest: true,
+  accessToken: localStorage.getItem('kar_access_token') || null,
+  refreshToken: localStorage.getItem('kar_refresh_token') || null,
+  mobile: '',
+  otpCode: '',
+  isSending: false,
+  resendCountdown: 0,
+  resendInterval: null,
+  isCentral: false,
+  memberships: [],
+  chatHistory: []
+};
+
+const synth = window.speechSynthesis;
+function speak(text) {
+  if (appState.isMuted || !synth) return;
+  try {
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = LANGUAGES[appState.lang].code;
+    u.rate = 1.0;
+    synth.speak(u);
+  } catch {}
+}
+
+function addMsg(box, text, role) {
+  const div = document.createElement("div");
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  box.appendChild(div); box.scrollTop = box.scrollHeight;
+  if (role === "bot") speak(text);
+  return div;
+}
+
+function proactiveAI(text) {
+  addMsg(document.getElementById("dashChatMessages"), text, "bot");
+}
+
+const toastEl = document.getElementById('toast');
+function showToast(msg, type = 'info') {
+  toastEl.textContent = msg;
+  toastEl.className = `toast show ${type}`;
+  clearTimeout(toastEl._timer);
+  toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 4000);
+}
+
+function setLoading(btn, loading) {
+  if (!btn) return;
+  if (loading) { btn.classList.add('loading'); btn.disabled = true; }
+  else { btn.classList.remove('loading'); btn.disabled = false; }
+}
+
+function showFieldError(id, msg) {
+  const err = document.getElementById(id + 'Error');
+  const inp = document.getElementById(id + 'Input');
+  if (err) { err.textContent = msg; err.hidden = false; }
+  if (inp) inp.classList.add('invalid');
+}
+function clearFieldError(id) {
+  const err = document.getElementById(id + 'Error');
+  const inp = document.getElementById(id + 'Input');
+  if (err) err.hidden = true;
+  if (inp) inp.classList.remove('invalid');
+}
+function clearAllFieldErrors() {
+  ['mobile','otp','username','password','passwordConfirm'].forEach(clearFieldError);
+}
+
+/* ---------- API ---------- */
+async function apiFetch(url, options = {}, retry = true) {
+  const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+  if (appState.accessToken) headers['Authorization'] = `Bearer ${appState.accessToken}`;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+  let res;
+  try {
+    res = await fetch(`${WORKER_BASE_URL}${url}`, { ...options, headers, signal: controller.signal });
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') throw new Error('درخواست طول کشید. دوباره تلاش کنید.');
+    throw new Error('اتصال به سرور برقرار نشد.');
+  }
+  clearTimeout(timeoutId);
+
+  if (res.status === 404) {
+    throw new Error('این قابلیت روی سرور فعال نیست.');
+  }
+
+  if (res.status === 401 && retry && appState.refreshToken && url !== '/api/v1/auth/refresh') {
+    const ok = await tryRefreshToken();
+    if (ok) return apiFetch(url, options, false);
+    await handleLogout(true);
+    throw new Error('نشست شما منقضی شده است.');
+  }
+  return res;
+}
+
+async function tryRefreshToken() {
+  try {
+    const res = await fetch(`${WORKER_BASE_URL}/api/v1/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: appState.refreshToken })
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    if (data.access_token) {
+      appState.accessToken = data.access_token;
+      appState.refreshToken = data.refresh_token;
+      localStorage.setItem('kar_access_token', data.access_token);
+      localStorage.setItem('kar_refresh_token', data.refresh_token);
+      if (data.user) {
+        appState.user = {
+          name: data.user.display_name || data.user.username || 'کاربر',
+          display_name: data.user.display_name || null,
+          username: data.user.username || null,
+          mobile_e164: data.user.mobile_e164 || null,
+          isGuest: false
+        };
+        appState.isGuest = false;
+      }
+      return true;
+    }
+    return false;
+  } catch { return false; }
+}
+
+async function probeCoreApi() {
+  try {
+    const res = await fetch(`${WORKER_BASE_URL}/health`, { method: 'GET' });
+    if (!res.ok) {
+      console.warn('[IranAI] /health پاسخ', res.status, 'داد. آیا Worker Core مستقر است؟');
+      return;
+    }
+    const data = await res.json().catch(() => null);
+    if (data && data.version) {
+      console.log('[IranAI] نسخه Core API:', data.version, '— سرویس:', data.service);
+      if (String(data.version).indexOf('1.1') === -1) {
+        console.warn('[IranAI] نسخه گزارش‌شده', data.version, 'است، نه 1.1.0-secured. برخی endpointها (password-reset, ai/chat) ممکن است موجود نباشند.');
+      }
+    } else {
+      console.log('[IranAI] /health پاسخ داد ولی version ندارد.');
+    }
+  } catch (err) {
+    console.warn('[IranAI] /health در دسترس نیست:', err.message);
+  }
+}
+
+/* ---------- AUTH UI ---------- */
+const authForm = document.getElementById('authForm');
+const authSubmit = document.getElementById('authSubmit');
+const authSubmitLabel = document.getElementById('authSubmitLabel');
+const otpResend = document.getElementById('otpResend');
+const resendOtpBtn = document.getElementById('resendOtpBtn');
+const resendTimer = document.getElementById('resendTimer');
+const btnCancelStep = document.getElementById('btnCancelStep');
+const tabLogin = document.getElementById('tabLogin');
+const tabRegister = document.getElementById('tabRegister');
+const tabReset = document.getElementById('tabReset');
+
+function setAuthTab(tab) {
+  appState.authTab = tab;
+  appState.step = 'mobile';
+  appState.mobile = '';
+  appState.otpCode = '';
+  clearAllFieldErrors();
+  [tabLogin, tabRegister, tabReset].forEach(t => t.classList.remove('active'));
+  if (tab === 'login') tabLogin.classList.add('active');
+  if (tab === 'register') tabRegister.classList.add('active');
+  if (tab === 'reset') tabReset.classList.add('active');
+
+  const greeting = document.getElementById('authGreeting');
+  if (tab === 'login') {
+    appState.mode = 'login';
+    greeting.textContent = 'سلام! برای ورود، شماره موبایل و نام کاربری و رمز عبور خود را وارد کنید.';
+  } else if (tab === 'register') {
+    appState.mode = 'register';
+    greeting.textContent = 'سلام! برای ثبت‌نام، ابتدا شماره موبایل خود را وارد کنید.';
+  } else {
+    appState.mode = 'reset';
+    greeting.textContent = 'برای بازیابی رمز عبور، شماره موبایل خود را وارد کنید.';
+  }
+  updateAuthUI();
+}
+
+tabLogin.addEventListener('click', () => setAuthTab('login'));
+tabRegister.addEventListener('click', () => setAuthTab('register'));
+tabReset.addEventListener('click', () => setAuthTab('reset'));
+
+function updateAuthUI() {
+  clearAllFieldErrors();
+  ['mobileGroup','otpGroup','usernameGroup','passwordGroup','passwordConfirmGroup'].forEach(id => {
+    document.getElementById(id).hidden = true;
+  });
+  otpResend.hidden = true;
+  document.getElementById('mobileInput').disabled = false;
+  btnCancelStep.hidden = (appState.step === 'mobile');
+
+  if (appState.step === 'mobile') {
+    document.getElementById('mobileGroup').hidden = false;
+    if (appState.authTab === 'reset') authSubmitLabel.textContent = 'ارسال کد بازیابی ←';
+    else if (appState.authTab === 'register') authSubmitLabel.textContent = 'ارسال کد ثبت‌نام ←';
+    else authSubmitLabel.textContent = 'ادامه ←';
+  } else if (appState.step === 'otp') {
+    document.getElementById('otpGroup').hidden = false;
+    otpResend.hidden = false;
+    authSubmitLabel.textContent = 'تایید کد ←';
+  } else if (appState.step === 'username') {
+    document.getElementById('mobileGroup').hidden = false;
+    document.getElementById('mobileInput').disabled = true;
+    document.getElementById('usernameGroup').hidden = false;
+    document.getElementById('passwordGroup').hidden = false;
+    if (appState.authTab === 'register') {
+      document.getElementById('passwordConfirmGroup').hidden = false;
+      authSubmitLabel.textContent = 'ثبت‌نام ←';
+    } else {
+      authSubmitLabel.textContent = 'ورود ←';
+    }
+  } else if (appState.step === 'newPassword') {
+    document.getElementById('passwordGroup').hidden = false;
+    document.getElementById('passwordConfirmGroup').hidden = false;
+    document.getElementById('passwordGroup').querySelector('label').textContent = 'رمز جدید';
+    document.getElementById('passwordConfirmGroup').querySelector('label').textContent = 'تکرار رمز جدید';
+    authSubmitLabel.textContent = 'تغییر رمز ←';
+  }
+}
+
+btnCancelStep.addEventListener('click', () => {
+  if (appState.step === 'otp' || appState.step === 'newPassword') {
+    appState.step = 'mobile';
+    updateAuthUI();
+  } else if (appState.step === 'username') {
+    appState.step = 'mobile';
+    document.getElementById('mobileInput').disabled = false;
+    updateAuthUI();
+  }
+});
+
+authForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  setLoading(authSubmit, true);
+  try {
+    if (appState.step === 'mobile') {
+      if (appState.authTab === 'login') await handleLoginMobile();
+      else if (appState.authTab === 'register') await handleRegisterMobile();
+      else if (appState.authTab === 'reset') await handleResetMobile();
+    } else if (appState.step === 'otp') {
+      await handleOtpSubmit();
+    } else if (appState.step === 'username') {
+      await handleCredentialsSubmit();
+    } else if (appState.step === 'newPassword') {
+      await handleNewPasswordSubmit();
+    }
+  } catch (err) {
+    showToast(err.message || 'خطا در ارتباط با سرور.', 'error');
+  } finally {
+    setLoading(authSubmit, false);
+  }
+});
+
+async function handleLoginMobile() {
+  const mobile = normalizeDigits(document.getElementById('mobileInput').value.trim());
+  clearFieldError('mobile');
+  if (!/^09\d{9}$/.test(mobile)) {
+    showFieldError('mobile', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
+    return;
+  }
+  appState.mobile = mobile;
+  appState.step = 'username';
+  updateAuthUI();
+}
+
+async function handleRegisterMobile() {
+  const mobile = normalizeDigits(document.getElementById('mobileInput').value.trim());
+  clearFieldError('mobile');
+  if (!/^09\d{9}$/.test(mobile)) {
+    showFieldError('mobile', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
+    return;
+  }
+  appState.mobile = mobile;
+
+  const res = await apiFetch('/api/v1/auth/otp/send', {
+    method: 'POST',
+    body: JSON.stringify({ mobile, purpose: 'signup' })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    if (data.code === 'account_exists') {
+      showToast('این شماره قبلاً ثبت شده. به صفحه ورود منتقل می‌شوید...', 'warning');
+      setTimeout(() => setAuthTab('login'), 1500);
+      return;
+    }
+    throw new Error(data.message_fa || 'خطا در ارسال پیامک');
+  }
+  appState.step = 'otp';
+  updateAuthUI();
+  startResendCountdown(120);
+}
+
+async function handleResetMobile() {
+  const mobile = normalizeDigits(document.getElementById('mobileInput').value.trim());
+  clearFieldError('mobile');
+  if (!/^09\d{9}$/.test(mobile)) {
+    showFieldError('mobile', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
+    return;
+  }
+  appState.mobile = mobile;
+
+  const res = await apiFetch('/api/v1/auth/otp/send', {
+    method: 'POST',
+    body: JSON.stringify({ mobile, purpose: 'password_reset' })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok && res.status !== 404) {
+    throw new Error(data.message_fa || 'خطا در ارسال کد بازیابی');
+  }
+  if (res.status === 404) {
+    showToast('بازیابی رمز روی سرور فعال نیست.', 'warning');
+    return;
+  }
+  appState.step = 'otp';
+  updateAuthUI();
+  startResendCountdown(120);
+}
+
+async function handleOtpSubmit() {
+  const code = normalizeDigits(document.getElementById('otpInput').value.trim());
+  clearFieldError('otp');
+  if (!/^\d{6}$/.test(code)) {
+    showFieldError('otp', 'کد باید ۶ رقم باشد.');
+    return;
+  }
+  appState.otpCode = code;
+  if (appState.authTab === 'reset') appState.step = 'newPassword';
+  else appState.step = 'username';
+  updateAuthUI();
+}
+
+async function handleCredentialsSubmit() {
+  const username = document.getElementById('usernameInput').value.trim();
+  const password = document.getElementById('passwordInput').value;
+  const passwordConfirmEl = document.getElementById('passwordConfirmInput');
+  const passwordConfirm = passwordConfirmEl ? passwordConfirmEl.value : password;
+
+  clearFieldError('username'); clearFieldError('password'); clearFieldError('passwordConfirm');
+
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]{3,39}$/.test(username)) {
+    showFieldError('username', 'نام کاربری ۴-۴۰ کاراکتر لاتین.');
+    return;
+  }
+  if (password.length < 10) {
+    showFieldError('password', 'رمز حداقل ۱۰ کاراکتر.');
+    return;
+  }
+  if (appState.authTab === 'register' && password !== passwordConfirm) {
+    showFieldError('passwordConfirm', 'رمزها یکسان نیستند.');
+    return;
+  }
+
+  if (appState.authTab === 'login') {
+    const res = await apiFetch('/api/v1/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password, device_label: 'web' })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message_fa || 'نام کاربری یا رمز نادرست است.');
+    if (data.two_factor_required) { showTOTPLogin(); return; }
+    await handleLoginSuccess(data);
+    return;
+  }
+
+  // register
+  const res = await apiFetch('/api/v1/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ mobile: appState.mobile, code: appState.otpCode, username, password })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message_fa || 'ثبت‌نام ناموفق بود.');
+
+  // auto-login
+  const loginRes = await apiFetch('/api/v1/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ username, password, device_label: 'web' })
+  });
+  const loginData = await loginRes.json().catch(() => ({}));
+  if (loginRes.ok && loginData.access_token) {
+    showToast('ثبت‌نام موفق!', 'success');
+    await handleLoginSuccess(loginData);
+  } else {
+    showToast('ثبت‌نام انجام شد. لطفاً وارد شوید.', 'success');
+    setAuthTab('login');
+  }
+}
+
+async function handleNewPasswordSubmit() {
+  const password = document.getElementById('passwordInput').value;
+  const passwordConfirmEl = document.getElementById('passwordConfirmInput');
+  const passwordConfirm = passwordConfirmEl ? passwordConfirmEl.value : password;
+
+  clearFieldError('password'); clearFieldError('passwordConfirm');
+
+  if (password.length < 10) {
+    showFieldError('password', 'رمز حداقل ۱۰ کاراکتر.');
+    return;
+  }
+  if (password !== passwordConfirm) {
+    showFieldError('passwordConfirm', 'رمزها یکسان نیستند.');
+    return;
+  }
+
+  const res = await apiFetch('/api/v1/auth/password-reset', {
+    method: 'POST',
+    body: JSON.stringify({
+      mobile: appState.mobile,
+      code: appState.otpCode,
+      new_password: password
+    })
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message_fa || 'تغییر رمز ناموفق بود.');
+  showToast('رمز عبور با موفقیت تغییر کرد.', 'success');
+  setAuthTab('login');
+}
+
+async function handleLoginSuccess(data) {
+  appState.accessToken = data.access_token;
+  appState.refreshToken = data.refresh_token;
+  appState.user = {
+    name: data.user?.display_name || data.user?.username || 'کاربر',
+    display_name: data.user?.display_name || null,
+    username: data.user?.username || null,
+    mobile_e164: data.user?.mobile_e164 || null,
+    isGuest: false
+  };
+  appState.isGuest = false;
+  localStorage.setItem('kar_access_token', data.access_token);
+  localStorage.setItem('kar_refresh_token', data.refresh_token);
+  await loadMe();
+  goToMainScreen();
+}
+
+async function loadMe() {
+  try {
+    const res = await apiFetch('/api/v1/me');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.user) {
+      appState.user.display_name = data.user.display_name || appState.user.display_name;
+      appState.user.mobile_e164 = data.user.mobile_e164 || appState.user.mobile_e164;
+    }
+    appState.isCentral = !!data.is_central;
+    appState.memberships = data.memberships || [];
+  } catch {}
+}
+
+function showTOTPLogin() {
+  const container = document.querySelector('.auth-container');
+  container.innerHTML = '';
+  const msgBox = document.createElement('div');
+  msgBox.className = 'chat-messages';
+  const greet = document.createElement('div');
+  greet.className = 'msg bot';
+  greet.textContent = 'ورود دو مرحله‌ای فعال است. کد پیامکی و کد Google Authenticator را وارد کنید.';
+  msgBox.appendChild(greet);
+  container.appendChild(msgBox);
+
+  const form = document.createElement('form');
+  form.className = 'auth-form';
+
+  const g1 = document.createElement('div'); g1.className = 'input-group';
+  const l1 = document.createElement('label'); l1.textContent = 'کد پیامکی';
+  const i1 = document.createElement('input'); i1.id = 'totpMobileCode'; i1.type = 'text'; i1.maxLength = 6; i1.dir = 'ltr'; i1.placeholder = '------';
+  g1.appendChild(l1); g1.appendChild(i1); form.appendChild(g1);
+
+  const g2 = document.createElement('div'); g2.className = 'input-group';
+  const l2 = document.createElement('label'); l2.textContent = 'کد Google Authenticator';
+  const i2 = document.createElement('input'); i2.id = 'totpAuthCode'; i2.type = 'text'; i2.maxLength = 6; i2.dir = 'ltr'; i2.placeholder = '------';
+  g2.appendChild(l2); g2.appendChild(i2); form.appendChild(g2);
+
+  const btn = document.createElement('button');
+  btn.type = 'submit'; btn.className = 'btn-primary';
+  btn.innerHTML = '<span class="btn-label">ورود ←</span><span class="btn-spinner"></span>';
+  form.appendChild(btn);
+  container.appendChild(form);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    setLoading(btn, true);
+    try {
+      const code = normalizeDigits(document.getElementById('totpMobileCode').value.trim());
+      const totp = normalizeDigits(document.getElementById('totpAuthCode').value.trim());
+      const res = await apiFetch('/api/v1/auth/login/verify', {
+        method: 'POST',
+        body: JSON.stringify({ mobile: appState.mobile, code, totp, device_label: 'web' })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message_fa || 'خطا در ورود');
+      await handleLoginSuccess(data);
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      setLoading(btn, false);
+    }
+  });
+}
+
+function startResendCountdown(seconds) {
+  appState.resendCountdown = seconds;
+  resendOtpBtn.disabled = true;
+  const upd = () => {
+    const m = Math.floor(appState.resendCountdown / 60);
+    const s = appState.resendCountdown % 60;
+    resendTimer.textContent = `(${m}:${s.toString().padStart(2, '0')})`;
+  };
+  upd();
+  clearInterval(appState.resendInterval);
+  appState.resendInterval = setInterval(() => {
+    appState.resendCountdown--;
+    if (appState.resendCountdown <= 0) {
+      clearInterval(appState.resendInterval);
+      resendOtpBtn.disabled = false;
+      resendTimer.textContent = '';
+    } else upd();
+  }, 1000);
+}
+
+resendOtpBtn.addEventListener('click', async () => {
+  try {
+    const purpose = appState.authTab === 'reset' ? 'password_reset' : 'signup';
+    const res = await apiFetch('/api/v1/auth/otp/send', {
+      method: 'POST',
+      body: JSON.stringify({ mobile: appState.mobile, purpose })
+    });
+    if (!res.ok) throw new Error('خطا در ارسال');
+    showToast('کد جدید ارسال شد.', 'success');
+    startResendCountdown(120);
+  } catch (err) { showToast(err.message, 'error'); }
+});
+
+/* ---------- GUEST / LOGOUT / SESSION ---------- */
+document.getElementById('btnGuest').addEventListener('click', () => {
+  appState.isGuest = true;
+  appState.user = { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null };
+  goToMainScreen();
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => handleLogout(false));
+
+async function handleLogout(silent = false) {
+  try {
+    if (!silent && appState.accessToken) await apiFetch('/api/v1/auth/logout', { method: 'POST' });
+  } catch {}
+  appState.accessToken = null;
+  appState.refreshToken = null;
+  appState.user = { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null };
+  appState.isGuest = true;
+  appState.isCentral = false;
+  appState.memberships = [];
+  localStorage.removeItem('kar_access_token');
+  localStorage.removeItem('kar_refresh_token');
+  location.reload();
+}
+
+async function restoreSession() {
+  if (!appState.accessToken) return false;
+  try {
+    const res = await apiFetch('/api/v1/me');
+    if (!res.ok) { await handleLogout(true); return false; }
+    const data = await res.json();
+    appState.user = {
+      name: data.user?.display_name || 'کاربر',
+      display_name: data.user?.display_name || null,
+      username: data.user?.username || null,
+      mobile_e164: data.user?.mobile_e164 || null,
+      isGuest: false
+    };
+    appState.isCentral = !!data.is_central;
+    appState.memberships = data.memberships || [];
+    appState.isGuest = false;
+    return true;
+  } catch { return false; }
+}
+</script>
+<!-- ================= SCRIPT PART 3: RENDERERS + CHAT + INIT ================= -->
+<script>
+"use strict";
+
+/* ---------- MAIN SCREEN ---------- */
 function goToMainScreen() {
   document.getElementById("onboardingScreen").classList.add("hidden");
   document.getElementById("mainScreen").classList.add("active");
-  document.getElementById("userLabel").textContent = appState.user.isGuest ? "مهمان" : appState.user.name + " عزیز";
-  
-  // ساخت هدر داشبورد (با کیف پول)
+
+  const label = appState.isGuest
+    ? "مهمان"
+    : (appState.user.display_name || appState.user.name || "کاربر") + " عزیز";
+  document.getElementById("userLabel").textContent = label;
+  document.getElementById("logoutBtn").style.display = appState.isGuest ? "none" : "grid";
+
+  // کیف پول
   const header = document.querySelector("#mainScreen header");
+  const headerRight = header.querySelector(".header-right");
   if (!document.getElementById("walletBtn")) {
     const walletDiv = document.createElement("div");
     walletDiv.id = "walletBtn";
     walletDiv.style.cssText = "display:flex; align-items:center; gap:5px; background:#FFF8E7; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:bold; color:var(--gold-main); cursor:pointer;";
     walletDiv.innerHTML = "💳 کیف پول: ۱,۲۵۰,۰۰۰ تومان";
-    walletDiv.onclick = () => alert("کیف پول شما شارژ شد (شبیه‌سازی).");
-    header.insertBefore(walletDiv, document.getElementById("userLabel"));
+    walletDiv.onclick = () => showToast("کیف پول شما شارژ شد (شبیه‌سازی).", "success");
+    headerRight.insertBefore(walletDiv, document.getElementById("logoutBtn"));
   }
 
   renderDashboard();
@@ -547,36 +1773,43 @@ function goToMainScreen() {
 
 function renderDashboard() {
   const featured = ["iran_transport", "iran_ads", "iran_mechanic", "iran_accounting"];
-  const strip = document.getElementById("featuredStrip"); strip.innerHTML = "";
+  const strip = document.getElementById("featuredStrip");
+  strip.innerHTML = "";
   featured.forEach(key => {
     const d = BRANCHES_DATA[key];
-    const div = document.createElement("div"); div.className = "featured-item";
+    if (!d) return;
+    const div = document.createElement("div");
+    div.className = "featured-item";
     div.innerHTML = `<div class="icon">${d.icon}</div><span>${d.title}</span>`;
-    div.onclick = () => openFullScreenApp(key); strip.appendChild(div);
+    div.onclick = () => openFullScreenApp(key);
+    strip.appendChild(div);
   });
 
-  const grid = document.getElementById("branchGrid"); grid.innerHTML = "";
+  const grid = document.getElementById("branchGrid");
+  grid.innerHTML = "";
   Object.keys(BRANCHES_DATA).forEach(key => {
     const d = BRANCHES_DATA[key];
-    const card = document.createElement("div"); card.className = "branch-card";
+    const card = document.createElement("div");
+    card.className = "branch-card";
     card.innerHTML = `<div class="icon-circle"><span>${d.icon}</span></div><span class="branch-name">${d.title}</span>`;
-    card.onclick = () => openFullScreenApp(key); grid.appendChild(card);
+    card.onclick = () => openFullScreenApp(key);
+    grid.appendChild(card);
   });
 }
 
-// ---------------- 3. APP ROUTER (FULL SCREEN) ----------------
+/* ---------- APP ROUTER ---------- */
 const appScreen = document.getElementById("appScreen");
 const appContent = document.getElementById("appContent");
 
 function openFullScreenApp(branchKey) {
   appState.currentBranch = branchKey;
   const data = BRANCHES_DATA[branchKey];
-  
+  if (!data) { showToast("این شاخه در دسترس نیست.", "error"); return; }
+
   document.getElementById("appTitle").textContent = data.title;
   appScreen.classList.add("active");
-  appContent.innerHTML = ""; // پاک کردن صفحه
+  appContent.innerHTML = "";
 
-  // رندر کردن صفحه بر اساس نوع UI
   if (data.uiType === "snapp") renderSnappApp(data);
   else if (data.uiType === "divar") renderDivarApp(data);
   else if (data.uiType === "mechanic") renderMechanicApp(data);
@@ -584,9 +1817,9 @@ function openFullScreenApp(branchKey) {
   else if (data.uiType === "legal") renderLegalApp(data);
   else if (data.uiType === "tourism") renderTourismApp(data);
   else if (data.uiType === "b2b") renderB2BApp(data);
+  else if (data.uiType === "bank") renderBankApp(data);
   else renderNormalApp(data);
 
-  // پیام پیش‌دستانه هوش مصنوعی
   proactiveAI(`وارد بخش ${data.title} شدیم. ${data.assistant.greeting}`);
 }
 
@@ -595,9 +1828,9 @@ document.getElementById("closeApp").addEventListener("click", () => {
   proactiveAI("از بخش خارج شدی. چه کار دیگه‌ای می‌تونم برات انجام بدم؟");
 });
 
-// ---------------- 4. SPECIFIC APP RENDERERS ----------------
+/* ---------- RENDERERS ---------- */
 
-// 🚕 1. اسنپ (ایران سفر)
+// 🚕 اسنپ
 function renderSnappApp(data) {
   appContent.innerHTML = `
     <div class="snapp-map">
@@ -618,21 +1851,21 @@ function renderSnappApp(data) {
     <button class="btn-action" onclick="submitSnapp()">درخواست سفر</button>
   `;
 }
-
-window.selectCar = function(el) { document.querySelectorAll('.car-card').forEach(c => c.classList.remove('active')); el.classList.add('active'); };
+window.selectCar = function(el) {
+  document.querySelectorAll('.car-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+};
 window.submitSnapp = function() {
+  if (appState.isGuest) { showToast("برای ثبت سفر ابتدا وارد شوید.", "error"); return; }
   const orig = document.getElementById("s-origin").value || "مبدا";
   const dest = document.getElementById("s-dest").value || "مقصد";
   appScreen.classList.remove("active");
   proactiveAI(`✅ سفر شما از «${orig}» به «${dest}» ثبت شد. مبلغ ۸۵,۰۰۰ تومان از کیف پول کسر شد. راننده در حال یافتن مسیر است.`);
 };
 
-// 📢 2. دیوار (ایران آگهی)
+// 📢 دیوار
 function renderDivarApp(data) {
-  // هدر و دسته‌بندی‌ها
   let catHtml = data.categories.map(c => `<div class="divar-cat"><span>📦</span><small>${c}</small></div>`).join("");
-  
-  // آگهی‌های فیک برای نمایش
   const mockAds = [
     { title: "پژو ۲۰۶ مدل ۹۵", price: "۴۵۰,۰۰۰,۰۰۰", icon: "🚗" },
     { title: "آپارتمان ۸۰ متری", price: "۲,۵۰۰,۰۰۰,۰۰۰", icon: "🏢" },
@@ -652,12 +1885,12 @@ function renderDivarApp(data) {
     <button class="fab-add" onclick="openNewAdForm()">+</button>
   `;
 }
-
 window.openNewAdForm = function() {
   appContent.innerHTML = `
     <h3 style="margin-bottom:16px;">ثبت آگهی جدید</h3>
-    <div class="divar-upload" onclick="alert('انتخاب عکس از گالری...')">
-      <span>📸</span><p>افزودن عکس (عکس اصلی)</p>
+    <div style="background:#F8FAFC; border:2px dashed #CBD5E1; border-radius:12px; padding:20px; text-align:center; cursor:pointer; margin-bottom:16px;" onclick="showToast('انتخاب عکس از گالری... (نمایشی)','info')">
+      <span style="font-size:32px;">📸</span>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">افزودن عکس (عکس اصلی)</p>
     </div>
     <div style="margin-bottom:12px;"><input type="text" placeholder="عنوان آگهی" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc;"></div>
     <div style="margin-bottom:12px;"><input type="text" placeholder="قیمت (تومان)" style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc;"></div>
@@ -665,13 +1898,12 @@ window.openNewAdForm = function() {
     <button class="btn-action" style="background:#EF4444;" onclick="submitAd()">ثبت آگهی</button>
   `;
 };
-
 window.submitAd = function() {
   appScreen.classList.remove("active");
   proactiveAI("✅ آگهی شما با موفقیت ثبت شد و پس از تایید در صفحه نمایش داده می‌شود.");
 };
 
-// 🔧 3. مکانیک
+// 🔧 مکانیک
 function renderMechanicApp(data) {
   appContent.innerHTML = `
     <h3 style="margin-bottom:16px;">مشکل خودروی شما چیست؟</h3>
@@ -681,8 +1913,8 @@ function renderMechanicApp(data) {
     <div class="mechanic-issue-card" onclick="showMechanicPayment()"><span>مشکل برقی دارد</span> <span>←</span></div>
   `;
 }
-
 window.showMechanicPayment = function() {
+  if (appState.isGuest) { showToast("ابتدا وارد شوید.", "error"); return; }
   appContent.innerHTML = `
     <div style="text-align:center; margin-bottom:20px;">
       <div style="font-size:50px;">🔧</div>
@@ -695,19 +1927,18 @@ window.showMechanicPayment = function() {
     </div>
   `;
 };
-
 window.payMechanicFee = function() {
   appScreen.classList.remove("active");
   proactiveAI("✅ پرداخت ۵۰,۰۰۰ تومان با موفقیت انجام شد. مکانیک به سمت شما در حال حرکت است.");
 };
 
-// 💼 4. حسابدار
+// 💼 حسابدار
 function renderAccountingApp(data) {
   appContent.innerHTML = `
     <div style="background:#fff; padding:20px; border-radius:16px; border:1px solid #ddd; text-align:center; margin-bottom:16px;">
       <h3 style="color:#10B981; margin-bottom:8px;">موجودی صندوق</h3>
       <h2 style="font-size:24px; margin-bottom:16px;">۱۲,۵۰۰,۰۰۰ تومان</h2>
-      <button style="background:var(--gold-main); color:#fff; padding:10px 20px; border-radius:10px; border:none; font-weight:bold; cursor:pointer;" onclick="alert('دوربین باز شد... (شبیه‌سازی)')">📸 آپلود فاکتور با هوش مصنوعی</button>
+      <button style="background:var(--gold-main); color:#fff; padding:10px 20px; border-radius:10px; border:none; font-weight:bold; cursor:pointer;" onclick="showToast('دوربین باز شد... (شبیه‌سازی)','info')">📸 آپلود فاکتور با هوش مصنوعی</button>
     </div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
       <div style="background:#fff; padding:16px; border-radius:12px; text-align:center; border:1px solid #ddd;">
@@ -720,7 +1951,7 @@ function renderAccountingApp(data) {
   `;
 }
 
-// ⚖️ 5. مشاوره حقوقی
+// ⚖️ حقوقی
 function renderLegalApp(data) {
   appContent.innerHTML = `
     <div style="text-align:center; padding:40px 20px;">
@@ -737,7 +1968,7 @@ window.openLegalChat = function() {
   proactiveAI("بفرمایید، سوال حقوقی خود را بپرسید. من طبق قوانین کشور راهنمایی‌تان می‌کنم.");
 };
 
-// ✈️ 6. گردشگری
+// ✈️ گردشگری
 function renderTourismApp(data) {
   appContent.innerHTML = `
     <h3 style="margin-bottom:16px;">کجای ایران رو می‌خواید ببینید؟</h3>
@@ -754,7 +1985,7 @@ function renderTourismApp(data) {
   `;
 }
 
-// 🏭 7. B2B تولید
+// 🏭 B2B
 function renderB2BApp(data) {
   appContent.innerHTML = `
     <h3 style="margin-bottom:16px;">شما چه نقشی دارید؟</h3>
@@ -768,59 +1999,126 @@ window.selectB2BRole = function(role) {
   proactiveAI(`شما به عنوان «${role}» وارد شدید. فرم مربوطه در حال بارگذاری است.`);
 };
 
-// 🏗️ 8. فرم‌های عادی (بقیه شاخه‌ها)
+// 💳 بانک
+function renderBankApp(data) {
+  appContent.innerHTML = `
+    <div style="background:linear-gradient(135deg,#D4AF37,#B8860B); padding:20px; border-radius:16px; color:#fff; margin-bottom:16px;">
+      <p style="font-size:12px; opacity:0.9;">موجودی کیف پول</p>
+      <h2 style="font-size:24px;">۰ تومان</h2>
+    </div>
+    <div class="mechanic-issue-card" onclick="showToast('پرداخت قبض در فاز بعدی فعال می‌شود.','warning')"><span>پرداخت قبض</span> <span>←</span></div>
+    <div class="mechanic-issue-card" onclick="showToast('انتقال وجه در فاز بعدی فعال می‌شود.','warning')"><span>انتقال وجه</span> <span>←</span></div>
+    <div class="mechanic-issue-card" onclick="showToast('شارژ کیف پول در فاز بعدی فعال می‌شود.','warning')"><span>شارژ کیف پول</span> <span>←</span></div>
+  `;
+}
+
+// 🏗️ فرم‌های عادی
 function renderNormalApp(data) {
-  let catHtml = data.categories.map((c, i) => `<div class="mechanic-issue-card" onclick="renderNormalForm(${i})"><span>${c}</span> <span>←</span></div>`).join("");
+  let catHtml = data.categories.map((c, i) =>
+    `<div class="mechanic-issue-card" onclick="renderNormalForm(${i})"><span>${c}</span> <span>←</span></div>`
+  ).join("");
   appContent.innerHTML = `<h3 style="margin-bottom:16px;">انتخاب خدمت</h3>${catHtml}`;
 }
 
 window.renderNormalForm = function(catIdx) {
   const data = BRANCHES_DATA[appState.currentBranch];
-  const form = data.formsByCategoryIndex[catIdx];
-  
-  let fieldsHtml = form.fields.map(f => `
-    <div style="margin-bottom:12px;">
-      <label style="display:block; font-size:12px; margin-bottom:4px; font-weight:bold;">${f.label}</label>
-      <input type="text" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;">
-    </div>
-  `).join("");
+  const form = data.formsByCategoryIndex && data.formsByCategoryIndex[catIdx];
+  if (!form) { showToast("این خدمت در فاز بعدی فعال می‌شود.", "warning"); return; }
+
+  let fieldsHtml = form.fields.map((f, i) => {
+    const id = `dyn_${i}`;
+    const req = f.required ? ' *' : '';
+    if (f.type === "select") {
+      const opts = (f.options || []).map(o => `<option value="${o}">${o}</option>`).join("");
+      return `<div style="margin-bottom:12px;">
+        <label style="display:block; font-size:12px; margin-bottom:4px; font-weight:bold;">${f.label}${req}</label>
+        <select id="${id}" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;">
+          <option value="">انتخاب کنید...</option>${opts}
+        </select>
+      </div>`;
+    }
+    if (f.type === "textarea") {
+      return `<div style="margin-bottom:12px;">
+        <label style="display:block; font-size:12px; margin-bottom:4px; font-weight:bold;">${f.label}${req}</label>
+        <textarea id="${id}" rows="3" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;"></textarea>
+      </div>`;
+    }
+    return `<div style="margin-bottom:12px;">
+      <label style="display:block; font-size:12px; margin-bottom:4px; font-weight:bold;">${f.label}${req}</label>
+      <input type="${f.type || 'text'}" id="${id}" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;">
+    </div>`;
+  }).join("");
 
   appContent.innerHTML = `
     <h3>${form.title}</h3>
-    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">${form.intro}</p>
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">${form.intro || ''}</p>
     ${fieldsHtml}
     <button class="btn-action" onclick="submitNormalForm()">ثبت نهایی درخواست</button>
   `;
 };
 
 window.submitNormalForm = function() {
+  if (appState.isGuest) { showToast("ابتدا وارد شوید.", "error"); return; }
   appScreen.classList.remove("active");
   proactiveAI("✅ درخواست شما با موفقیت ثبت شد! کد پیگیری: IR-" + Math.floor(Math.random()*90000+10000));
 };
 
-// ---------------- 5. CHAT LOGIC ----------------
+/* ---------- CHAT (Worker /api/v1/ai/chat) ---------- */
+const chatModal = document.getElementById("chatModal");
+const chatMessagesArea = document.getElementById("dashChatMessages");
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
+const chatSendBtn = document.getElementById("chatSendBtn");
+
 document.getElementById("fabChat").addEventListener("click", () => {
-  document.getElementById("chatModal").classList.add("show");
+  chatModal.classList.add("show");
+  setTimeout(() => chatInput.focus(), 150);
 });
 document.getElementById("closeChatModal").addEventListener("click", () => {
-  document.getElementById("chatModal").classList.remove("show");
+  chatModal.classList.remove("show");
 });
 
-document.getElementById("dashChatSend").addEventListener("click", () => {
-  const text = document.getElementById("dashChatInput").value.trim();
+chatForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (appState.isSending) return;
+  const text = chatInput.value.trim();
   if (!text) return;
-  addMsg(document.getElementById("dashChatMessages"), text, "user");
-  document.getElementById("dashChatInput").value = "";
-  
-  setTimeout(() => {
-    proactiveAI("من در حال حاضر در حالت شبیه‌سازی هستم. لطفاً از طریق آیکون‌های اصلی سرویس مورد نظر خود را انتخاب کنید.");
-  }, 600);
+  chatInput.value = "";
+
+  addMsg(chatMessagesArea, text, "user");
+  appState.chatHistory.push({ role: "user", content: text });
+
+  appState.isSending = true;
+  setLoading(chatSendBtn, true);
+
+  try {
+    const res = await apiFetch("/api/v1/ai/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        message: text,
+        history: appState.chatHistory.slice(-10)
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message_fa || "خطا در پاسخ دستیار");
+    const reply = data.reply || "پاسخی دریافت نشد.";
+    addMsg(chatMessagesArea, reply, "bot");
+    appState.chatHistory.push({ role: "assistant", content: reply });
+  } catch (err) {
+    addMsg(chatMessagesArea, "⚠️ " + (err.message || "خطا در ارتباط با سرور"), "bot");
+  } finally {
+    appState.isSending = false;
+    setLoading(chatSendBtn, false);
+  }
 });
 
-// ---------------- INITIALIZATION ----------------
-document.addEventListener("DOMContentLoaded", () => {
-  startOnboarding();
-});
+/* ---------- INIT ---------- */
+(async function init() {
+  probeCoreApi();
+  updateAuthUI();
+  const restored = await restoreSession();
+  if (restored) goToMainScreen();
+})();
 </script>
 </body>
 </html>
