@@ -243,6 +243,7 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
   <header>
     <div class="logo">Iran <span>AI</span></div>
     <div class="header-right">
+      <button type="button" class="btn-icon" id="soundToggle" title="روشن/خاموش کردن صدا">🔇</button>
       <div id="userLabel">مهمان</div>
       <button class="btn-icon" id="logoutBtn" title="خروج" style="display:none;">⎋</button>
     </div>
@@ -1147,7 +1148,7 @@ async function restoreSession() {
 
 const appState = {
   lang: "fa",
-  isMuted: false,
+  isMuted: true,
   user: { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null },
   onboardingStep: 0,
   currentBranch: null,
@@ -1746,6 +1747,14 @@ async function restoreSession() {
 
 /* ---------- MAIN SCREEN ---------- */
 function goToMainScreen() {
+    // خوش‌آمدگویی صوتی بعد از ورود موفق
+  setTimeout(() => {
+    if (appState.isGuest) {
+      speak("به دستیار هوشمند ایران ای آی خوش آمدید. من آماده کمک به شما هستم.");
+    } else {
+      speak("سلام " + (appState.user.name || "کاربر") + " عزیز، خوش آمدید.");
+    }
+  }, 500);
   document.getElementById("onboardingScreen").classList.add("hidden");
   document.getElementById("mainScreen").classList.add("active");
 
@@ -2118,6 +2127,18 @@ chatForm.addEventListener("submit", async (e) => {
   const restored = await restoreSession();
   if (restored) goToMainScreen();
 })();
+    // مدیریت دکمه روشن/خاموش کردن صدا
+  const soundToggle = document.getElementById('soundToggle');
+  if (soundToggle) {
+    soundToggle.addEventListener('click', () => {
+      appState.voiceEnabled = !appState.voiceEnabled;
+      soundToggle.textContent = appState.voiceEnabled ? '🔊' : '🔇';
+      
+      if (appState.voiceEnabled) {
+        speak("صدای دستیار روشن شد.");
+      }
+    });
+  }
 </script>
 </body>
 </html>
