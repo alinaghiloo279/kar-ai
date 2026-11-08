@@ -564,14 +564,33 @@ const appState = {
 
 const synth = window.speechSynthesis;
 function speak(text) {
-  if (appState.isMuted || !synth) return;
+  if (!appState.voiceEnabled) return;
+  if (!synth) {
+    console.warn("مرورگر شما از تبدیل متن به گفتار پشتیبانی نمی‌کند.");
+    return;
+  }
+  
   try {
-    synth.cancel();
+    synth.cancel(); // قطع کردن صدای قبلی
+    
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = LANGUAGES[appState.lang].code;
+    u.lang = 'fa-IR'; // زبان فارسی
     u.rate = 1.0;
+    u.pitch = 1.0;
+    
+    // پیدا کردن صدای فارسی در گوشی
+    const voices = synth.getVoices();
+    const faVoice = voices.find(v => v.lang.includes('fa') || v.lang.includes('IR'));
+    if (faVoice) u.voice = faVoice;
+
+    u.onerror = function(e) {
+      console.error("خطا در پخش صدا:", e);
+    };
+
     synth.speak(u);
-  } catch {}
+  } catch (e) {
+    console.error("خطای صدا:", e);
+  }
 }
 
 function addMsg(box, text, role) {
