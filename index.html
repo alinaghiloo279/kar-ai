@@ -1830,23 +1830,23 @@ document.getElementById("closeApp").addEventListener("click", () => {
 
 /* ---------- RENDERERS ---------- */
 
-// 🚕 اسنپ
+// 🚕 سفر
 function renderSnappApp(data) {
   appContent.innerHTML = `
-    <div class="snapp-map">
-      <div class="snapp-marker origin"></div>
-      <div class="snapp-marker dest"></div>
-      <div class="snapp-line"></div>
+    <div class="safar-map">
+      <div class="safar-marker origin"></div>
+      <div class="safar-marker dest"></div>
+      <div class="safar-line"></div>
     </div>
-    <div class="snapp-inputs">
-      <div class="snapp-input-row"><div class="dot green"></div><input type="text" id="s-origin" placeholder="مبدا را وارد کنید..."></div>
-      <div class="snapp-input-row"><div class="dot red"></div><input type="text" id="s-dest" placeholder="مقصد را وارد کنید..."></div>
+    <div class="safar-inputs">
+      <div class="safar-input-row"><div class="dot green"></div><input type="text" id="s-origin" placeholder="مبدا را وارد کنید..."></div>
+      <div class="safar-input-row"><div class="dot red"></div><input type="text" id="s-dest" placeholder="مقصد را وارد کنید..."></div>
     </div>
     <div style="font-size:14px; font-weight:bold; margin-bottom:10px;">انتخاب خودرو</div>
     <div class="car-options">
-      <div class="car-card active" onclick="selectCar(this)"><div class="c-icon">🚗</div><span>اقتصادی</span><small>اسنپ</small></div>
-      <div class="car-card" onclick="selectCar(this)"><div class="c-icon">🚙</div><span>پلاس</span><small>اسنپ</small></div>
-      <div class="car-card" onclick="selectCar(this)"><div class="c-icon">🏍️</div><span>موتور</span><small>اسنپ‌بایک</small></div>
+      <div class="car-card active" onclick="selectCar(this)"><div class="c-icon">🚗</div><span>اقتصادی</span><small>اکو</small></div>
+      <div class="car-card" onclick="selectCar(this)"><div class="c-icon">🚙</div><span>پلاس</span><small>اکو</small></div>
+      <div class="car-card" onclick="selectCar(this)"><div class="c-icon">🏍️</div><span>موتور</span><small>اکوبایک</small></div>
     </div>
     <button class="btn-action" onclick="submitSnapp()">درخواست سفر</button>
   `;
@@ -1863,9 +1863,9 @@ window.submitSnapp = function() {
   proactiveAI(`✅ سفر شما از «${orig}» به «${dest}» ثبت شد. مبلغ ۸۵,۰۰۰ تومان از کیف پول کسر شد. راننده در حال یافتن مسیر است.`);
 };
 
-// 📢 دیوار
+// 📢 آگهی
 function renderDivarApp(data) {
-  let catHtml = data.categories.map(c => `<div class="divar-cat"><span>📦</span><small>${c}</small></div>`).join("");
+  let catHtml = data.categories.map(c => `<div class="agahi-cat"><span>📦</span><small>${c}</small></div>`).join("");
   const mockAds = [
     { title: "پژو ۲۰۶ مدل ۹۵", price: "۴۵۰,۰۰۰,۰۰۰", icon: "🚗" },
     { title: "آپارتمان ۸۰ متری", price: "۲,۵۰۰,۰۰۰,۰۰۰", icon: "🏢" },
@@ -1879,7 +1879,7 @@ function renderDivarApp(data) {
   `).join("");
 
   appContent.innerHTML = `
-    <div class="divar-categories">${catHtml}</div>
+    <div class="agahi-categories">${catHtml}</div>
     <h3 style="margin-top:20px; font-size:15px;">آگهی‌های شهر شما</h3>
     <div class="ad-feed">${adsHtml}</div>
     <button class="fab-add" onclick="openNewAdForm()">+</button>
