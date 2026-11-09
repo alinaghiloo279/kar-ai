@@ -8,10 +8,10 @@
     <!-- فونت فارسی وزیرمتن -->
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
-    <!-- استایل‌های مربوط به نقشه (Leaflet) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    <!-- استایل و اسکریپت نقشه نشان (Neshan) -->
+    <link rel="stylesheet" href="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.css" type="text/css">
+    <script src="https://static.neshan.org/sdk/leaflet/1.4.0/leaflet.js" type="text/javascript"></script>
+    
     <style>
         /* ====================================================
            متغیرهای اصلی رنگ‌ها (تم اسنپ)
@@ -712,18 +712,75 @@
          ==================================================== -->
     <div id="authScreen" class="hidden">
         
-        <!-- مرحله ۱: شماره موبایل -->
+      <!-- مرحله ۱: شماره موبایل -->
         <div id="authStepMobile">
             <div class="auth-header">
                 <div></div>
                 <div style="font-weight: bold; color: var(--snapp-green);">EN</div>
             </div>
+
             <h2 class="auth-title">خوش آمدید!</h2>
-            <p class="auth-desc">لطفاً شماره موبایلتان را وارد کنید تا بتوانیم با شما در ارتباط باشیم.</p>
-            <input type="tel" id="mobileInput" class="snapp-input" placeholder="مثلاً: ۰۹۱۲۳۴۵۶۷۸۹" dir="ltr" maxlength="11">
-            <p style="font-size:11px; color:var(--text-muted); margin-top:15px;">با ثبت‌نام در اسنپ، شرایط و قوانین و بیانیه حریم خصوصی را قبول می‌کنم.</p>
-            <button class="snapp-btn" id="btnSubmitMobile" onclick="submitMobile()" disabled>ادامه</button>
+
+            <p class="auth-desc">
+                لطفاً شماره موبایلتان را وارد کنید تا بتوانیم با شما در ارتباط باشیم.
+            </p>
+
+            <input
+                type="tel"
+                id="mobileInput"
+                class="snapp-input"
+                placeholder="مثلاً: ۰۹۱۲۳۴۵۶۷۸۹"
+                dir="ltr"
+                maxlength="11"
+            >
+
+            <p style="font-size:11px; color:var(--text-muted); margin-top:15px;">
+                با ثبت‌نام در سفر، شرایط و قوانین و بیانیه حریم خصوصی را قبول می‌کنم.
+            </p>
+
+            <!-- دکمه ادامه (لاگین واقعی) -->
+            <button class="snapp-btn" id="btnSubmitMobile" onclick="submitMobile()" disabled>
+                ادامه
+            </button>
+
+            <!-- جداکننده "یا" -->
+            <div style="display: flex; align-items: center; margin-top: 20px; margin-bottom: 20px;">
+                <div style="flex: 1; height: 1px; background: #E0E0E0;"></div>
+                <span style="padding: 0 12px; font-size: 12px; color: #999999; font-weight: bold;">یا</span>
+                <div style="flex: 1; height: 1px; background: #E0E0E0;"></div>
+            </div>
+
+            <!-- دکمه ورود مهمان (شاخص و کامل) -->
+            <button
+                type="button"
+                onclick="loginAsGuest()"
+                style="
+                    width: 100%;
+                    padding: 16px;
+                    border-radius: 12px;
+                    font-size: 15px;
+                    font-weight: bold;
+                    background-color: white;
+                    color: var(--snapp-green);
+                    border: 2px solid var(--snapp-green);
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 8px;
+                "
+            >
+                <span style="font-size: 18px;">👤</span>
+                <span>ورود به عنوان مهمان</span>
+            </button>
+
+            <!-- توضیح کوتاه زیر دکمه مهمان -->
+            <p style="font-size: 11px; color: #999999; text-align: center; margin-top: 10px; line-height: 1.6;">
+                می‌توانید بدون ثبت‌نام سرویس‌ها را ببینید،<br>
+                اما برای ثبت درخواست، باید وارد شوید.
+            </p>
         </div>
+       
 
         <!-- مرحله ۲: کد تایید (OTP) -->
         <div id="authStepOtp" hidden>
@@ -831,6 +888,8 @@
     <div class="toast" id="toast"></div>
     <script>
 "use strict";
+        const WORKER_URL = 'https://api.kar-ai.ir'; // آدرس ورکر شما
+let authToken = localStorage.getItem('kar_token') || null;
 
 // ====================================================
 // ۱. دیتابیس نهایی و کامل تمام ۱۲ کسب‌وکار
@@ -1204,13 +1263,27 @@ mobileInput.addEventListener('input', (e) => {
     }
 });
 
-function submitMobile() {
+async function submitMobile() {
     state.mobile = mobileInput.value;
     document.getElementById('displayMobile').textContent = state.mobile;
-    document.getElementById('authStepMobile').hidden = true;
-    document.getElementById('authStepOtp').hidden = false;
-    setupOtpInputs();
-    startTimer(120);
+    
+    // درخواست واقعی به ورکر برای ارسال OTP
+    try {
+        const res = await fetch(`${WORKER_URL}/api/v1/auth/otp/send`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mobile: state.mobile, purpose: 'signup' })
+        });
+        if (!res.ok) throw new Error("خطا در ارسال پیامک");
+        
+        document.getElementById('authStepMobile').hidden = true;
+        document.getElementById('authStepOtp').hidden = false;
+        setupOtpInputs();
+        startTimer(120);
+        showToast("کد تایید ارسال شد.");
+    } catch(err) {
+        showToast("شماره باید با ۰۹ شروع شود و معتبر باشد.");
+    }
 }
 
 function backToMobile() {
@@ -1253,15 +1326,78 @@ function submitOtp() {
     }
 }
 
-function submitProfile() {
+async function submitProfile() {
     const name = document.getElementById('profileName').value;
     if (!name) { showToast("لطفاً نام خود را وارد کنید."); return; }
-    state.user = { name: name, mobile: state.mobile };
+    
+    const password = "Password123!"; // برای سادگی، ما از یک رمز ثابت استفاده می‌کنیم
+    const username = "user_" + state.mobile.replace('0',''); // ساخت نام کاربری یکتا
+
+    try {
+        // ۱. ثبت‌نام کاربر در ورکر
+        await fetch(`${WORKER_URL}/api/v1/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                mobile: state.mobile,
+                code: state.otp,
+                username: username,
+                password: password
+            })
+        });
+
+        // ۲. لاگین برای دریافت توکن
+        const loginRes = await fetch(`${WORKER_URL}/api/v1/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username, password: password })
+        });
+        
+        const loginData = await loginRes.json();
+        if (loginData.access_token) {
+            authToken = loginData.access_token;
+            localStorage.setItem('kar_token', authToken);
+            
+            state.user = { name: name, mobile: state.mobile, isGuest: false };
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.add('active');
+            initDashboard();
+        } else {
+            showToast("خطا در ورود.");
+        }
+    } catch(err) {
+        showToast("خطا در ایجاد حساب کاربری");
+    }
+}
+function loginAsGuest() {
+    // ۱. تنظیم وضعیت کاربر به مهمان
+    state.user = { 
+        name: "مهمان", 
+        mobile: "Guest", 
+        isGuest: true 
+    };
+    
+    // ۲. پاک کردن توکن قبلی (اگر وجود داشت)
+    authToken = null;
+    localStorage.removeItem('kar_token');
+    
+    // ۳. مخفی کردن صفحه ورود و نمایش داشبورد
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('mainScreen').classList.add('active');
+    
+    // ۴. تغییر آیکون پروفایل برای نشان دادن مهمان بودن
+    const profileIcon = document.querySelector('.profile-icon');
+    if (profileIcon) {
+        profileIcon.innerText = "م";
+        profileIcon.style.background = "#888888";
+    }
+    
+    // ۵. نمایش پیام خوش‌آمدگویی
+    showToast("شما به عنوان مهمان وارد شدید. برای ثبت درخواست، باید ثبت‌نام کنید.");
+    
+    // ۶. رندر داشبورد
     initDashboard();
 }
-
 let timerInterval;
 function startTimer(seconds) {
     clearInterval(timerInterval);
@@ -1296,27 +1432,32 @@ function requestPermissions() {
 // ====================================================
 // ۵. منطق نقشه (Leaflet.js)
 // ====================================================
+        // کلید API نشان خود را اینجا قرار دهید
+const NESHAN_API_KEY = "کلید_API_نشان_شما_اینجا";
+
 function initMap(lat, lng) {
     if (state.map) {
         state.map.remove();
         state.map = null;
     }
+    
     const mapEl = document.getElementById('map');
     if (!mapEl) return;
     
-    state.map = L.map('map').setView([lat, lng], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(state.map);
+    // استفاده از SDK نشان
+    state.map = new L.Map("map", {
+        key: NESHAN_API_KEY,
+        maptype: "neshan",
+        poi: true,
+        traffic: false,
+        center: [lat, lng],
+        zoom: 14
+    });
 
     state.marker = L.marker([lat, lng], { draggable: true }).addTo(state.map);
-    state.marker.on('dragend', function() {
-        const pos = state.marker.getLatLng();
-        console.log("موقعیت جدید:", pos.lat, pos.lng);
-    });
     setTimeout(() => state.map.invalidateSize(), 100);
 }
-    </script>
+     </script>
     <script>
 "use strict";
 
@@ -1685,9 +1826,49 @@ function renderDynamicForm(catIdx) {
     }
 }
 
-function submitDynamicForm() {
-    showToast("✅ درخواست شما با موفقیت ثبت شد.");
-    setTimeout(() => appScreen.classList.remove('active'), 2000);
+async function submitDynamicForm() {
+    if (state.user && state.user.isGuest) {
+        showToast("برای ثبت نهایی درخواست، ابتدا وارد شوید.");
+        return;
+    }
+
+    // ۱. جمع‌آوری داده‌های فرم از فیلدها
+    const formData = {};
+    const inputs = document.querySelectorAll('#appContent input, #appContent select, #appContent textarea');
+    
+    inputs.forEach((input) => {
+        if (input.id && input.id.startsWith('dyn_')) {
+            formData[input.id] = input.value;
+        }
+    });
+
+    try {
+        showToast("در حال ارسال درخواست...");
+        
+        // ۲. ارسال به ورکر
+        const res = await fetch(`${WORKER_URL}/api/v1/requests`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                business_slug: state.currentApp,
+                category: "دسته‌بندی خودکار", // در نسخه واقعی، ایندکس دسته‌بندی را از دکمه گرفته و پاس بدهید
+                form_data: formData
+            })
+        });
+
+        if (res.ok) {
+            showToast("✅ درخواست شما با موفقیت در سیستم ثبت شد.");
+            setTimeout(() => appScreen.classList.remove('active'), 2000);
+        } else {
+            const errData = await res.json();
+            showToast("⚠️ خطا: " + (errData.message_fa || "لطفاً دوباره تلاش کنید."));
+        }
+    } catch(err) {
+        showToast("⚠️ خطای شبکه در ارتباط با سرور.");
+    }
 }
 
 // ====================================================
