@@ -21,6 +21,38 @@ button:disabled { opacity: 0.6; cursor: not-allowed; }
   button, .btn-primary, .btn-icon { min-height: 48px; transition: transform 0.1s; }
   button:active { transform: scale(0.95); }
   ::-webkit-scrollbar { width: 0px; }
+  <!-- ================= صفحه دریافت مجوزها ================= -->
+<div id="permissionScreen" style="position: fixed; inset: 0; background: #FFFFFF; z-index: 10000; display: flex; flex-direction: column; padding: 30px 20px; text-align: center; justify-content: center;">
+  <div style="font-size: 80px; margin-bottom: 20px;">🤖</div>
+  <h2 style="font-weight: 900; font-size: 22px; margin-bottom: 10px; color: #0F172A;">به Iran AI خوش آمدید</h2>
+  <p style="color: #64748B; font-size: 14px; margin-bottom: 40px; line-height: 1.6;">
+    برای اینکه دستیار هوشمند بتواند بهترین تجربه را به شما بدهد، لطفاً دسترسی‌های زیر را فعال کنید.
+  </p>
+
+  <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; text-align: right;">
+    <!-- میکروفون -->
+    <div style="display: flex; align-items: center; gap: 16px; background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid #E2E8F0;">
+      <div style="font-size: 24px; background: #FFF; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">🎤</div>
+      <div>
+        <h4 style="font-size: 14px; font-weight: bold; color: #1E293B;">دسترسی به میکروفون</h4>
+        <p style="font-size: 12px; color: #64748B;">برای شنیدن دستورات صوتی شما</p>
+      </div>
+    </div>
+
+    <!-- GPS -->
+    <div style="display: flex; align-items: center; gap: 16px; background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid #E2E8F0;">
+      <div style="font-size: 24px; background: #FFF; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">📍</div>
+      <div>
+        <h4 style="font-size: 14px; font-weight: bold; color: #1E293B;">دسترسی به موقعیت مکانی</h4>
+        <p style="font-size: 12px; color: #64748B;">برای پیدا کردن نزدیک‌ترین خدمات به شما</p>
+      </div>
+    </div>
+  </div>
+
+  <button id="allowPermissionsBtn" style="width: 100%; background: var(--gold-main); color: white; padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 900; border: none; box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); cursor: pointer;">
+    تایید و شروع
+  </button>
+</div>
 /* ================= صفحه ورود ================= */
 #onboardingScreen { position: absolute; inset: 0; z-index: 100; background: var(--bg-body); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 #onboardingScreen.hidden { opacity: 0; pointer-events: none; }
@@ -597,7 +629,56 @@ function speak(text) {
     console.error("خطای صدا:", e);
   }
 }
+// =========================================
+// مدیریت مجوزها (Permissions) - بخش پایانی
+// =========================================
+document.addEventListener("DOMContentLoaded", () => {
+  const allowBtn = document.getElementById("allowPermissionsBtn");
+  
+  if (allowBtn) {
+    allowBtn.addEventListener("click", async () => {
+      allowBtn.textContent = "لطفاً اجازه دهید...";
+      allowBtn.disabled = true;
 
+      // ۱. درخواست مجوز میکروفون
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (err) {
+        console.warn("Microphone permission denied");
+      }
+
+      // ۲. درخواست مجوز موقعیت مکانی (GPS)
+      try {
+        await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+        });
+      } catch (err) {
+        console.warn("GPS permission denied");
+      }
+
+      // ۳. فعال‌سازی صدای دستیار (TTS)
+      appState.voiceEnabled = true;
+
+      // مخفی کردن صفحه مجوزها
+      document.getElementById("permissionScreen").style.display = "none";
+      
+      // هدایت کاربر به داشبورد یا صفحه ورود
+      if (typeof restoreSession === "function") {
+        const restored = await restoreSession();
+        if (restored) {
+          goToMainScreen();
+        } else {
+          // اگر کاربر لاگین نکرده، صفحه ورود را نشان بده
+          document.getElementById("onboardingScreen").classList.remove("hidden");
+        }
+      } else {
+        // حالت امن: اگر تابع لاگین نبود، به عنوان مهمان وارد شود
+        appState.isGuest = true;
+        goToMainScreen();
+      }
+    });
+  }
+});
 function addMsg(box, text, role) {
   const div = document.createElement("div");
   div.className = `msg ${role}`;
