@@ -12,51 +12,26 @@
   --danger: #EF4444; --success: #10B981;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; }
-body { background: var(--bg-body); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+body { background: var(--bg-body); color: var(--text-dark); height: 100vh; display: flex; flex-direction: column; overflow: hidden; position: relative; -webkit-text-size-adjust: 100%; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 button { cursor: pointer; border: none; outline: none; background: transparent; transition: 0.3s; }
 button:disabled { opacity: 0.6; cursor: not-allowed; }
 [hidden] { display: none !important; }
-    /* بهینه‌سازی برای گوشی */
-  body { -webkit-text-size-adjust: 100%; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-  button, .btn-primary, .btn-icon { min-height: 48px; transition: transform 0.1s; }
-  button:active { transform: scale(0.95); }
-  ::-webkit-scrollbar { width: 0px; }
-  <!-- ================= صفحه دریافت مجوزها ================= -->
-<div id="permissionScreen" style="position: fixed; inset: 0; background: #FFFFFF; z-index: 10000; display: flex; flex-direction: column; padding: 30px 20px; text-align: center; justify-content: center;">
-  <div style="font-size: 80px; margin-bottom: 20px;">🤖</div>
-  <h2 style="font-weight: 900; font-size: 22px; margin-bottom: 10px; color: #0F172A;">به Iran AI خوش آمدید</h2>
-  <p style="color: #64748B; font-size: 14px; margin-bottom: 40px; line-height: 1.6;">
-    برای اینکه دستیار هوشمند بتواند بهترین تجربه را به شما بدهد، لطفاً دسترسی‌های زیر را فعال کنید.
-  </p>
 
-  <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; text-align: right;">
-    <!-- میکروفون -->
-    <div style="display: flex; align-items: center; gap: 16px; background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid #E2E8F0;">
-      <div style="font-size: 24px; background: #FFF; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">🎤</div>
-      <div>
-        <h4 style="font-size: 14px; font-weight: bold; color: #1E293B;">دسترسی به میکروفون</h4>
-        <p style="font-size: 12px; color: #64748B;">برای شنیدن دستورات صوتی شما</p>
-      </div>
-    </div>
+/* ================= صفحه دریافت مجوزها ================= */
+#permissionScreen { position: fixed; inset: 0; background: #FFFFFF; z-index: 10000; display: flex; flex-direction: column; padding: 30px 20px; text-align: center; justify-content: center; }
+.perm-icon { font-size: 80px; margin-bottom: 20px; }
+.perm-title { font-weight: 900; font-size: 22px; margin-bottom: 10px; color: #0F172A; }
+.perm-desc { color: #64748B; font-size: 14px; margin-bottom: 40px; line-height: 1.6; }
+.perm-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; text-align: right; }
+.perm-item { display: flex; align-items: center; gap: 16px; background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid #E2E8F0; }
+.perm-item-icon { font-size: 24px; background: #FFF; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
+.perm-item h4 { font-size: 14px; font-weight: bold; color: #1E293B; }
+.perm-item p { font-size: 12px; color: #64748B; }
+#allowPermissionsBtn { width: 100%; background: var(--gold-main); color: white; padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 900; border: none; box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); cursor: pointer; }
 
-    <!-- GPS -->
-    <div style="display: flex; align-items: center; gap: 16px; background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid #E2E8F0;">
-      <div style="font-size: 24px; background: #FFF; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">📍</div>
-      <div>
-        <h4 style="font-size: 14px; font-weight: bold; color: #1E293B;">دسترسی به موقعیت مکانی</h4>
-        <p style="font-size: 12px; color: #64748B;">برای پیدا کردن نزدیک‌ترین خدمات به شما</p>
-      </div>
-    </div>
-  </div>
-
-  <button id="allowPermissionsBtn" style="width: 100%; background: var(--gold-main); color: white; padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 900; border: none; box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); cursor: pointer;">
-    تایید و شروع
-  </button>
-</div>
 /* ================= صفحه ورود ================= */
 #onboardingScreen { position: absolute; inset: 0; z-index: 100; background: var(--bg-body); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
 #onboardingScreen.hidden { opacity: 0; pointer-events: none; }
-
 .robot-wrapper { position: relative; margin-bottom: 20px; animation: float 4s ease-in-out infinite; display: flex; flex-direction: column; align-items: center; }
 .ask-text { font-size: 22px; font-weight: 900; color: var(--text-dark); margin-bottom: 10px; }
 .robot-svg { width: 120px; height: 120px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15)); }
@@ -201,6 +176,34 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
 </head>
 <body>
 
+<!-- ================= صفحه دریافت مجوزها ================= -->
+<div id="permissionScreen">
+  <div class="perm-icon">🤖</div>
+  <h2 class="perm-title">به Iran AI خوش آمدید</h2>
+  <p class="perm-desc">
+    برای اینکه دستیار هوشمند بتواند بهترین تجربه را به شما بدهد، لطفاً دسترسی‌های زیر را فعال کنید.
+  </p>
+
+  <div class="perm-list">
+    <div class="perm-item">
+      <div class="perm-item-icon">🎤</div>
+      <div>
+        <h4>دسترسی به میکروفون</h4>
+        <p>برای شنیدن دستورات صوتی شما</p>
+      </div>
+    </div>
+    <div class="perm-item">
+      <div class="perm-item-icon">📍</div>
+      <div>
+        <h4>دسترسی به موقعیت مکانی</h4>
+        <p>برای پیدا کردن نزدیک‌ترین خدمات به شما</p>
+      </div>
+    </div>
+  </div>
+
+  <button id="allowPermissionsBtn">تایید و شروع</button>
+</div>
+
 <!-- ================= صفحه ورود / ثبت‌نام / فراموشی ================= -->
 <div id="onboardingScreen">
   <div class="robot-wrapper">
@@ -227,13 +230,11 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
       <div class="msg bot" id="authGreeting">سلام! برای استفاده از Iran AI وارد شوید یا به عنوان مهمان ادامه دهید.</div>
     </div>
     <form class="auth-form" id="authForm" autocomplete="off">
-      <!-- mobile -->
       <div class="input-group" id="mobileGroup">
         <label for="mobileInput">شماره موبایل</label>
         <input type="tel" id="mobileInput" inputmode="numeric" placeholder="۰۹۱۲۳۴۵۶۷۸۹" maxlength="11" dir="ltr" />
         <div class="field-error" id="mobileError" hidden></div>
       </div>
-      <!-- otp -->
       <div class="input-group" id="otpGroup" hidden>
         <label for="otpInput">کد پیامکی (۶ رقم)</label>
         <input type="text" id="otpInput" inputmode="numeric" placeholder="------" maxlength="6" dir="ltr" />
@@ -244,19 +245,16 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
           <span id="resendTimer"></span>
         </div>
       </div>
-      <!-- username -->
       <div class="input-group" id="usernameGroup" hidden>
         <label for="usernameInput">نام کاربری</label>
         <input type="text" id="usernameInput" placeholder="username" dir="ltr" maxlength="40" />
         <div class="field-error" id="usernameError" hidden></div>
       </div>
-      <!-- password -->
       <div class="input-group" id="passwordGroup" hidden>
         <label for="passwordInput">رمز عبور</label>
         <input type="password" id="passwordInput" placeholder="حداقل ۱۰ کاراکتر" dir="ltr" maxlength="128" />
         <div class="field-error" id="passwordError" hidden></div>
       </div>
-      <!-- password confirm -->
       <div class="input-group" id="passwordConfirmGroup" hidden>
         <label for="passwordConfirmInput">تکرار رمز عبور</label>
         <input type="password" id="passwordConfirmInput" placeholder="تکرار رمز" dir="ltr" maxlength="128" />
@@ -280,7 +278,7 @@ header { padding: 12px 16px; display: flex; justify-content: space-between; alig
   <header>
     <div class="logo">Iran <span>AI</span></div>
     <div class="header-right">
-      <button type="button" class="btn-icon" id="soundToggle" title="روشن/خاموش کردن صدا">🔇</button>
+      <button type="button" class="btn-icon" id="soundToggle" title="روشن/خاموش کردن صدا">🔊</button>
       <div id="userLabel">مهمان</div>
       <button class="btn-icon" id="logoutBtn" title="خروج" style="display:none;">⎋</button>
     </div>
@@ -576,683 +574,6 @@ function normalizeDigits(str) {
 
 const appState = {
   lang: "fa",
-  isMuted: false,
-  user: { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null },
-  onboardingStep: 0,
-  currentBranch: null,
-  currentCategory: null,
-  // auth
-  authTab: 'login', // login | register | reset
-  mode: 'login',
-  step: 'mobile',
-  isGuest: true,
-  accessToken: localStorage.getItem('kar_access_token') || null,
-  refreshToken: localStorage.getItem('kar_refresh_token') || null,
-  mobile: '',
-  otpCode: '',
-  isSending: false,
-  resendCountdown: 0,
-  resendInterval: null,
-  isCentral: false,
-  memberships: [],
-  // chat
-  chatHistory: []
-};
-
-const synth = window.speechSynthesis;
-function speak(text) {
-  if (!appState.voiceEnabled) return;
-  if (!synth) {
-    console.warn("مرورگر شما از تبدیل متن به گفتار پشتیبانی نمی‌کند.");
-    return;
-  }
-  
-  try {
-    synth.cancel(); // قطع کردن صدای قبلی
-    
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'fa-IR'; // زبان فارسی
-    u.rate = 1.0;
-    u.pitch = 1.0;
-    
-    // پیدا کردن صدای فارسی در گوشی
-    const voices = synth.getVoices();
-    const faVoice = voices.find(v => v.lang.includes('fa') || v.lang.includes('IR'));
-    if (faVoice) u.voice = faVoice;
-
-    u.onerror = function(e) {
-      console.error("خطا در پخش صدا:", e);
-    };
-
-    synth.speak(u);
-  } catch (e) {
-    console.error("خطای صدا:", e);
-  }
-}
-// =========================================
-// مدیریت مجوزها (Permissions) - بخش پایانی
-// =========================================
-document.addEventListener("DOMContentLoaded", () => {
-  const allowBtn = document.getElementById("allowPermissionsBtn");
-  
-  if (allowBtn) {
-    allowBtn.addEventListener("click", async () => {
-      allowBtn.textContent = "لطفاً اجازه دهید...";
-      allowBtn.disabled = true;
-
-      // ۱. درخواست مجوز میکروفون
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-      } catch (err) {
-        console.warn("Microphone permission denied");
-      }
-
-      // ۲. درخواست مجوز موقعیت مکانی (GPS)
-      try {
-        await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
-        });
-      } catch (err) {
-        console.warn("GPS permission denied");
-      }
-
-      // ۳. فعال‌سازی صدای دستیار (TTS)
-      appState.voiceEnabled = true;
-
-      // مخفی کردن صفحه مجوزها
-      document.getElementById("permissionScreen").style.display = "none";
-      
-      // هدایت کاربر به داشبورد یا صفحه ورود
-      if (typeof restoreSession === "function") {
-        const restored = await restoreSession();
-        if (restored) {
-          goToMainScreen();
-        } else {
-          // اگر کاربر لاگین نکرده، صفحه ورود را نشان بده
-          document.getElementById("onboardingScreen").classList.remove("hidden");
-        }
-      } else {
-        // حالت امن: اگر تابع لاگین نبود، به عنوان مهمان وارد شود
-        appState.isGuest = true;
-        goToMainScreen();
-      }
-    });
-  }
-});
-function addMsg(box, text, role) {
-  const div = document.createElement("div");
-  div.className = `msg ${role}`;
-  div.textContent = text;
-  box.appendChild(div); box.scrollTop = box.scrollHeight;
-  if (role === "bot") speak(text);
-  return div;
-}
-
-function proactiveAI(text) {
-  addMsg(document.getElementById("dashChatMessages"), text, "bot");
-}
-
-const toastEl = document.getElementById('toast');
-function showToast(msg, type = 'info') {
-  toastEl.textContent = msg;
-  toastEl.className = `toast show ${type}`;
-  clearTimeout(toastEl._timer);
-  toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 4000);
-}
-
-function setLoading(btn, loading) {
-  if (!btn) return;
-  if (loading) { btn.classList.add('loading'); btn.disabled = true; }
-  else { btn.classList.remove('loading'); btn.disabled = false; }
-}
-
-function showFieldError(id, msg) {
-  const err = document.getElementById(id + 'Error');
-  const inp = document.getElementById(id + 'Input');
-  if (err) { err.textContent = msg; err.hidden = false; }
-  if (inp) inp.classList.add('invalid');
-}
-function clearFieldError(id) {
-  const err = document.getElementById(id + 'Error');
-  const inp = document.getElementById(id + 'Input');
-  if (err) err.hidden = true;
-  if (inp) inp.classList.remove('invalid');
-}
-function clearAllFieldErrors() {
-  ['mobile','otp','username','password','passwordConfirm'].forEach(clearFieldError);
-}
-
-/* ---------- API ---------- */
-async function apiFetch(url, options = {}, retry = true) {
-  const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
-  if (appState.accessToken) headers['Authorization'] = `Bearer ${appState.accessToken}`;
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-  let res;
-  try {
-    res = await fetch(`${WORKER_BASE_URL}${url}`, { ...options, headers, signal: controller.signal });
-  } catch (err) {
-    clearTimeout(timeoutId);
-    if (err.name === 'AbortError') throw new Error('درخواست طول کشید. دوباره تلاش کنید.');
-    throw new Error('اتصال به سرور برقرار نشد.');
-  }
-  clearTimeout(timeoutId);
-
-  if (res.status === 404) {
-    throw new Error('این قابلیت روی سرور فعال نیست.');
-  }
-
-  if (res.status === 401 && retry && appState.refreshToken && url !== '/api/v1/auth/refresh') {
-    const ok = await tryRefreshToken();
-    if (ok) return apiFetch(url, options, false);
-    await handleLogout(true);
-    throw new Error('نشست شما منقضی شده است.');
-  }
-  return res;
-}
-
-async function tryRefreshToken() {
-  try {
-    const res = await fetch(`${WORKER_BASE_URL}/api/v1/auth/refresh`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: appState.refreshToken })
-    });
-    if (!res.ok) return false;
-    const data = await res.json();
-    if (data.access_token) {
-      appState.accessToken = data.access_token;
-      appState.refreshToken = data.refresh_token;
-      localStorage.setItem('kar_access_token', data.access_token);
-      localStorage.setItem('kar_refresh_token', data.refresh_token);
-      if (data.user) {
-        appState.user = {
-          name: data.user.display_name || data.user.username || 'کاربر',
-          display_name: data.user.display_name || null,
-          username: data.user.username || null,
-          mobile_e164: data.user.mobile_e164 || null,
-          isGuest: false
-        };
-        appState.isGuest = false;
-      }
-      return true;
-    }
-    return false;
-  } catch { return false; }
-}
-
-async function probeCoreApi() {
-  try {
-    const res = await fetch(`${WORKER_BASE_URL}/health`, { method: 'GET' });
-    if (!res.ok) {
-      console.warn('[IranAI] /health پاسخ', res.status, 'داد. آیا Worker Core مستقر است؟');
-      return;
-    }
-    const data = await res.json().catch(() => null);
-    if (data && data.version) {
-      console.log('[IranAI] نسخه Core API:', data.version, '— سرویس:', data.service);
-      if (String(data.version).indexOf('1.1') === -1) {
-        console.warn('[IranAI] نسخه گزارش‌شده', data.version, 'است، نه 1.1.0-secured. برخی endpointها (password-reset, ai/chat) ممکن است موجود نباشند.');
-      }
-    } else {
-      console.log('[IranAI] /health پاسخ داد ولی version ندارد.');
-    }
-  } catch (err) {
-    console.warn('[IranAI] /health در دسترس نیست:', err.message);
-  }
-}
-
-/* ---------- AUTH UI ---------- */
-const authForm = document.getElementById('authForm');
-const authSubmit = document.getElementById('authSubmit');
-const authSubmitLabel = document.getElementById('authSubmitLabel');
-const otpResend = document.getElementById('otpResend');
-const resendOtpBtn = document.getElementById('resendOtpBtn');
-const resendTimer = document.getElementById('resendTimer');
-const btnCancelStep = document.getElementById('btnCancelStep');
-const tabLogin = document.getElementById('tabLogin');
-const tabRegister = document.getElementById('tabRegister');
-const tabReset = document.getElementById('tabReset');
-
-function setAuthTab(tab) {
-  appState.authTab = tab;
-  appState.step = 'mobile';
-  appState.mobile = '';
-  appState.otpCode = '';
-  clearAllFieldErrors();
-  [tabLogin, tabRegister, tabReset].forEach(t => t.classList.remove('active'));
-  if (tab === 'login') tabLogin.classList.add('active');
-  if (tab === 'register') tabRegister.classList.add('active');
-  if (tab === 'reset') tabReset.classList.add('active');
-
-  const greeting = document.getElementById('authGreeting');
-  if (tab === 'login') {
-    appState.mode = 'login';
-    greeting.textContent = 'سلام! برای ورود، شماره موبایل و نام کاربری و رمز عبور خود را وارد کنید.';
-  } else if (tab === 'register') {
-    appState.mode = 'register';
-    greeting.textContent = 'سلام! برای ثبت‌نام، ابتدا شماره موبایل خود را وارد کنید.';
-  } else {
-    appState.mode = 'reset';
-    greeting.textContent = 'برای بازیابی رمز عبور، شماره موبایل خود را وارد کنید.';
-  }
-  updateAuthUI();
-}
-
-tabLogin.addEventListener('click', () => setAuthTab('login'));
-tabRegister.addEventListener('click', () => setAuthTab('register'));
-tabReset.addEventListener('click', () => setAuthTab('reset'));
-
-function updateAuthUI() {
-  clearAllFieldErrors();
-  ['mobileGroup','otpGroup','usernameGroup','passwordGroup','passwordConfirmGroup'].forEach(id => {
-    document.getElementById(id).hidden = true;
-  });
-  otpResend.hidden = true;
-  document.getElementById('mobileInput').disabled = false;
-  btnCancelStep.hidden = (appState.step === 'mobile');
-
-  if (appState.step === 'mobile') {
-    document.getElementById('mobileGroup').hidden = false;
-    if (appState.authTab === 'reset') authSubmitLabel.textContent = 'ارسال کد بازیابی ←';
-    else if (appState.authTab === 'register') authSubmitLabel.textContent = 'ارسال کد ثبت‌نام ←';
-    else authSubmitLabel.textContent = 'ادامه ←';
-  } else if (appState.step === 'otp') {
-    document.getElementById('otpGroup').hidden = false;
-    otpResend.hidden = false;
-    authSubmitLabel.textContent = 'تایید کد ←';
-  } else if (appState.step === 'username') {
-    document.getElementById('mobileGroup').hidden = false;
-    document.getElementById('mobileInput').disabled = true;
-    document.getElementById('usernameGroup').hidden = false;
-    document.getElementById('passwordGroup').hidden = false;
-    if (appState.authTab === 'register') {
-      document.getElementById('passwordConfirmGroup').hidden = false;
-      authSubmitLabel.textContent = 'ثبت‌نام ←';
-    } else {
-      authSubmitLabel.textContent = 'ورود ←';
-    }
-  } else if (appState.step === 'newPassword') {
-    // برای فراموشی رمز
-    document.getElementById('passwordGroup').hidden = false;
-    document.getElementById('passwordConfirmGroup').hidden = false;
-    document.getElementById('passwordGroup').querySelector('label').textContent = 'رمز جدید';
-    document.getElementById('passwordConfirmGroup').querySelector('label').textContent = 'تکرار رمز جدید';
-    authSubmitLabel.textContent = 'تغییر رمز ←';
-  }
-}
-
-btnCancelStep.addEventListener('click', () => {
-  if (appState.step === 'otp' || appState.step === 'newPassword') {
-    appState.step = 'mobile';
-    updateAuthUI();
-  } else if (appState.step === 'username') {
-    appState.step = 'mobile';
-    document.getElementById('mobileInput').disabled = false;
-    updateAuthUI();
-  }
-});
-
-authForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  setLoading(authSubmit, true);
-  try {
-    if (appState.step === 'mobile') {
-      if (appState.authTab === 'login') {
-        await handleLoginMobile();
-      } else if (appState.authTab === 'register') {
-        await handleRegisterMobile();
-      } else if (appState.authTab === 'reset') {
-        await handleResetMobile();
-      }
-    } else if (appState.step === 'otp') {
-      await handleOtpSubmit();
-    } else if (appState.step === 'username') {
-      await handleCredentialsSubmit();
-    } else if (appState.step === 'newPassword') {
-      await handleNewPasswordSubmit();
-    }
-  } catch (err) {
-    showToast(err.message || 'خطا در ارتباط با سرور.', 'error');
-  } finally {
-    setLoading(authSubmit, false);
-  }
-});
-
-async function handleLoginMobile() {
-  const mobile = normalizeDigits(document.getElementById('mobileInput').value.trim());
-  clearFieldError('mobile');
-  if (!/^09\d{9}$/.test(mobile)) {
-    showFieldError('mobile', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
-    return;
-  }
-  appState.mobile = mobile;
-  appState.step = 'username';
-  updateAuthUI();
-}
-
-async function handleRegisterMobile() {
-  const mobile = normalizeDigits(document.getElementById('mobileInput').value.trim());
-  clearFieldError('mobile');
-  if (!/^09\d{9}$/.test(mobile)) {
-    showFieldError('mobile', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
-    return;
-  }
-  appState.mobile = mobile;
-
-  const res = await apiFetch('/api/v1/auth/otp/send', {
-    method: 'POST',
-    body: JSON.stringify({ mobile, purpose: 'signup' })
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    if (data.code === 'account_exists') {
-      showToast('این شماره قبلاً ثبت شده. به صفحه ورود منتقل می‌شوید...', 'warning');
-      setTimeout(() => setAuthTab('login'), 1500);
-      return;
-    }
-    throw new Error(data.message_fa || 'خطا در ارسال پیامک');
-  }
-  appState.step = 'otp';
-  updateAuthUI();
-  startResendCountdown(120);
-}
-
-async function handleResetMobile() {
-  const mobile = normalizeDigits(document.getElementById('mobileInput').value.trim());
-  clearFieldError('mobile');
-  if (!/^09\d{9}$/.test(mobile)) {
-    showFieldError('mobile', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.');
-    return;
-  }
-  appState.mobile = mobile;
-
-  const res = await apiFetch('/api/v1/auth/otp/send', {
-    method: 'POST',
-    body: JSON.stringify({ mobile, purpose: 'password_reset' })
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok && res.status !== 404) {
-    throw new Error(data.message_fa || 'خطا در ارسال کد بازیابی');
-  }
-  if (res.status === 404) {
-    showToast('بازیابی رمز روی سرور فعال نیست.', 'warning');
-    return;
-  }
-  appState.step = 'otp';
-  updateAuthUI();
-  startResendCountdown(120);
-}
-
-async function handleOtpSubmit() {
-  const code = normalizeDigits(document.getElementById('otpInput').value.trim());
-  clearFieldError('otp');
-  if (!/^\d{6}$/.test(code)) {
-    showFieldError('otp', 'کد باید ۶ رقم باشد.');
-    return;
-  }
-  appState.otpCode = code;
-  if (appState.authTab === 'reset') {
-    appState.step = 'newPassword';
-  } else {
-    appState.step = 'username';
-  }
-  updateAuthUI();
-}
-
-async function handleCredentialsSubmit() {
-  const username = document.getElementById('usernameInput').value.trim();
-  const password = document.getElementById('passwordInput').value;
-  const passwordConfirmEl = document.getElementById('passwordConfirmInput');
-  const passwordConfirm = passwordConfirmEl ? passwordConfirmEl.value : password;
-
-  clearFieldError('username'); clearFieldError('password'); clearFieldError('passwordConfirm');
-
-  if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]{3,39}$/.test(username)) {
-    showFieldError('username', 'نام کاربری ۴-۴۰ کاراکتر لاتین.');
-    return;
-  }
-  if (password.length < 10) {
-    showFieldError('password', 'رمز حداقل ۱۰ کاراکتر.');
-    return;
-  }
-  if (appState.authTab === 'register' && password !== passwordConfirm) {
-    showFieldError('passwordConfirm', 'رمزها یکسان نیستند.');
-    return;
-  }
-
-  if (appState.authTab === 'login') {
-    const res = await apiFetch('/api/v1/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password, device_label: 'web' })
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.message_fa || 'نام کاربری یا رمز نادرست است.');
-    if (data.two_factor_required) { showTOTPLogin(); return; }
-    await handleLoginSuccess(data);
-    return;
-  }
-
-  // register
-  const res = await apiFetch('/api/v1/auth/register', {
-    method: 'POST',
-    body: JSON.stringify({ mobile: appState.mobile, code: appState.otpCode, username, password })
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message_fa || 'ثبت‌نام ناموفق بود.');
-
-  // auto-login
-  const loginRes = await apiFetch('/api/v1/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ username, password, device_label: 'web' })
-  });
-  const loginData = await loginRes.json().catch(() => ({}));
-  if (loginRes.ok && loginData.access_token) {
-    showToast('ثبت‌نام موفق!', 'success');
-    await handleLoginSuccess(loginData);
-  } else {
-    showToast('ثبت‌نام انجام شد. لطفاً وارد شوید.', 'success');
-    setAuthTab('login');
-  }
-}
-
-async function handleNewPasswordSubmit() {
-  const password = document.getElementById('passwordInput').value;
-  const passwordConfirmEl = document.getElementById('passwordConfirmInput');
-  const passwordConfirm = passwordConfirmEl ? passwordConfirmEl.value : password;
-
-  clearFieldError('password'); clearFieldError('passwordConfirm');
-
-  if (password.length < 10) {
-    showFieldError('password', 'رمز حداقل ۱۰ کاراکتر.');
-    return;
-  }
-  if (password !== passwordConfirm) {
-    showFieldError('passwordConfirm', 'رمزها یکسان نیستند.');
-    return;
-  }
-
-  const res = await apiFetch('/api/v1/auth/password-reset', {
-    method: 'POST',
-    body: JSON.stringify({
-      mobile: appState.mobile,
-      code: appState.otpCode,
-      new_password: password
-    })
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message_fa || 'تغییر رمز ناموفق بود.');
-  showToast('رمز عبور با موفقیت تغییر کرد.', 'success');
-  setAuthTab('login');
-}
-
-async function handleLoginSuccess(data) {
-  appState.accessToken = data.access_token;
-  appState.refreshToken = data.refresh_token;
-  appState.user = {
-    name: data.user?.display_name || data.user?.username || 'کاربر',
-    display_name: data.user?.display_name || null,
-    username: data.user?.username || null,
-    mobile_e164: data.user?.mobile_e164 || null,
-    isGuest: false
-  };
-  appState.isGuest = false;
-  localStorage.setItem('kar_access_token', data.access_token);
-  localStorage.setItem('kar_refresh_token', data.refresh_token);
-  await loadMe();
-  goToMainScreen();
-}
-
-async function loadMe() {
-  try {
-    const res = await apiFetch('/api/v1/me');
-    if (!res.ok) return;
-    const data = await res.json();
-    if (data.user) {
-      appState.user.display_name = data.user.display_name || appState.user.display_name;
-      appState.user.mobile_e164 = data.user.mobile_e164 || appState.user.mobile_e164;
-    }
-    appState.isCentral = !!data.is_central;
-    appState.memberships = data.memberships || [];
-  } catch {}
-}
-
-function showTOTPLogin() {
-  const container = document.querySelector('.auth-container');
-  container.innerHTML = '';
-  const msgBox = document.createElement('div');
-  msgBox.className = 'chat-messages';
-  const greet = document.createElement('div');
-  greet.className = 'msg bot';
-  greet.textContent = 'ورود دو مرحله‌ای فعال است. کد پیامکی و کد Google Authenticator را وارد کنید.';
-  msgBox.appendChild(greet);
-  container.appendChild(msgBox);
-
-  const form = document.createElement('form');
-  form.className = 'auth-form';
-
-  const g1 = document.createElement('div'); g1.className = 'input-group';
-  const l1 = document.createElement('label'); l1.textContent = 'کد پیامکی';
-  const i1 = document.createElement('input'); i1.id = 'totpMobileCode'; i1.type = 'text'; i1.maxLength = 6; i1.dir = 'ltr'; i1.placeholder = '------';
-  g1.appendChild(l1); g1.appendChild(i1); form.appendChild(g1);
-
-  const g2 = document.createElement('div'); g2.className = 'input-group';
-  const l2 = document.createElement('label'); l2.textContent = 'کد Google Authenticator';
-  const i2 = document.createElement('input'); i2.id = 'totpAuthCode'; i2.type = 'text'; i2.maxLength = 6; i2.dir = 'ltr'; i2.placeholder = '------';
-  g2.appendChild(l2); g2.appendChild(i2); form.appendChild(g2);
-
-  const btn = document.createElement('button');
-  btn.type = 'submit'; btn.className = 'btn-primary';
-  btn.innerHTML = '<span class="btn-label">ورود ←</span><span class="btn-spinner"></span>';
-  form.appendChild(btn);
-  container.appendChild(form);
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    setLoading(btn, true);
-    try {
-      const code = normalizeDigits(document.getElementById('totpMobileCode').value.trim());
-      const totp = normalizeDigits(document.getElementById('totpAuthCode').value.trim());
-      const res = await apiFetch('/api/v1/auth/login/verify', {
-        method: 'POST',
-        body: JSON.stringify({ mobile: appState.mobile, code, totp, device_label: 'web' })
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.message_fa || 'خطا در ورود');
-      await handleLoginSuccess(data);
-    } catch (err) {
-      showToast(err.message, 'error');
-    } finally {
-      setLoading(btn, false);
-    }
-  });
-}
-
-function startResendCountdown(seconds) {
-  appState.resendCountdown = seconds;
-  resendOtpBtn.disabled = true;
-  const upd = () => {
-    const m = Math.floor(appState.resendCountdown / 60);
-    const s = appState.resendCountdown % 60;
-    resendTimer.textContent = `(${m}:${s.toString().padStart(2, '0')})`;
-  };
-  upd();
-  clearInterval(appState.resendInterval);
-  appState.resendInterval = setInterval(() => {
-    appState.resendCountdown--;
-    if (appState.resendCountdown <= 0) {
-      clearInterval(appState.resendInterval);
-      resendOtpBtn.disabled = false;
-      resendTimer.textContent = '';
-    } else upd();
-  }, 1000);
-}
-
-resendOtpBtn.addEventListener('click', async () => {
-  try {
-    const purpose = appState.authTab === 'reset' ? 'password_reset' : 'signup';
-    const res = await apiFetch('/api/v1/auth/otp/send', {
-      method: 'POST',
-      body: JSON.stringify({ mobile: appState.mobile, purpose })
-    });
-    if (!res.ok) throw new Error('خطا در ارسال');
-    showToast('کد جدید ارسال شد.', 'success');
-    startResendCountdown(120);
-  } catch (err) { showToast(err.message, 'error'); }
-});
-
-/* ---------- GUEST / LOGOUT / SESSION ---------- */
-document.getElementById('btnGuest').addEventListener('click', () => {
-  appState.isGuest = true;
-  appState.user = { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null };
-  goToMainScreen();
-});
-
-document.getElementById('logoutBtn').addEventListener('click', () => handleLogout(false));
-
-async function handleLogout(silent = false) {
-  try {
-    if (!silent && appState.accessToken) await apiFetch('/api/v1/auth/logout', { method: 'POST' });
-  } catch {}
-  appState.accessToken = null;
-  appState.refreshToken = null;
-  appState.user = { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null };
-  appState.isGuest = true;
-  appState.isCentral = false;
-  appState.memberships = [];
-  localStorage.removeItem('kar_access_token');
-  localStorage.removeItem('kar_refresh_token');
-  location.reload();
-}
-
-async function restoreSession() {
-  if (!appState.accessToken) return false;
-  try {
-    const res = await apiFetch('/api/v1/me');
-    if (!res.ok) { await handleLogout(true); return false; }
-    const data = await res.json();
-    appState.user = {
-      name: data.user?.display_name || 'کاربر',
-      display_name: data.user?.display_name || null,
-      username: data.user?.username || null,
-      mobile_e164: data.user?.mobile_e164 || null,
-      isGuest: false
-    };
-    appState.isCentral = !!data.is_central;
-    appState.memberships = data.memberships || [];
-    appState.isGuest = false;
-    return true;
-  } catch { return false; }
-}
-</script>
-<!-- ================= SCRIPT PART 2: AUTH + API ================= -->
-<script>
-"use strict";
-
-const appState = {
-  lang: "fa",
   isMuted: true,
   user: { name: "مهمان", isGuest: true, display_name: null, username: null, mobile_e164: null },
   onboardingStep: 0,
@@ -1271,12 +592,13 @@ const appState = {
   resendInterval: null,
   isCentral: false,
   memberships: [],
-  chatHistory: []
+  chatHistory: [],
+  voiceEnabled: false // پیش‌فرض خاموش برای جلوگیری از پخش صدای ناخواسته
 };
 
 const synth = window.speechSynthesis;
 function speak(text) {
-  if (appState.isMuted || !synth) return;
+  if (!appState.voiceEnabled || !synth) return;
   try {
     synth.cancel();
     const u = new SpeechSynthesisUtterance(text);
@@ -1846,20 +1168,13 @@ async function restoreSession() {
   } catch { return false; }
 }
 </script>
+
 <!-- ================= SCRIPT PART 3: RENDERERS + CHAT + INIT ================= -->
 <script>
 "use strict";
 
 /* ---------- MAIN SCREEN ---------- */
 function goToMainScreen() {
-    // خوش‌آمدگویی صوتی بعد از ورود موفق
-  setTimeout(() => {
-    if (appState.isGuest) {
-      speak("به دستیار هوشمند ایران ای آی خوش آمدید. من آماده کمک به شما هستم.");
-    } else {
-      speak("سلام " + (appState.user.name || "کاربر") + " عزیز، خوش آمدید.");
-    }
-  }, 500);
   document.getElementById("onboardingScreen").classList.add("hidden");
   document.getElementById("mainScreen").classList.add("active");
 
@@ -1882,6 +1197,15 @@ function goToMainScreen() {
   }
 
   renderDashboard();
+  
+  // خوش‌آمدگویی صوتی بعد از ورود
+  setTimeout(() => {
+    if (appState.isGuest) {
+      speak("به دستیار هوشمند ایران ای آی خوش آمدید. من آماده کمک به شما هستم.");
+    } else {
+      speak("سلام " + (appState.user.name || "کاربر") + " عزیز، خوش آمدید.");
+    }
+  }, 500);
 }
 
 function renderDashboard() {
@@ -1923,8 +1247,11 @@ function openFullScreenApp(branchKey) {
   appScreen.classList.add("active");
   appContent.innerHTML = "";
 
+  // ثبت وضعیت در تاریخچه مرورگر
+  history.pushState({ appOpen: true }, "", "#" + branchKey);
+
   if (data.uiType === "snapp") renderSnappApp(data);
-  else if (data.uiType === "divar") renderDivarApp(data);
+  else if (data.uiType === "divar" || data.uiType === "agahi") renderDivarApp(data);
   else if (data.uiType === "mechanic") renderMechanicApp(data);
   else if (data.uiType === "accounting") renderAccountingApp(data);
   else if (data.uiType === "legal") renderLegalApp(data);
@@ -2170,19 +1497,6 @@ window.renderNormalForm = function(catIdx) {
   `;
 };
 
-
-/* بهبود ظاهر اسکرول در گوشی */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 10px;
-}
-
-  nsition: transform 0.1s;
-}
 window.submitNormalForm = function() {
   if (appState.isGuest) { showToast("ابتدا وارد شوید.", "error"); return; }
   appScreen.classList.remove("active");
@@ -2239,13 +1553,41 @@ chatForm.addEventListener("submit", async (e) => {
 });
 
 /* ---------- INIT ---------- */
-(async function init() {
-  probeCoreApi();
-  updateAuthUI();
-  const restored = await restoreSession();
-  if (restored) goToMainScreen();
-})();
-    // مدیریت دکمه روشن/خاموش کردن صدا
+document.addEventListener("DOMContentLoaded", () => {
+  // مدیریت دکمه مجوزها
+  const allowBtn = document.getElementById("allowPermissionsBtn");
+  if (allowBtn) {
+    allowBtn.addEventListener("click", async () => {
+      allowBtn.textContent = "لطفاً اجازه دهید...";
+      allowBtn.disabled = true;
+
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (err) {
+        console.warn("Microphone permission denied");
+      }
+
+      try {
+        await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+        });
+      } catch (err) {
+        console.warn("GPS permission denied");
+      }
+
+      appState.voiceEnabled = true;
+      document.getElementById("permissionScreen").style.display = "none";
+      
+      const restored = await restoreSession();
+      if (restored) {
+        goToMainScreen();
+      } else {
+        document.getElementById("onboardingScreen").classList.remove("hidden");
+      }
+    });
+  }
+
+  // مدیریت دکمه روشن/خاموش کردن صدا
   const soundToggle = document.getElementById('soundToggle');
   if (soundToggle) {
     soundToggle.addEventListener('click', () => {
@@ -2257,6 +1599,27 @@ chatForm.addEventListener("submit", async (e) => {
       }
     });
   }
+
+  // مدیریت دکمه برگشت گوشی
+  window.addEventListener("popstate", function(e) {
+    const appScreen = document.getElementById("appScreen");
+    const chatModal = document.getElementById("chatModal");
+    
+    if (chatModal && chatModal.classList.contains("show")) {
+      chatModal.classList.remove("show");
+      history.pushState({ appOpen: true }, "", "#chat");
+    } else if (appScreen && appScreen.classList.contains("active")) {
+      appScreen.classList.remove("active");
+    }
+  });
+
+  // شروع بررسی نشست
+  probeCoreApi();
+  updateAuthUI();
+  restoreSession().then((restored) => {
+    if (restored) goToMainScreen();
+  });
+});
 </script>
 </body>
 </html>
