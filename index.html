@@ -2083,7 +2083,41 @@ window.renderNormalForm = function(catIdx) {
     <button class="btn-action" onclick="submitNormalForm()">ثبت نهایی درخواست</button>
   `;
 };
+/* جلوگیری از زوم شدن ناخواسته در گوشی */
+body {
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
 
+/* بزرگتر و راحت‌تر کردن دکمه‌ها برای لمس */
+button, .car-card, .featured-item, .branch-card, .input-group input, .input-group select {
+  min-height: 48px; /* اندازه استاندارد دکمه‌ها در اپل و گوگل */
+  padding: 12px 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* حذف مربع آبی رنگ موقع کلیک در گوشی */
+}
+
+/* بهبود ظاهر اسکرول در گوشی */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 10px;
+}
+
+/* انیمیشن نرم‌تر برای اسلایدها */
+#appScreen {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* فشرده شدن دکمه‌ها موقع لمس (حس اپلیکیشن) */
+button:active, .branch-card:active, .featured-item:active {
+  transform: scale(0.96);
+  transition: transform 0.1s;
+}
 window.submitNormalForm = function() {
   if (appState.isGuest) { showToast("ابتدا وارد شوید.", "error"); return; }
   appScreen.classList.remove("active");
