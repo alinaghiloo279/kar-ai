@@ -26,7 +26,7 @@
     <!-- ۱. ربات انسان‌نما (Top 1/3) - Voice Only       -->
     <!-- ================================================ -->
     <div id="aiWrapper">
-        <div class="ai-humanoid" id="aiHumanoid">
+        <div class="ai-humanoid" id="aiHumanoid"> onclick="toggleAIConversation()" style="cursor: pointer;">
             <!-- SVG ربات مدرن، سه‌بعدی و شیک -->
             <svg viewBox="0 0 200 260" class="ai-svg">
                 <defs>
@@ -467,109 +467,67 @@
     }
 
     /* ================================================================ */
-    /* ۴. ربات انسان‌نما (Top 1/3) - Voice Only                       */
+    /* ۴. ربات انسان‌نما (Top) - کوچک‌تر و بهینه‌تر                    */
     /* ================================================================ */
     #aiWrapper {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        height: 30vh;
-        min-height: 220px;
+        height: 20vh; /* ارتفاع ربات کاهش یافت تا فضا بیشتر شود */
+        min-height: 160px;
         z-index: 9999;
         display: flex;
         justify-content: center;
         align-items: flex-start;
         pointer-events: none;
-        padding-top: 15px;
-        background: linear-gradient(to bottom, rgba(248,250,252,0.9) 0%, rgba(248,250,252,0) 100%);
-    }
-
-    .ai-humanoid {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        pointer-events: auto;
-        position: relative;
-        animation: float 4s ease-in-out infinite;
+        padding-top: 10px;
+        background: linear-gradient(to bottom, rgba(248,250,252,1) 0%, rgba(248,250,252,0) 100%);
     }
 
     .ai-svg {
-        width: 110px;
-        height: 150px;
-        filter: drop-shadow(0 15px 25px rgba(139, 92, 246, 0.4));
+        width: 85px; /* سایز ربات کمی کوچک‌تر شد */
+        height: 115px;
+        filter: drop-shadow(0 10px 15px rgba(139, 92, 246, 0.4));
     }
 
-    /* انیمیشن‌های داخلی SVG */
-    .antenna-light {
-        animation: antenna-pulse 1.5s ease-in-out infinite;
-    }
-
-    .eyes {
-        animation: blink 5s infinite;
-        transform-origin: center;
-    }
-
-    .eye-glow {
-        filter: drop-shadow(0 0 5px #00E5FF);
-    }
-
-    .mouth {
-        transition: all 0.15s ease;
-    }
-
-    .ai-humanoid.speaking .mouth {
-        animation: mouth-talk 0.3s ease-in-out infinite;
-    }
-
-    .ai-humanoid.speaking .head {
-        filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.9));
-    }
-
-    .ai-humanoid.listening .head {
-        filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.9));
-    }
-
-    .ai-humanoid.listening .antenna-light {
-        animation: antenna-fast 0.5s ease-in-out infinite;
-    }
-
-    /* حباب گفتار */
-    .ai-speech-bubble {
+    /* ================================================================ */
+    /* ۷. داشبورد اصلی و هدر شیشه‌ای                                   */
+    /* ================================================================ */
+    #mainScreen {
         position: absolute;
-        top: 160px;
-        left: 50%;
-        transform: translateX(-50%) scale(0);
-        background: white;
-        border: 2px solid var(--purple);
-        border-radius: var(--radius-lg);
-        padding: 12px 20px;
-        font-size: 13px;
-        font-weight: bold;
-        color: var(--text-main);
-        max-width: 280px;
-        width: max-content;
-        text-align: center;
-        box-shadow: var(--shadow-lg);
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        pointer-events: none;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
         z-index: 10;
-        line-height: 1.6;
+        transform: translateY(100%);
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: var(--bg-main);
+        overflow-y: auto;
+        padding-top: 22vh; /* فاصله دقیق برای قرارگیری هدر زیر ربات */
+        padding-bottom: 90px;
     }
 
-    .ai-speech-bubble::before {
-        content: '';
-        position: absolute;
-        top: -8px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 8px solid var(--purple);
+    #mainScreen.active {
+        transform: translateY(0);
     }
 
-    .ai-speech-bubble.show {
-        transform: translateX(-50%) scale(1);
+    /* نوار هدر شیشه‌ای و شناور */
+    .main-header {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        padding: 12px 15px;
+        margin: 0 15px 15px 15px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        position: sticky;
+        top: 22vh; /* هدر دقیقاً زیر ربات فیکس می‌شود */
+        z-index: 50;
+        border: 1px solid rgba(255, 255, 255, 0.6);
     }
 
     /* ================================================================ */
@@ -921,44 +879,68 @@
         filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
     }
 
-    /* گرید خدمات و آیکون‌های سه‌بعدی */
+        /* گرید خدمات */
     .services-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 25px 10px;
-        padding: 20px;
+        gap: 30px 15px;
+        padding: 10px 20px 20px 20px;
     }
 
     .service-item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         cursor: pointer;
+        transition: transform 0.2s ease;
     }
 
+    .service-item:active {
+        transform: scale(0.92); /* افکت فشرده شدن هنگام کلیک */
+    }
+
+    /* آیکون سه‌بعدی */
     .service-icon {
-        width: 65px;
-        height: 65px;
-        border-radius: 20px;
+        width: 70px;
+        height: 70px;
+        border-radius: 22px;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 30px;
+        font-size: 32px;
         color: white;
-        /* افکت سه‌بعدی */
-        box-shadow: var(--shadow-3d);
         position: relative;
-        transform: translateZ(0);
+        /* سایه‌های پیچیده برای افکت سه‌بعدی واقعی */
+        box-shadow: 
+            0 10px 20px -5px rgba(0, 0, 0, 0.3),
+            0 4px 8px -2px rgba(0, 0, 0, 0.2),
+            inset 0 4px 6px rgba(255, 255, 255, 0.4),
+            inset 0 -4px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
     }
 
+    /* افکت شیشه‌ای براق روی آیکون */
+    .service-icon::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        border-radius: 22px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 50%);
+        pointer-events: none;
+    }
+
+    /* سایه نرم در زیر آیکون */
     .service-icon::after {
         content: '';
         position: absolute;
-        inset: 0;
-        border-radius: 20px;
-        background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%);
-        pointer-events: none;
+        bottom: -5px; left: 15%; right: 15%;
+        height: 15px;
+        background: inherit;
+        filter: blur(12px);
+        z-index: -1;
+        opacity: 0.5;
+        border-radius: 50%;
     }
 
     .service-name {
@@ -1248,7 +1230,9 @@ const state = {
     mobile: "",
     otpCode: "",
     username: "",
-    isGuest: true,
+    isGuest: true,         
+    isAIActive: false,
+    isAISpeaking: false,
     
     /* --- تنظیمات امنیتی و ورود --- */
     biometricEnabled: localStorage.getItem('kar_biometric_enabled') === 'true',
@@ -2536,7 +2520,6 @@ async function submitLogin() {
 
         if (!res.ok) throw new Error(data.message_fa || 'نام کاربری یا رمز نادرست است');
 
-        // اگر ورکر تشخیص داد که این کاربر مدیر است (2FA)
         if (data.two_factor_required) {
             return showToast('ورود مدیر نیاز به تایید پیامکی دارد که فعلاً غیرفعال است.', 'error');
         }
@@ -2550,41 +2533,48 @@ async function submitLogin() {
         state.user = { name: data.user?.display_name || 'کاربر', username: username, isGuest: false };
         state.isGuest = false;
         
-     function goToDashboard() {
-    const authScreen = document.getElementById('authScreen');
-    const mainScreen = document.getElementById('mainScreen');
-    
-    // مخفی کردن قاطع صفحه لاگین
-    authScreen.classList.add('hidden');
-    authScreen.style.display = 'none'; 
-    
-    // نمایش قاطع داشبورد
-    mainScreen.classList.add('active');
-    mainScreen.style.transform = 'translateY(0)';
-    mainScreen.style.display = 'flex';
+        goToDashboard();
+        showToast('خوش آمدید!', 'success');
 
-    const profileIcon = document.getElementById('profileIcon');
-    if (profileIcon) {
-        profileIcon.innerText = (state.user?.name || 'I').charAt(0).toUpperCase();
-        profileIcon.style.background = state.user?.isGuest ? 'var(--slate)' : 'var(--purple)';
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        setLoading(btn, false);
     }
-
-    // پر کردن آیکون‌های داشبورد
-    if (typeof initDashboard === 'function') {
-        try {
-            initDashboard();
-        } catch (e) {
-            console.error("Dashboard init error:", e);
-        }
-    }
-
-    // شروع خودکار ربات (اگر خطا داد، سایت را کرش نکند)
-    setTimeout(() => {
-        if (typeof startAIOnEntry === 'function') {
-            try { startAIOnEntry(); } catch(e) { console.error(e); }
-        }
-    }, 1000);
 }
+
+// منطق فراموشی رمز
+function showForgotPassword() {
+    const mobile = prompt('لطفاً شماره موبایل خود را برای دریافت کد بازیابی وارد کنید:');
+    if (!mobile) return;
+    
+    fetch(`${WORKER_URL}/api/v1/auth/otp/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile: normalizeDigits(mobile), purpose: 'password_reset' })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.ok) throw new Error(data.message_fa);
+        showToast('کد بازیابی ارسال شد.', 'success');
+        
+        setTimeout(() => {
+            const otpCode = prompt('کد ۶ رقمی ارسال شده را وارد کنید:');
+            if (!otpCode) return;
+            const newPassword = prompt('رمز عبور جدید خود را وارد کنید:');
+            if (!newPassword) return;
+            
+            return fetch(`${WORKER_URL}/api/v1/auth/password-reset`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mobile: normalizeDigits(mobile),
+                    code: normalizeDigits(otpCode),
+                    new_password: newPassword
+                })
+            });
+        }, 1000);
+    })
     .then(res => res && res.json())
     .then(data => {
         if (data && data.ok) {
@@ -2646,11 +2636,13 @@ function backToMobile() {
     document.getElementById('authStepOtp').hidden = true;
     document.getElementById('authStepProfile').hidden = true;
     if (timerInterval) clearInterval(timerInterval);
-}
-
+    
+    // این بخش به داخل تابع منتقل شد
     if(document.getElementById('authStepLogin')) {
         document.getElementById('authStepLogin').hidden = true;
     }
+}
+
 function backToOtp() {
     document.getElementById('authStepMobile').hidden = true;
     document.getElementById('authStepOtp').hidden = false;
@@ -3014,26 +3006,26 @@ function calculateMechanicPrice(distanceKm) {
  * هر آیکون شامل لوگوی برند (Airo, Aisel و...) و زیرنویس فارسی است.
  * از کلاس service-icon استفاده می‌کند که افکت سه‌بعدی در CSS دارد.
  */
-function initDashboard() {
+    function initDashboard() {
     const grid = document.getElementById('servicesGrid');
     if (!grid) return;
 
-    // دریافت تمام ۱۲ کسب‌وکار از دیتابیس
     const allApps = Object.values(BRANCHES_DATA);
 
-    // ساخت HTML برای هر کسب‌وکار
     const itemsHtml = allApps.map(app => {
         return `
             <div class="service-item" onclick="openApp('${app.slug}')">
                 <div class="service-icon" style="background: linear-gradient(135deg, ${app.color}, ${app.color}dd);">
                     ${app.icon}
                 </div>
-                <span class="service-name" style="font-weight: 900;">
-                    ${app.title}
-                </span>
-                <span class="service-subtitle" style="font-size: 10px; color: var(--text-muted); margin-top: -4px;">
-                    ${app.subtitle}
-                </span>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <span class="service-name" style="font-size: 13px; font-weight: 900; color: var(--text-main);">
+                        ${app.title}
+                    </span>
+                    <span class="service-subtitle" style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
+                        ${app.subtitle}
+                    </span>
+                </div>
             </div>
         `;
     }).join('');
@@ -4263,10 +4255,13 @@ function speakText(text, langCode) {
 
 function initSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return null;
+    if (!SpeechRecognition) {
+        showToast('مرورگر شما از دستیار صوتی پشتیبانی نمی‌کند.', 'error');
+        return null;
+    }
 
     const rec = new SpeechRecognition();
-    rec.continuous = false;
+    rec.continuous = false; // هر بار یک جمله می‌شنود، اما ما دوباره روشنش می‌کنیم
     rec.interimResults = false;
     rec.lang = LANGUAGES[state.aiState.language] || 'fa-IR';
 
@@ -4278,35 +4273,85 @@ function initSpeechRecognition() {
 
     rec.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
+        isListening = false;
+        const humanoid = document.getElementById('aiHumanoid');
+        if (humanoid) humanoid.classList.remove('listening');
+        
         processUserSpeech(transcript);
     };
 
-    rec.onerror = (event) => { stopListening(); };
-    rec.onend = () => stopListening();
+    rec.onerror = (event) => { 
+        console.warn("Speech Error:", event.error);
+        stopListening(); 
+    };
+    
+    rec.onend = () => { 
+        stopListening(); 
+    };
 
     return rec;
 }
 
 function startVoiceRecognition() {
     if (isSpeaking) return;
+    
+    // اگر قبلا ساخته نشده، بساز
     if (!recognition) recognition = initSpeechRecognition();
     if (!recognition || isListening) return;
 
     try {
         recognition.lang = LANGUAGES[state.aiState.language] || 'fa-IR';
         recognition.start();
-    } catch (e) { console.warn(e); }
+    } catch (e) { 
+        console.warn("Could not start mic:", e); 
+    }
 }
 
 function stopListening() {
     isListening = false;
     const humanoid = document.getElementById('aiHumanoid');
     if (humanoid) humanoid.classList.remove('listening');
+    
+    // اگر ربات هنوز در حالت مکالمه است و صدا هم قطع است، دوباره گوش کن
+    if (state.isAIActive && !isSpeaking) {
+        setTimeout(() => startVoiceRecognition(), 1000);
+    }
 }
 
+// استارت مکالمه با کلیک کاربر (به جای استارت خودکار)
+function toggleAIConversation() {
+    if (state.isAIActive) {
+        // توقف مکالمه
+        state.isAIActive = false;
+        if (synth) synth.cancel();
+        if (recognition) {
+            try { recognition.stop(); } catch(e){}
+        }
+        showToast('دستیار متوقف شد.', 'warning');
+    } else {
+        // شروع مکالمه
+        state.isAIActive = true;
+        if (!state.aiState.language) {
+            state.aiState.language = 'fa';
+        }
+        
+        if (!state.isAIInitialized) {
+            state.isAIInitialized = true;
+            state.aiState.step = 'language';
+            speakText('سلام! من آیری هستم. به ایران AI خوش آمدید. به چه زبانی صحبت کنیم؟ فارسی، انگلیسی یا عربی؟');
+        } else {
+            speakText('بله، در خدمتم. چه کاری براتون انجام بدم؟');
+        }
+    }
+}
+
+// پردازش هوشمند و زنده صحبت‌های کاربر
 async function processUserSpeech(text) {
     if (!text || text.trim().length < 1) return;
 
+    console.log("🎤 کاربر گفت:", text);
+
+    // اگر در مرحله انتخاب زبان بودیم
     if (state.aiState.step === 'language') {
         if (text.includes('فارسی') || text.toLowerCase().includes('farsi')) state.aiState.language = 'fa';
         else if (text.includes('English') || text.includes('انگلیسی')) state.aiState.language = 'en';
@@ -4314,30 +4359,34 @@ async function processUserSpeech(text) {
         else state.aiState.language = 'fa';
 
         state.aiState.step = 'intent';
-        speakText('عالی. حالا بفرمایید چه کاری برات انجام بدم؟');
+        speakText('عالی. حالا بفرمایید چه کاری براتون انجام بدم؟');
         return;
     }
 
-    if (state.aiState.step === 'intent') {
+    // اگر در مرحله فهمیدن درخواست بودیم
+    if (state.aiState.step === 'intent' || state.aiState.step === 'confirmation') {
         try {
-            // ترکیب پرامپت اصلی با پرامپت تخصصی اپلیکیشن‌ها (اختیاری)
             const res = await fetch(`${WORKER_URL}/api/v1/ai/chat`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}) },
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}) 
+                },
                 body: JSON.stringify({
                     message: text,
                     history: state.chatHistory.slice(-4),
-                    system_prompt: AI_SYSTEM_PROMPT + `\nوضعیت: ${state.aiState.step}`
+                    system_prompt: AI_SYSTEM_PROMPT
                 })
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error('AI error');
+            if (!res.ok) throw new Error('خطا در ارتباط با هوش مصنوعی');
 
             const reply = data.reply;
             const actionMatch = reply.match(/\[ACTION:\s*(\w+)\]/);
 
             if (actionMatch) {
+                // اگر AI تشخیص داد کاربر می‌خواهد وارد یک اپلیکیشن شود (مثلا تاکسی)
                 const appSlug = actionMatch[1];
                 state.aiState.intent = appSlug;
                 state.aiState.step = 'form_filling';
@@ -4350,19 +4399,23 @@ async function processUserSpeech(text) {
                 setTimeout(() => {
                     openApp(appSlug);
                     setTimeout(() => askNextQuestion(), 2000);
-                }, 2500);
+                }, 2000);
                 state.chatHistory.push({ role: 'user', content: text });
+                state.chatHistory.push({ role: 'assistant', content: reply });
             } else {
+                // مکالمه عادی
                 speakText(reply);
                 state.chatHistory.push({ role: 'user', content: text });
                 state.chatHistory.push({ role: 'assistant', content: reply });
             }
         } catch (err) {
-            speakText('متأسفم، مشکلی پیش آمد. دوباره تلاش کنید.');
+            speakText('متأسفم، در ارتباط با سرور مشکلی پیش آمد. دوباره تلاش کنید.');
+            console.error(err);
         }
         return;
     }
 
+    // اگر در حال پر کردن فرم با صدا بودیم
     if (state.aiState.step === 'form_filling') {
         const flow = AI_APP_FLOWS[state.aiState.intent];
         if (!flow) return;
@@ -4388,14 +4441,15 @@ async function processUserSpeech(text) {
         if (state.aiState.currentQuestionIdx < flow.questions.length) {
             askNextQuestion();
         } else {
-            speakText('عالی! اطلاعات کامل شد. لطفاً روی دکمه ثبت بزنید یا بگویید «ثبت کن» تا من برات انجام بدم.');
+            speakText('عالی! اطلاعات کامل شد. لطفاً روی دکمه ثبت بزنید.');
             state.aiState.step = 'confirmation';
-
             if (flow.afterAll && typeof window[flow.afterAll] === 'function') {
                 setTimeout(() => window[flow.afterAll](), 1500);
             }
         }
-    } else if (state.aiState.step === 'confirmation') {
+    }
+}
+    else if (state.aiState.step === 'confirmation') {
         if (text.includes('ثبت') || text.includes('تایید') || text.includes('بله')) {
             speakText('در حال ثبت سفارش شما...');
             const flow = AI_APP_FLOWS[state.aiState.intent];
