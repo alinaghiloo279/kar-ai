@@ -2375,49 +2375,68 @@ async function requestPermissions() {
     }
 
     try {
-        const results = await Promise.allSettled([
-            navigator.mediaDevices.getUserMedia({ audio: true }),
-            new Promise((resolve, reject) => {
+        const promises = [];
+        
+        // درخواست میکروفن
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            promises.push(navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => null));
+        }
+        
+        // درخواست موقعیت مکانی
+        promises.push(new Promise((resolve) => {
+            if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    resolve,
-                    reject,
-                    { timeout: 10000, enableHighAccuracy: true }
+                    (pos) => resolve(pos),
+                    (err) => resolve(null),
+                    { timeout: 8000, enableHighAccuracy: true }
                 );
-            })
-        ]);
+            } else {
+                resolve(null);
+            }
+        }));
 
-        // ذخیره موقعیت واقعی کاربر
-        if (results[1].status === 'fulfilled') {
-            const pos = results[1].value;
+        const results = await Promise.all(promises);
+
+        // اگر موقعیت مکانی گرفته شد، ذخیره کن
+        const geoResult = results.find(r => r && r.coords);
+        if (geoResult) {
             state.userLocation = {
-                lat: pos.coords.latitude,
-                lng: pos.coords.longitude
+                lat: geoResult.coords.latitude,
+                lng: geoResult.coords.longitude
             };
-            console.log('📍 موقعیت کاربر دریافت شد:', state.userLocation);
         } else {
+            // موقعیت پیش‌فرض (تهران) اگر کاربر دسترسی نداد
             state.userLocation = { lat: 35.6892, lng: 51.3890 };
         }
+
     } catch (err) {
-        console.warn("Permission error", err);
+        console.warn("Permission error:", err);
         state.userLocation = { lat: 35.6892, lng: 51.3890 };
-    }
+    } finally {
+        // 👇 این بخش "در هر شرایطی" اجرا می‌شود تا صفحه بسته شود 👇
+        try {
+            localStorage.setItem('kar_permissions_granted', 'true');
+            localStorage.setItem('kar_user_lat', state.userLocation.lat);
+            localStorage.setItem('kar_user_lng', state.userLocation.lng);
+        } catch (e) {
+            console.warn("LocalStorage is full or blocked");
+        }
 
-    // ذخیره وضعیت در localStorage تا دیگر پرسیده نشود
-    localStorage.setItem('kar_permissions_granted', 'true');
-    
-    // ذخیره موقعیت در حافظه مرورگر برای استفاده‌های بعدی
-    localStorage.setItem('kar_user_lat', state.userLocation.lat);
-    localStorage.setItem('kar_user_lng', state.userLocation.lng);
+        // پنهان کردن صفحه مجوزها
+        const permScreen = document.getElementById('permissionScreen');
+        if (permScreen) permScreen.style.display = 'none';
+        
+        // نمایش صفحه احراز هویت
+        const authScreen = document.getElementById('authScreen');
+        if (authScreen) authScreen.classList.remove('hidden');
 
-    document.getElementById('permissionScreen').style.display = 'none';
-    document.getElementById('authScreen').classList.remove('hidden');
-
-    if (btn) {
-        btn.innerText = 'فعال‌سازی و شروع';
-        btn.disabled = false;
+        // برگرداندن دکمه به حالت اول
+        if (btn) {
+            btn.innerText = 'فعال‌سازی و شروع';
+            btn.disabled = false;
+        }
     }
 }
-
 /* ================================================================ */
 /* ۲. احراز هویت: مرحله ۱ (شماره موبایل)                          */
 /* ================================================================ */
