@@ -118,7 +118,10 @@
             </div>
             <input type="tel" id="mobileInput" class="app-input" placeholder="۰۹۱۲۳۴۵۶۷۸۹" dir="ltr" maxlength="11">
             <button class="app-btn" id="btnSubmitMobile" onclick="submitMobile()" disabled>ادامه</button>
-            
+                        <button class="guest-btn" onclick="showLoginForm()" style="border-color: var(--blue); color: var(--blue); margin-top: 10px;">
+                <span class="guest-btn-icon">🔑</span>
+                قبلاً ثبت‌نام کرده‌ام (ورود با رمز)
+            </button>
             <div class="divider-or">
                 <div class="divider-line"></div>
                 <span class="divider-text">یا</span>
@@ -2327,23 +2330,18 @@ async function tryRefreshToken() {
  */
 async function getBusinessBySlug(slug) {
     try {
-        if (state.cache.businesses) {
+        if (state.cache.businesses && state.cache.businesses.length > 0) {
             const cached = state.cache.businesses.find(b => b.slug === slug);
             if (cached) return cached;
         }
-
-        const res = await apiFetch('/api/v1/businesses');
+        const res = await apiFetch('/api/v1/businesses/public');
         const data = await res.json();
-
         if (!res.ok) throw new Error(data.message_fa || 'خطا در دریافت کسب‌وکار');
-
         state.cache.businesses = data.businesses || [];
-        state.cache.businessesFetchedAt = Date.now();
-
-        return state.cache.businesses.find(b => b.slug === slug) || { id: 'dummy-id' };
+        return state.cache.businesses.find(b => b.slug === slug) || null;
     } catch (err) {
         console.error('getBusinessBySlug error:', err);
-        return { id: 'dummy-id' };
+        return null; 
     }
 }
 
@@ -2481,6 +2479,123 @@ async function submitMobile() {
         setLoading(btnSubmitMobile, false);
     }
 }
+    // نمایش فرم ورود
+function showLoginForm() {
+    document.getElementById('authStepMobile').hidden = true;
+    
+    let loginDiv = document.getElementById('authStepLogin');
+    if (!loginDiv) {
+        loginDiv = document.createElement('div');
+        loginDiv.id = 'authStepLogin';
+        document.getElementById('authScreen').appendChild(loginDiv);
+    }
+    loginDiv.hidden = false;
+    
+    loginDiv.innerHTML = `
+        <div class="auth-header">
+            <button class="app-back-btn" onclick="backToMobile()">→</button>
+        </div>
+        <h2 class="auth-title">ورود به حساب</h2>
+        <div class="input-group">
+            <label class="form-label">نام کاربری</label>
+            <input type="text" id="loginUsername" class="app-input" placeholder="username" dir="ltr">
+        </div>
+        <div class="input-group">
+            <label class="form-label">رمز عبور / پین کد</label>
+            <input type="password" id="loginPassword" class="app-input" placeholder="********" dir="ltr">
+        </div>
+        <button class="app-btn" id="btnSubmitLogin" onclick="submitLogin()">ورود</button>
+        
+        <div style="text-align: center; margin-top: 15px;">
+            <span style="color: var(--purple); font-size: 13px; cursor: pointer;" onclick="showForgotPassword()">رمز عبور را فراموش کرده‌اید؟</span>
+        </div>
+    `;
+}
+
+// منطق ورود با رمز
+async function submitLogin() {
+    const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+    const btn = document.getElementById('btnSubmitLogin');
+
+    if (!username || !password) return showToast('نام کاربری و رمز الزامی است.', 'error');
+
+    setLoading(btn, true);
+    try {
+        const res = await fetch(`${WORKER_URL}/api/v1/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message_fa || 'نام کاربری یا رمز نادرست است');
+
+        // اگر ورکر تشخیص داد که این کاربر مدیر است (2FA)
+        if (data.two_factor_required) {
+            return showToast('ورود مدیر نیاز به تایید پیامکی دارد که فعلاً غیرفعال است.', 'error');
+        }
+
+        authToken = data.access_token;
+        refreshToken = data.refresh_token;
+        localStorage.setItem('kar_access_token', authToken);
+        localStorage.setItem('kar_refresh_token', refreshToken);
+        localStorage.setItem('kar_username', username);
+
+        state.user = { name: data.user?.display_name || 'کاربر', username: username, isGuest: false };
+        state.isGuest = false;
+        
+        goToDashboard();
+        showToast('خوش آمدید!', 'success');
+
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        setLoading(btn, false);
+    }
+}
+
+// منطق فراموشی رمز (استفاده از OTP فقط در این حالت)
+function showForgotPassword() {
+    const mobile = prompt('لطفاً شماره موبایل خود را برای دریافت کد بازیابی وارد کنید:');
+    if (!mobile) return;
+    
+    fetch(`${WORKER_URL}/api/v1/auth/otp/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile: normalizeDigits(mobile), purpose: 'password_reset' })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.ok) throw new Error(data.message_fa);
+        showToast('کد بازیابی ارسال شد.', 'success');
+        
+        setTimeout(() => {
+            const otpCode = prompt('کد ۶ رقمی ارسال شده را وارد کنید:');
+            if (!otpCode) return;
+            const newPassword = prompt('رمز عبور جدید خود را وارد کنید:');
+            if (!newPassword) return;
+            
+            return fetch(`${WORKER_URL}/api/v1/auth/password-reset`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mobile: normalizeDigits(mobile),
+                    code: normalizeDigits(otpCode),
+                    new_password: newPassword
+                })
+            });
+        }, 1000);
+    })
+    .then(res => res && res.json())
+    .then(data => {
+        if (data && data.ok) {
+            showToast('رمز عبور تغییر کرد. حالا وارد شوید.', 'success');
+            showLoginForm();
+        }
+    })
+    .catch(err => showToast(err.message || 'خطا در بازیابی', 'error'));
+}
 
 /* ================================================================ */
 /* ۳. احراز هویت: مرحله ۲ (کد OTP)                                */
@@ -2535,6 +2650,9 @@ function backToMobile() {
     if (timerInterval) clearInterval(timerInterval);
 }
 
+    if(document.getElementById('authStepLogin')) {
+        document.getElementById('authStepLogin').hidden = true;
+    }
 function backToOtp() {
     document.getElementById('authStepMobile').hidden = true;
     document.getElementById('authStepOtp').hidden = false;
@@ -3310,12 +3428,13 @@ async function submitTravel() {
         const biz = await getBusinessBySlug('airo');
         const dest = document.getElementById('travel-destination').value.trim();
 
-        const res = await apiFetch('/api/v1/orders', {
+               const res = await apiFetch('/api/v1/orders', {
             method: 'POST',
             body: JSON.stringify({
                 business_id: biz.id,
                 title: `سفر به ${dest}`,
                 amount: state.travelPrice,
+                distance_km: state.currentDistance,  // 👈 این خط اضافه شد
                 description: `مسافت: ${state.currentDistance} کیلومتر`,
                 payment_method: 'wallet'
             })
@@ -4079,7 +4198,22 @@ const AI_SYSTEM_PROMPT = `
 ۳. اگر کاربر درخواستی داد، کد [ACTION: app_slug] را در انتها قرار بده.
 ۴. پاسخ‌ها حداکثر ۲ جمله، صمیمی و کوتاه.
 `;
-
+const AI_APP_FLOWS = {
+    airo: {
+        questions: [
+            { field: 'origin', inputId: 'travel-origin', question: 'مبدأ حرکت شما کجاست؟' },
+            { field: 'destination', inputId: 'travel-destination', question: 'مقصدتان کجاست؟' }
+        ],
+        afterAll: 'drawTravelRoute'
+    },
+    aikar: {
+        questions: [
+            { field: 'carModel', inputId: 'mech-carmodel', question: 'مدل خودروی شما چیست؟' },
+            { field: 'issue', inputId: 'mech-issue', isSelect: true, question: 'مشکل خودرو چیست؟' }
+        ],
+        afterAll: 'calculateMechanicFee'
+    }
+};
 function speakText(text, langCode) {
     if (!synth) return;
     langCode = langCode || LANGUAGES[state.aiState.language] || 'fa-IR';
