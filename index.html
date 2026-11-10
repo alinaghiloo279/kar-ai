@@ -2374,67 +2374,53 @@ async function requestPermissions() {
         btn.disabled = true;
     }
 
+    let micGranted = false;
+    let geoGranted = false;
+
+    // ۱. درخواست میکروفن
     try {
-        const promises = [];
-        
-        // درخواست میکروفن
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            promises.push(navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => null));
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(track => track.stop()); // میکروفن را موقتاً آزاد می‌کنیم
+            micGranted = true;
         }
-        
-        // درخواست موقعیت مکانی
-        promises.push(new Promise((resolve) => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => resolve(pos),
-                    (err) => resolve(null),
-                    { timeout: 8000, enableHighAccuracy: true }
-                );
-            } else {
-                resolve(null);
-            }
-        }));
-
-        const results = await Promise.all(promises);
-
-        // اگر موقعیت مکانی گرفته شد، ذخیره کن
-        const geoResult = results.find(r => r && r.coords);
-        if (geoResult) {
-            state.userLocation = {
-                lat: geoResult.coords.latitude,
-                lng: geoResult.coords.longitude
-            };
-        } else {
-            // موقعیت پیش‌فرض (تهران) اگر کاربر دسترسی نداد
-            state.userLocation = { lat: 35.6892, lng: 51.3890 };
-        }
-
     } catch (err) {
-        console.warn("Permission error:", err);
-        state.userLocation = { lat: 35.6892, lng: 51.3890 };
-    } finally {
-        // 👇 این بخش "در هر شرایطی" اجرا می‌شود تا صفحه بسته شود 👇
-        try {
-            localStorage.setItem('kar_permissions_granted', 'true');
-            localStorage.setItem('kar_user_lat', state.userLocation.lat);
-            localStorage.setItem('kar_user_lng', state.userLocation.lng);
-        } catch (e) {
-            console.warn("LocalStorage is full or blocked");
-        }
+        console.warn("Microphone blocked:", err);
+    }
 
-        // پنهان کردن صفحه مجوزها
-        const permScreen = document.getElementById('permissionScreen');
-        if (permScreen) permScreen.style.display = 'none';
-        
-        // نمایش صفحه احراز هویت
-        const authScreen = document.getElementById('authScreen');
-        if (authScreen) authScreen.classList.remove('hidden');
-
-        // برگرداندن دکمه به حالت اول
-        if (btn) {
-            btn.innerText = 'فعال‌سازی و شروع';
-            btn.disabled = false;
+    // ۲. درخواست موقعیت مکانی
+    try {
+        if (navigator.geolocation) {
+            const pos = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, { 
+                    timeout: 8000, // حداکثر ۸ ثانیه صبر می‌کند
+                    enableHighAccuracy: true 
+                });
+            });
+            state.userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            geoGranted = true;
         }
+    } catch (err) {
+        console.warn("Location blocked or timed out:", err);
+        state.userLocation = { lat: 35.6892, lng: 51.3890 }; // مختصات پیش‌فرض تهران
+    }
+
+    // ۳. ذخیره در حافظه
+    try {
+        localStorage.setItem('kar_permissions_granted', 'true');
+        localStorage.setItem('kar_user_lat', state.userLocation.lat);
+        localStorage.setItem('kar_user_lng', state.userLocation.lng);
+    } catch (e) {}
+
+    // ۴. رفتن به صفحه بعد (در هر شرایطی انجام می‌شود تا کاربر گیر نکند)
+    document.getElementById('permissionScreen').style.display = 'none';
+    document.getElementById('authScreen').classList.remove('hidden');
+
+    // ۵. نمایش هشدار در صورت رد شدن دسترسی
+    if (!micGranted || !geoGranted) {
+        setTimeout(() => {
+            showToast('برای عملکرد صحیح دستیار و نقشه، لطفاً در تنظیمات مرورگر دسترسی‌ها را فعال کنید.', 'warning');
+        }, 500);
     }
 }
 /* ================================================================ */
