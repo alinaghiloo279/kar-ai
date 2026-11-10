@@ -2545,48 +2545,41 @@ async function submitLogin() {
         state.user = { name: data.user?.display_name || 'کاربر', username: username, isGuest: false };
         state.isGuest = false;
         
-        goToDashboard();
-        showToast('خوش آمدید!', 'success');
-
-    } catch (err) {
-        showToast(err.message, 'error');
-    } finally {
-        setLoading(btn, false);
-    }
-}
-
-// منطق فراموشی رمز (استفاده از OTP فقط در این حالت)
-function showForgotPassword() {
-    const mobile = prompt('لطفاً شماره موبایل خود را برای دریافت کد بازیابی وارد کنید:');
-    if (!mobile) return;
+     function goToDashboard() {
+    const authScreen = document.getElementById('authScreen');
+    const mainScreen = document.getElementById('mainScreen');
     
-    fetch(`${WORKER_URL}/api/v1/auth/otp/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobile: normalizeDigits(mobile), purpose: 'password_reset' })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (!data.ok) throw new Error(data.message_fa);
-        showToast('کد بازیابی ارسال شد.', 'success');
-        
-        setTimeout(() => {
-            const otpCode = prompt('کد ۶ رقمی ارسال شده را وارد کنید:');
-            if (!otpCode) return;
-            const newPassword = prompt('رمز عبور جدید خود را وارد کنید:');
-            if (!newPassword) return;
-            
-            return fetch(`${WORKER_URL}/api/v1/auth/password-reset`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    mobile: normalizeDigits(mobile),
-                    code: normalizeDigits(otpCode),
-                    new_password: newPassword
-                })
-            });
-        }, 1000);
-    })
+    // مخفی کردن قاطع صفحه لاگین
+    authScreen.classList.add('hidden');
+    authScreen.style.display = 'none'; 
+    
+    // نمایش قاطع داشبورد
+    mainScreen.classList.add('active');
+    mainScreen.style.transform = 'translateY(0)';
+    mainScreen.style.display = 'flex';
+
+    const profileIcon = document.getElementById('profileIcon');
+    if (profileIcon) {
+        profileIcon.innerText = (state.user?.name || 'I').charAt(0).toUpperCase();
+        profileIcon.style.background = state.user?.isGuest ? 'var(--slate)' : 'var(--purple)';
+    }
+
+    // پر کردن آیکون‌های داشبورد
+    if (typeof initDashboard === 'function') {
+        try {
+            initDashboard();
+        } catch (e) {
+            console.error("Dashboard init error:", e);
+        }
+    }
+
+    // شروع خودکار ربات (اگر خطا داد، سایت را کرش نکند)
+    setTimeout(() => {
+        if (typeof startAIOnEntry === 'function') {
+            try { startAIOnEntry(); } catch(e) { console.error(e); }
+        }
+    }, 1000);
+}
     .then(res => res && res.json())
     .then(data => {
         if (data && data.ok) {
@@ -2666,21 +2659,28 @@ function backToOtp() {
 async function submitProfile(event) {
     const name = document.getElementById('profileName').value.trim();
     const password = document.getElementById('profilePassword').value;
-    const enableBiometric = document.getElementById('enableBiometric').checked;
+    const enableBiometric = document.getElementById('enableBiometric') ? document.getElementById('enableBiometric').checked : false;
+    
+    // اگر فیلد نام کاربری را اضافه کرده‌اید:
+    const usernameInput = document.getElementById('profileUsername') ? document.getElementById('profileUsername').value.trim().toLowerCase() : null;
 
     if (!name || name.length < 2) {
         return showToast('لطفاً نام و نام خانوادگی خود را وارد کنید.', 'error');
     }
 
-    if (!password || password.length < 10) {
-        return showToast('رمز عبور باید حداقل ۱۰ کاراکتر باشد.', 'error');
+    if (!password || password.length < 4) {
+        return showToast('رمز عبور باید حداقل ۴ کاراکتر باشد.', 'error');
+    }
+
+    if (usernameInput && !/^[a-z0-9][a-z0-9_.-]{3,39}$/.test(usernameInput)) {
+         return showToast('نام کاربری باید ۴ تا ۴۰ حرف انگلیسی/عدد باشد.', 'error');
     }
 
     setLoading(event.target, true);
 
     try {
-        const randomSuffix = Math.floor(Math.random() * 10000);
-        const username = `user_${state.mobile.replace(/\D/g, '')}_${randomSuffix}`;
+        // تولید نام کاربری در صورت نبودن
+        const username = usernameInput || `user_${state.mobile.replace(/\D/g, '')}_${Math.floor(Math.random() * 10000)}`;
 
         const registerRes = await fetch(`${WORKER_URL}/api/v1/auth/register`, {
             method: 'POST',
@@ -2697,6 +2697,7 @@ async function submitProfile(event) {
         const registerData = await registerRes.json();
         if (!registerRes.ok) throw new Error(registerData.message_fa || 'خطا در ثبت‌نام');
 
+        // ورود خودکار بعد از ثبت‌نام
         const loginRes = await fetch(`${WORKER_URL}/api/v1/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2720,14 +2721,17 @@ async function submitProfile(event) {
         };
         state.isGuest = false;
 
-        // اگر کاربر تیک بیومتریک زده بود
         if (enableBiometric && window.PublicKeyCredential) {
-            await registerBiometricCredential(username);
+            try { await registerBiometricCredential(username); } catch(e) {}
         }
 
+        showToast('ثبت‌نام با موفقیت انجام شد.', 'success');
+        
+        // انتقال به داشبورد
         goToDashboard();
 
     } catch (err) {
+        console.error("Submit Profile Error:", err);
         showToast(err.message, 'error');
     } finally {
         setLoading(event.target, false);
