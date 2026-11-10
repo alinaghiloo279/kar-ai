@@ -2580,7 +2580,6 @@ async function requestPermissions() {
         }, 500);
     }
 }
-
 /* ================================================================ */
 /* ۲. احراز هویت: مرحله ۱ (شماره موبایل)                          */
 /* ================================================================ */
@@ -2619,12 +2618,7 @@ async function submitMobile() {
 
         const data = await res.json();
 
-        if (!res.ok) {
-            if (data.code === 'account_exists') {
-                showToast('این شماره قبلاً ثبت شده است. لطفاً وارد شوید.', 'warning');
-                // در اینجا می‌توانید منطقی برای تغییر به حالت ورود اضافه کنید
-                return;
-            }
+        if (!res.ok && data.code !== 'account_exists') {
             throw new Error(data.message_fa || 'خطا در ارسال پیامک');
         }
 
@@ -2642,126 +2636,9 @@ async function submitMobile() {
         setLoading(btnSubmitMobile, false);
     }
 }
-    // نمایش فرم ورود
-function showLoginForm() {
-    document.getElementById('authStepMobile').hidden = true;
-    
-    let loginDiv = document.getElementById('authStepLogin');
-    if (!loginDiv) {
-        loginDiv = document.createElement('div');
-        loginDiv.id = 'authStepLogin';
-        document.getElementById('authScreen').appendChild(loginDiv);
-    }
-    loginDiv.hidden = false;
-    
-    loginDiv.innerHTML = `
-        <div class="auth-header">
-            <button class="app-back-btn" onclick="backToMobile()">→</button>
-        </div>
-        <h2 class="auth-title">ورود به حساب</h2>
-        <div class="input-group">
-            <label class="form-label">نام کاربری</label>
-            <input type="text" id="loginUsername" class="app-input" placeholder="username" dir="ltr">
-        </div>
-        <div class="input-group">
-            <label class="form-label">رمز عبور / پین کد</label>
-            <input type="password" id="loginPassword" class="app-input" placeholder="********" dir="ltr">
-        </div>
-        <button class="app-btn" id="btnSubmitLogin" onclick="submitLogin()">ورود</button>
-        
-        <div style="text-align: center; margin-top: 15px;">
-            <span style="color: var(--purple); font-size: 13px; cursor: pointer;" onclick="showForgotPassword()">رمز عبور را فراموش کرده‌اید؟</span>
-        </div>
-    `;
-}
-
-// منطق ورود با رمز
-async function submitLogin() {
-    const username = document.getElementById('loginUsername').value.trim().toLowerCase();
-    const password = document.getElementById('loginPassword').value;
-    const btn = document.getElementById('btnSubmitLogin');
-
-    if (!username || !password) return showToast('نام کاربری و رمز الزامی است.', 'error');
-
-    setLoading(btn, true);
-    try {
-        const res = await fetch(`${WORKER_URL}/api/v1/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        const data = await res.json();
-
-        if (!res.ok) throw new Error(data.message_fa || 'نام کاربری یا رمز نادرست است');
-
-        if (data.two_factor_required) {
-            return showToast('ورود مدیر نیاز به تایید پیامکی دارد که فعلاً غیرفعال است.', 'error');
-        }
-
-        authToken = data.access_token;
-        refreshToken = data.refresh_token;
-        localStorage.setItem('kar_access_token', authToken);
-        localStorage.setItem('kar_refresh_token', refreshToken);
-        localStorage.setItem('kar_username', username);
-
-        state.user = { name: data.user?.display_name || 'کاربر', username: username, isGuest: false };
-        state.isGuest = false;
-        
-        goToDashboard();
-        showToast('خوش آمدید!', 'success');
-
-    } catch (err) {
-        showToast(err.message, 'error');
-    } finally {
-        setLoading(btn, false);
-    }
-}
-
-// منطق فراموشی رمز
-function showForgotPassword() {
-    const mobile = prompt('لطفاً شماره موبایل خود را برای دریافت کد بازیابی وارد کنید:');
-    if (!mobile) return;
-    
-    fetch(`${WORKER_URL}/api/v1/auth/otp/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobile: normalizeDigits(mobile), purpose: 'password_reset' })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (!data.ok) throw new Error(data.message_fa);
-        showToast('کد بازیابی ارسال شد.', 'success');
-        
-        setTimeout(() => {
-            const otpCode = prompt('کد ۶ رقمی ارسال شده را وارد کنید:');
-            if (!otpCode) return;
-            const newPassword = prompt('رمز عبور جدید خود را وارد کنید:');
-            if (!newPassword) return;
-            
-            return fetch(`${WORKER_URL}/api/v1/auth/password-reset`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    mobile: normalizeDigits(mobile),
-                    code: normalizeDigits(otpCode),
-                    new_password: newPassword
-                })
-            });
-        }, 1000);
-    })
-    .then(res => res && res.json())
-    .then(data => {
-        if (data && data.ok) {
-            showToast('رمز عبور تغییر کرد. حالا وارد شوید.', 'success');
-            showLoginForm();
-        }
-    })
-    .catch(err => showToast(err.message || 'خطا در بازیابی', 'error'));
-}
 
 /* ================================================================ */
-/* ۳. احراز هویت: مرحله ۲ (کد OTP) با ثبت‌نام پس‌زمینه           */
-/*    اصلاحیه ۴: حذف فرم طولانی ثبت‌نام (ثبت‌نام در پس‌زمینه)      */
+/* ۳. احراز هویت: مرحله ۲ (کد OTP) - بدون نام کاربری و رمز         */
 /* ================================================================ */
 
 function setupOtpInputs() {
@@ -2789,11 +2666,6 @@ function setupOtpInputs() {
     }
 }
 
-/**
- * اصلاحیه ۴: پس از تایید کد، بدون نمایش فرم نام و رمز،
- * یک نام کاربری و رمز تصادفی ساخته می‌شود،
- * کاربر در پس‌زمینه ثبت‌نام و لاگین می‌شود و مستقیم به داشبورد می‌رود.
- */
 async function submitOtp() {
     const boxes = document.querySelectorAll('.otp-box');
     let code = "";
@@ -2808,75 +2680,89 @@ async function submitOtp() {
 
     state.otpCode = code;
 
-    // نمایش وضعیت لودینگ
     const otpBtn = document.querySelector('#authStepOtp .app-btn');
     if (otpBtn) {
-        otpBtn.innerText = 'در حال ثبت‌نام خودکار...';
+        otpBtn.innerText = 'در حال ورود...';
         otpBtn.disabled = true;
     }
 
-    // تولید نام کاربری و رمز تصادفی برای ثبت‌نام در پس‌زمینه
-    const randomUsername = `user_${state.mobile.replace(/\D/g, '')}_${Math.floor(Math.random() * 10000)}`;
-    const randomPassword = Math.random().toString(36).slice(-12) + 'Aa1!';
+    // تولید خودکار نام کاربری و رمز در پس‌زمینه (کاربر نمی‌بیند)
+    const autoUsername = `u_${state.mobile}_${Date.now()}`;
+    const autoPassword = Math.random().toString(36).slice(-16) + 'Aa1!' + Math.random().toString(36).slice(-8);
     const displayName = `کاربر ${state.mobile.slice(-4)}`;
 
     try {
-        // ۱. ثبت‌نام در پس‌زمینه
+        // ۱. تلاش برای ثبت‌نام
         const registerRes = await fetch(`${WORKER_URL}/api/v1/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 mobile: state.mobile,
                 code: state.otpCode,
-                username: randomUsername,
-                password: randomPassword,
+                username: autoUsername,
+                password: autoPassword,
                 display_name: displayName
             })
         });
 
         const registerData = await registerRes.json();
-        if (!registerRes.ok) {
-            throw new Error(registerData.message_fa || 'خطا در ثبت‌نام');
+
+        // ۲. اگر از قبل ثبت‌نام کرده بود
+        if (!registerRes.ok && registerData.code === 'account_exists') {
+            const otpLoginRes = await fetch(`${WORKER_URL}/api/v1/auth/login-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mobile: state.mobile, code: state.otpCode })
+            });
+
+            const otpLoginData = await otpLoginRes.json();
+
+            if (!otpLoginRes.ok) throw new Error(otpLoginData.message_fa || 'خطا در ورود');
+
+            authToken = otpLoginData.access_token;
+            refreshToken = otpLoginData.refresh_token;
+            localStorage.setItem('kar_access_token', authToken);
+            localStorage.setItem('kar_refresh_token', refreshToken);
+            localStorage.setItem('kar_display_name', otpLoginData.user?.display_name || displayName);
+
+            state.user = { name: otpLoginData.user?.display_name || displayName, isGuest: false };
+            state.isGuest = false;
+
+            showToast('خوش آمدید!', 'success');
+            goToDashboard();
+            return;
         }
 
-        // ۲. ورود خودکار با همان نام کاربری و رمز
+        if (!registerRes.ok) throw new Error(registerData.message_fa || 'خطا در ثبت‌نام');
+
+        // ۳. ثبت‌نام موفق - لاگین خودکار
         const loginRes = await fetch(`${WORKER_URL}/api/v1/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: randomUsername, password: randomPassword })
+            body: JSON.stringify({ username: autoUsername, password: autoPassword })
         });
 
         const loginData = await loginRes.json();
         if (!loginRes.ok) throw new Error(loginData.message_fa || 'خطا در ورود خودکار');
 
-        // ۳. ذخیره توکن‌ها و اطلاعات کاربر
         authToken = loginData.access_token;
         refreshToken = loginData.refresh_token;
 
         localStorage.setItem('kar_access_token', authToken);
         localStorage.setItem('kar_refresh_token', refreshToken);
-        localStorage.setItem('kar_username', randomUsername);
-        localStorage.setItem('kar_display_name', displayName);
+        localStorage.setItem('kar_display_name', loginData.user?.display_name || displayName);
 
-        state.user = {
-            name: loginData.user?.display_name || displayName,
-            username: randomUsername,
-            isGuest: false
-        };
+        state.user = { name: loginData.user?.display_name || displayName, isGuest: false };
         state.isGuest = false;
 
         showToast('ثبت‌نام با موفقیت انجام شد.', 'success');
-
-        // ۴. مستقیم به داشبورد (بدون نمایش فرم نام و رمز)
         goToDashboard();
 
     } catch (err) {
         console.error("Submit OTP Error:", err);
-        showToast(err.message || 'خطا در ثبت‌نام خودکار.', 'error');
-
-        // در صورت خطا، دکمه را بازگردانی می‌کنیم
+        showToast(err.message || 'خطا در ورود.', 'error');
         if (otpBtn) {
-            otpBtn.innerText = 'تایید کد';
+            otpBtn.innerText = 'تایید و ورود';
             otpBtn.disabled = false;
         }
     }
@@ -2885,230 +2771,8 @@ async function submitOtp() {
 function backToMobile() {
     document.getElementById('authStepMobile').hidden = false;
     document.getElementById('authStepOtp').hidden = true;
-    document.getElementById('authStepProfile').hidden = true;
     if (timerInterval) clearInterval(timerInterval);
-    
-    // این بخش به داخل تابع منتقل شد
-    if(document.getElementById('authStepLogin')) {
-        document.getElementById('authStepLogin').hidden = true;
-    }
 }
-
-function backToOtp() {
-    document.getElementById('authStepMobile').hidden = true;
-    document.getElementById('authStepOtp').hidden = false;
-    document.getElementById('authStepProfile').hidden = true;
-}
-
-/* ================================================================ */
-/* ۴. احراز هویت: مرحله ۳ (ثبت‌نام و بیومتریک)                     */
-/*    توجه: چون ثبت‌نام در پس‌زمینه انجام می‌شود، این تابع           */
-/*    به عنوان fallback باقی می‌ماند تا در صورت نیاز استفاده شود.   */
-/* ================================================================ */
-
-async function submitProfile(event) {
-    const name = document.getElementById('profileName').value.trim();
-    const password = document.getElementById('profilePassword').value;
-    const enableBiometric = document.getElementById('enableBiometric') ? document.getElementById('enableBiometric').checked : false;
-    
-    // اگر فیلد نام کاربری را اضافه کرده‌اید:
-    const usernameInput = document.getElementById('profileUsername') ? document.getElementById('profileUsername').value.trim().toLowerCase() : null;
-
-    if (!name || name.length < 2) {
-        return showToast('لطفاً نام و نام خانوادگی خود را وارد کنید.', 'error');
-    }
-
-    if (!password || password.length < 4) {
-        return showToast('رمز عبور باید حداقل ۴ کاراکتر باشد.', 'error');
-    }
-
-    if (usernameInput && !/^[a-z0-9][a-z0-9_.-]{3,39}$/.test(usernameInput)) {
-         return showToast('نام کاربری باید ۴ تا ۴۰ حرف انگلیسی/عدد باشد.', 'error');
-    }
-
-    setLoading(event.target, true);
-
-    try {
-        // تولید نام کاربری در صورت نبودن
-        const username = usernameInput || `user_${state.mobile.replace(/\D/g, '')}_${Math.floor(Math.random() * 10000)}`;
-
-        const registerRes = await fetch(`${WORKER_URL}/api/v1/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                mobile: state.mobile,
-                code: state.otpCode,
-                username: username,
-                password: password,
-                display_name: name
-            })
-        });
-
-        const registerData = await registerRes.json();
-        if (!registerRes.ok) throw new Error(registerData.message_fa || 'خطا در ثبت‌نام');
-
-        // ورود خودکار بعد از ثبت‌نام
-        const loginRes = await fetch(`${WORKER_URL}/api/v1/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: username, password: password })
-        });
-
-        const loginData = await loginRes.json();
-        if (!loginRes.ok) throw new Error(loginData.message_fa || 'خطا در ورود خودکار');
-
-        authToken = loginData.access_token;
-        refreshToken = loginData.refresh_token;
-
-        localStorage.setItem('kar_access_token', authToken);
-        localStorage.setItem('kar_refresh_token', refreshToken);
-        localStorage.setItem('kar_username', username);
-
-        state.user = {
-            name: loginData.user?.display_name || name,
-            username: username,
-            isGuest: false
-        };
-        state.isGuest = false;
-
-        if (enableBiometric && window.PublicKeyCredential) {
-            try { await registerBiometricCredential(username); } catch(e) {}
-        }
-
-        showToast('ثبت‌نام با موفقیت انجام شد.', 'success');
-        
-        // انتقال به داشبورد
-        goToDashboard();
-
-    } catch (err) {
-        console.error("Submit Profile Error:", err);
-        showToast(err.message, 'error');
-    } finally {
-        setLoading(event.target, false);
-    }
-}
-
-/* ================================================================ */
-/* ۵. سیستم ورود با اثر انگشت / چهره (WebAuthn)                   */
-/* ================================================================ */
-
-/**
- * ثبت اثر انگشت یا چهره کاربر برای ورود‌های بعدی
- * @param {string} username - نام کاربری
- */
-async function registerBiometricCredential(username) {
-    try {
-        // تولید یک چالش ساده (در محیط واقعی باید از سرور گرفته شود)
-        const challenge = new Uint8Array(32);
-        crypto.getRandomValues(challenge);
-
-        const userID = new TextEncoder().encode(username);
-
-        const publicKeyCredentialCreationOptions = {
-            challenge: challenge,
-            rp: {
-                name: "Iran AI",
-                id: window.location.hostname,
-            },
-            user: {
-                id: userID,
-                name: username,
-                displayName: state.user.name,
-            },
-            pubKeyCredParams: [
-                { alg: -7, type: "public-key" },  // ES256
-                { alg: -257, type: "public-key" } // RS256
-            ],
-            authenticatorSelection: {
-                authenticatorAttachment: "platform", // استفاده از سنسور خود گوشی
-                userVerification: "required"
-            },
-            timeout: 60000,
-            attestation: "direct"
-        };
-
-        const credential = await navigator.credentials.create({
-            publicKey: publicKeyCredentialCreationOptions
-        });
-
-        if (credential) {
-            // ذخیره شناسه در حافظه
-            const credId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
-            localStorage.setItem('kar_biometric_id', credId);
-            localStorage.setItem('kar_biometric_username', username);
-            localStorage.setItem('kar_biometric_enabled', 'true');
-            
-            state.biometricEnabled = true;
-            state.biometricCredentialId = credId;
-            
-            showToast('ورود با اثر انگشت/چهره با موفقیت فعال شد.', 'success');
-        }
-    } catch (err) {
-        console.warn('Biometric registration failed:', err);
-        // خطا را نادیده می‌گیریم تا ثبت‌نام متوقف نشود
-    }
-}
-
-/**
- * ورود به سیستم با اثر انگشت یا چهره
- */
-async function loginWithBiometrics() {
-    const savedCredId = localStorage.getItem('kar_biometric_id');
-    const savedUsername = localStorage.getItem('kar_biometric_username');
-
-    if (!savedCredId || !savedUsername) {
-        return showToast('اطلاعات بیومتریک یافت نشد. لطفاً با رمز وارد شوید.', 'warning');
-    }
-
-    try {
-        const challenge = new Uint8Array(32);
-        crypto.getRandomValues(challenge);
-
-        const credentialIdBuffer = Uint8Array.from(atob(savedCredId), c => c.charCodeAt(0));
-
-        const publicKeyCredentialRequestOptions = {
-            challenge: challenge,
-            allowCredentials: [{
-                id: credentialIdBuffer,
-                type: 'public-key',
-                transports: ['internal'],
-            }],
-            timeout: 60000,
-            userVerification: "required",
-        };
-
-        const assertion = await navigator.credentials.get({
-            publicKey: publicKeyCredentialRequestOptions
-        });
-
-        if (assertion) {
-            // در محیط واقعی باید این assertion به سرور فرستاده شود تا توکن بگیرد
-            // در اینجا ما فرض می‌کنیم احراز هویت موفق بوده و از توکن ذخیره شده استفاده می‌کنیم
-            const savedToken = localStorage.getItem('kar_access_token');
-            if (savedToken) {
-                authToken = savedToken;
-                refreshToken = localStorage.getItem('kar_refresh_token');
-                state.isGuest = false;
-                state.user = {
-                    name: localStorage.getItem('kar_display_name') || 'کاربر',
-                    username: savedUsername,
-                    isGuest: false
-                };
-                goToDashboard();
-                showToast('خوش آمدید!', 'success');
-            } else {
-                showToast('توکن ورود یافت نشد. لطفاً با رمز وارد شوید.', 'warning');
-            }
-        }
-    } catch (err) {
-        console.error('Biometric login failed:', err);
-        showToast('ورود با بیومتریک ناموفق بود. لطفاً از رمز استفاده کنید.', 'error');
-    }
-}
-
-/* ================================================================ */
-/* ۶. ورود مهمان و رفتن به داشبورد                                */
-/* ================================================================ */
 
 function loginAsGuest() {
     state.user = { name: 'مهمان', isGuest: true };
@@ -3117,36 +2781,16 @@ function loginAsGuest() {
     refreshToken = null;
     localStorage.removeItem('kar_access_token');
     localStorage.removeItem('kar_refresh_token');
-
     goToDashboard();
-    showToast('شما به عنوان مهمان وارد شدید. برای ثبت سفارش، ابتدا ثبت‌نام کنید.', 'warning');
+    showToast('شما به عنوان مهمان وارد شدید.', 'warning');
 }
 
 function goToDashboard() {
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('mainScreen').classList.add('active');
-
-    const profileIcon = document.getElementById('profileIcon');
-    if (profileIcon) {
-        profileIcon.innerText = (state.user?.name || 'I').charAt(0).toUpperCase();
-        profileIcon.style.background = state.user?.isGuest ? 'var(--slate)' : 'var(--purple)';
-    }
-
-    if (typeof initDashboard === 'function') {
-        initDashboard();
-    }
-
-    // شروع خودکار ربات
-    setTimeout(() => {
-        if (typeof startAIOnEntry === 'function') {
-            startAIOnEntry();
-        }
-    }, 1000);
+    if (typeof initDashboard === 'function') initDashboard();
+    setTimeout(() => { if (typeof startAIOnEntry === 'function') startAIOnEntry(); }, 1000);
 }
-
-/* ================================================================ */
-/* ۷. تایمر و بازیابی نشست                                        */
-/* ================================================================ */
 
 function startTimer(seconds) {
     clearInterval(timerInterval);
@@ -3174,9 +2818,7 @@ async function resendOtp() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ mobile: state.mobile, purpose: 'signup' })
         });
-
         if (!res.ok) throw new Error('خطا در ارسال مجدد');
-
         showToast('کد جدید ارسال شد.', 'success');
         const resendContainer = document.querySelector('.otp-timer');
         if (resendContainer) {
@@ -3184,14 +2826,13 @@ async function resendOtp() {
             startTimer(120);
         }
     } catch (err) {
-        showToast('خطا در ارسال کد. لطفاً دوباره تلاش کنید.', 'error');
+        showToast('خطا در ارسال کد.', 'error');
     }
 }
 
 async function restoreSession() {
     const savedToken = localStorage.getItem('kar_access_token');
     const savedRefresh = localStorage.getItem('kar_refresh_token');
-
     if (!savedToken && !savedRefresh) return false;
 
     authToken = savedToken;
@@ -3202,53 +2843,31 @@ async function restoreSession() {
             headers: { 'Authorization': `Bearer ${authToken}` }
         });
 
-        // اگر توکن منقضی شده بود (خطای 401)
         if (res.status === 401 && refreshToken) {
             const refreshed = await tryRefreshToken();
-            if (refreshed) return await restoreSession(); // دوباره تلاش کن
+            if (refreshed) return await restoreSession();
             return false;
         }
 
         if (!res.ok) return false;
 
         const data = await res.json();
-        state.user = {
-            name: data.user?.display_name || 'کاربر',
-            username: data.user?.username || null,
-            isGuest: false
-        };
+        state.user = { name: data.user?.display_name || 'کاربر', isGuest: false };
         state.isGuest = false;
-        
-        // ذخیره نام برای دفعات بعد
-        if (data.user?.username) localStorage.setItem('kar_username', data.user.username);
         if (data.user?.display_name) localStorage.setItem('kar_display_name', data.user.display_name);
-
         return true;
     } catch {
         return false;
     }
 }
 
-/* ================================================================ */
-/* ۸. فرمول‌های قیمت‌گذاری هوشمند (اسنپ‌وار)                      */
-/* ================================================================ */
-
 function calculateTravelPrice(distanceKm) {
-    const baseFare = 20000;
-    const perKmRate = 15000;
-    return Math.floor(baseFare + (distanceKm * perKmRate));
+    return Math.floor(20000 + (distanceKm * 15000));
 }
 
 function calculateMechanicPrice(distanceKm) {
-    const baseFare = 30000;
-    const perKmRate = 12000;
-    // ضرب در ۲ برای احتساب رفت و برگشت
-    return Math.floor(baseFare + ((distanceKm * 2) * perKmRate));
+    return Math.floor(30000 + ((distanceKm * 2) * 12000));
 }
-
-    </script>
-    <script>
-"use strict";
 
 /* ================================================================ */
 /* ۹. هوش مصنوعی مکالمه‌محور (Voice-Only) و ماشین حالت             */
@@ -5552,14 +5171,8 @@ async function submitPartnerForm(slug) {
 window.requestPermissions = requestPermissions;
 window.submitMobile = submitMobile;
 window.submitOtp = submitOtp;
-window.submitProfile = submitProfile;
 window.loginAsGuest = loginAsGuest;
-window.loginWithBiometrics = loginWithBiometrics;
-window.showLoginForm = showLoginForm;
-window.submitLogin = submitLogin;
-window.showForgotPassword = showForgotPassword;
 window.backToMobile = backToMobile;
-window.backToOtp = backToOtp;
 window.resendOtp = resendOtp;
 
 // روتر و اپلیکیشن‌ها
@@ -5593,7 +5206,6 @@ window.openNotifications = openNotifications;
 window.closeNotifications = closeNotifications;
 window.openSettings = openSettings;
 window.closeSettings = closeSettings;
-window.toggleBiometricSetting = toggleBiometricSetting;
 window.toggleSoundSetting = toggleSoundSetting;
 window.changeAILanguage = changeAILanguage;
 
