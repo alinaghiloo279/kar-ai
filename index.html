@@ -2938,7 +2938,7 @@ async function restoreSession() {
     const savedToken = localStorage.getItem('kar_access_token');
     const savedRefresh = localStorage.getItem('kar_refresh_token');
 
-    if (!savedToken) return false;
+    if (!savedToken && !savedRefresh) return false;
 
     authToken = savedToken;
     refreshToken = savedRefresh;
@@ -2948,9 +2948,10 @@ async function restoreSession() {
             headers: { 'Authorization': `Bearer ${authToken}` }
         });
 
+        // اگر توکن منقضی شده بود (خطای 401)
         if (res.status === 401 && refreshToken) {
             const refreshed = await tryRefreshToken();
-            if (refreshed) return await restoreSession();
+            if (refreshed) return await restoreSession(); // دوباره تلاش کن
             return false;
         }
 
@@ -2964,8 +2965,9 @@ async function restoreSession() {
         };
         state.isGuest = false;
         
-        // ذخیره نام برای استفاده در بیومتریک
-        localStorage.setItem('kar_display_name', state.user.name);
+        // ذخیره نام برای دفعات بعد
+        if (data.user?.username) localStorage.setItem('kar_username', data.user.username);
+        if (data.user?.display_name) localStorage.setItem('kar_display_name', data.user.display_name);
 
         return true;
     } catch {
@@ -5269,23 +5271,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (btnBio) btnBio.style.display = 'flex';
     }
 
-    // بازیابی نشست
+    // بازیابی نشست (چک کردن اینکه آیا کاربر قبلا لاگین کرده است یا نه)
     const restored = await restoreSession();
 
     if (restored) {
-        console.log('✅ Session restored');
+        console.log('✅ Session restored successfully. Going to dashboard...');
         document.getElementById('permissionScreen').style.display = 'none';
+        
+        // 👇 این دو خط اضافه شد تا مطمئن شویم صفحه لاگین کاملا مخفی می‌شود 👇
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('mainScreen').classList.add('active');
+        // 👆 ------------------------------------------------------------- 👆
+        
         goToDashboard();
+        return; // توقف اجرای کدهای بعدی چون کاربر وارد شده است
+    }
+
+    console.log('ℹ️ No session found. Showing login/permission screens...');
+    if (permissionsGranted) {
+        // اگر قبلا مجوز داده، مستقیم برو به ورود
+        document.getElementById('permissionScreen').style.display = 'none';
+        document.getElementById('authScreen').classList.remove('hidden');
     } else {
-        console.log('ℹ️ No session found');
-        if (permissionsGranted) {
-            // اگر قبلا مجوز داده، مستقیم برو به ورود
-            document.getElementById('permissionScreen').style.display = 'none';
-            document.getElementById('authScreen').classList.remove('hidden');
-        } else {
-            // اگر بار اول است، صفحه مجوزها را نشان بده
-            document.getElementById('permissionScreen').style.display = 'flex';
-        }
+        // اگر بار اول است، صفحه مجوزها را نشان بده
+        document.getElementById('permissionScreen').style.display = 'flex';
     }
 });
 
