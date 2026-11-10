@@ -183,7 +183,7 @@
         </div>
     </div>
 
-    <!-- ================================================ -->
+<!-- ================================================ -->
 <!-- ۴. داشبورد اصلی (طراحی مینیمال)                 -->
 <!-- ================================================ -->
 <div id="mainScreen">
@@ -208,9 +208,7 @@
     </div>
 
     <!-- گرید ۱۲ آیکون سه‌بعدی -->
-    <div class="services-grid" id="servicesGrid">
-        <!-- توسط JavaScript پر می‌شود -->
-    </div>
+    <div class="services-grid" id="servicesGrid"></div>
 
     <!-- نوار پایین (۳ آیکون اصلی) -->
     <div class="bottom-nav">
@@ -228,6 +226,10 @@
         </div>
     </div>
 </div>
+
+<!-- ================================================ -->
+<!-- ۵. صفحه اختصاصی اپلیکیشن‌ها (Full Screen)        -->
+<!-- ================================================ -->
 
         <!-- بخش ویژه: درخواست همکاری -->
         <div class="partner-banner" onclick="openPartnerScreen()">
@@ -522,30 +524,7 @@
     position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10;
     transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     background: var(--bg-main); overflow-y: auto; padding-top: 21vh; padding-bottom: 110px;
-    }
-
-    #mainScreen.active {
-        transform: translateY(0);
-    }
-
-    /* نوار هدر شیشه‌ای و شناور */
-    .main-header {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        padding: 12px 15px;
-        margin: 0 15px 15px 15px;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        position: sticky;
-        top: 22vh; /* هدر دقیقاً زیر ربات فیکس می‌شود */
-        z-index: 50;
-        border: 1px solid rgba(255, 255, 255, 0.6);
-    }
-
+}
     /* ================================================================ */
     /* ۵. صفحه مجوزها                                                  */
     /* ================================================================ */
@@ -780,40 +759,6 @@
     /* ================================================================ */
     /* ۷. داشبورد اصلی و آیکون‌های سه‌بعدی                             */
     /* ================================================================ */
-    #mainScreen {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        z-index: 10;
-        transform: translateY(100%);
-        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        background: var(--bg-main);
-        overflow-y: auto;
-        padding-top: 30vh; /* فاصله برای ربات */
-        padding-bottom: 90px;
-    }
-
-    #mainScreen.active {
-        transform: translateY(0);
-    }
-
-    .main-header {
-        background: white;
-        padding: 15px 20px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
-        position: sticky;
-        top: 0;
-        z-index: 50;
-    }
-
-    .header-menu-btn {
-        font-size: 24px;
-    }
-
     .main-search {
         flex: 1;
         background: var(--bg-hover);
@@ -1225,7 +1170,57 @@
             display: none; /* در موبایل کوچک، جستجو مخفی می‌شود تا آیکون‌ها جا بشن */
         }
     }
-        </style>
+       
+/* استایل آیکون‌های شناور داشبورد */
+.floating-top-right { position: absolute; top: 20px; right: 20px; z-index: 100; }
+.floating-top-left { position: absolute; top: 20px; left: 20px; z-index: 100; display: flex; flex-direction: column; gap: 12px; }
+.quick-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; transition: all 0.2s ease; }
+.glass-effect { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+.quick-icon:active { transform: scale(0.9); }
+.section-header { padding: 0 20px; margin-top: 15px; margin-bottom: -5px; font-size: 14px; font-weight: 900; color: var(--text-main); display: flex; align-items: center; gap: 8px; opacity: 0.8; }
+
+#mainScreen {
+    position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10;
+    transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: var(--bg-main); overflow-y: auto; padding-top: 21vh; padding-bottom: 110px;
+}
+#mainScreen.active { transform: translateY(0); }
+
+/* استایل اختصاصی آیرو (الهام گرفته از اسنپ) */
+.airo-screen-wrapper { position: absolute; inset: 0; overflow: hidden; background: #e5e5e5; }
+.airo-header { position: absolute; top: 20px; left: 20px; right: 20px; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+.airo-btn { width: 45px; height: 45px; border-radius: 50%; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; }
+.airo-gps-btn { position: absolute; bottom: 320px; left: 20px; z-index: 100; width: 45px; height: 45px; border-radius: 50%; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; font-size: 24px; }
+.airo-bottom-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: white; border-radius: 25px 25px 0 0; padding: 20px; z-index: 100; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); min-height: 280px; }
+.airo-search-bar { display: flex; align-items: center; background: #F3F4F6; border-radius: 12px; padding: 12px 15px; margin-bottom: 15px; gap: 10px; border: 1px solid #E5E7EB; }
+.airo-search-bar input { border: none; background: transparent; outline: none; flex: 1; font-size: 14px; font-weight: bold; }
+.airo-search-bar .blue-dot { width: 12px; height: 12px; background: var(--blue); border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 1px var(--blue); }
+.airo-history-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F3F4F6; }
+.airo-car-option { border: 1px solid #E5E7EB; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; flex: 1; transition: all 0.2s; }
+.airo-car-option.active { border-color: var(--primary); background: #F0FDF4; }
+.airo-car-option .car-icon { font-size: 24px; margin-bottom: 5px; }
+.airo-car-option .car-name { font-size: 12px; font-weight: bold; }
+.airo-car-option .car-price { font-size: 11px; color: var(--text-muted); }
+
+/* استایل پروفایل شبیه اسنپ */
+.profile-screen { position: absolute; inset: 0; background: white; z-index: 2000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.4s; }
+.profile-screen.active { transform: translateY(0); }
+.profile-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--bg-hover); }
+.profile-user-info { display: flex; align-items: center; gap: 15px; flex-direction: row-reverse; }
+.profile-avatar { width: 65px; height: 65px; border-radius: 50%; background: #E2E8F0; display: flex; justify-content: center; align-items: center; font-size: 30px; color: #94A3B8; border: 2px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.profile-name { font-size: 18px; font-weight: 900; color: var(--text-main); margin-bottom: 4px; }
+.profile-phone { font-size: 13px; color: var(--text-muted); direction: ltr; }
+.settings-list { flex: 1; overflow-y: auto; padding-bottom: 20px; }
+.settings-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid #F1F5F9; cursor: pointer; }
+.settings-item-right { display: flex; align-items: center; gap: 15px; }
+.settings-icon { font-size: 22px; color: #64748B; width: 30px; text-align: center; }
+.settings-title { font-size: 14px; font-weight: bold; color: var(--text-main); }
+.settings-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.settings-badge { background: #F59E0B; color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
+.settings-banner { margin: 15px 20px; background: #F0F9FF; border-radius: 15px; padding: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #E0F2FE; }
+.settings-banner.support { background: #EEF2FF; border-color: #E0E7FF; margin-top: auto; }
+.settings-banner-icon { font-size: 24px; color: #3B82F6; }
+</style>
         <script>
 "use strict";
 
