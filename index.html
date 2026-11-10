@@ -184,26 +184,50 @@
     </div>
 
     <!-- ================================================ -->
-    <!-- ۴. داشبورد اصلی                                 -->
-    <!-- ================================================ -->
-    <div id="mainScreen">
-        <!-- نوار بالا (Top Bar) -->
-        <div class="main-header">
-            <button class="header-menu-btn" onclick="openSettings()">☰</button>
-            <div class="main-search">
-                <span class="search-icon">🔍</span>
-                <input type="text" placeholder="جستجو در خدمات...">
-            </div>
-            <!-- ۳ آیکون دسترسی سریع -->
-            <div class="header-quick-actions">
-                <button class="quick-icon" onclick="openNotifications()" style="position: relative;">
-                    🔔
-                    <span id="notifBadge" class="notif-badge" style="display: none;">!</span>
-                </button>
-                <button class="quick-icon" onclick="openWallet()">💳</button>
-                <button class="quick-icon" onclick="openProfile()">👤</button>
-            </div>
+<!-- ۴. داشبورد اصلی (طراحی مینیمال)                 -->
+<!-- ================================================ -->
+<div id="mainScreen">
+    <!-- آیکون‌های شناور سمت راست (منو) -->
+    <div class="floating-top-right">
+        <button class="quick-icon glass-effect" onclick="openSettings()">☰</button>
+    </div>
+
+    <!-- آیکون‌های شناور سمت چپ (اعلانات، کیف پول، همکاری) -->
+    <div class="floating-top-left">
+        <button class="quick-icon glass-effect" onclick="openNotifications()" style="position: relative;">
+            🔔
+            <span id="notifBadge" class="notif-badge" style="display: none;">!</span>
+        </button>
+        <button class="quick-icon glass-effect" onclick="openWallet()">💳</button>
+        <button class="quick-icon glass-effect" onclick="openPartnerScreen()">🤝</button>
+    </div>
+
+    <!-- تیتر بخش خدمات -->
+    <div class="section-header">
+        <span>✨</span> درخواست خدمات هوشمند
+    </div>
+
+    <!-- گرید ۱۲ آیکون سه‌بعدی -->
+    <div class="services-grid" id="servicesGrid">
+        <!-- توسط JavaScript پر می‌شود -->
+    </div>
+
+    <!-- نوار پایین (۳ آیکون اصلی) -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item active" onclick="closeApp()">
+            <div class="bottom-nav-icon">🏠</div>
+            <span>خانه</span>
         </div>
+        <div class="bottom-nav-item" onclick="openOrders()">
+            <div class="bottom-nav-icon">📋</div>
+            <span>سفارش‌ها</span>
+        </div>
+        <div class="bottom-nav-item" onclick="openProfile()">
+            <div class="bottom-nav-icon">👤</div>
+            <span>پروفایل</span>
+        </div>
+    </div>
+</div>
 
         <!-- بخش ویژه: درخواست همکاری -->
         <div class="partner-banner" onclick="openPartnerScreen()">
@@ -495,17 +519,9 @@
     /* ۷. داشبورد اصلی و هدر شیشه‌ای                                   */
     /* ================================================================ */
     #mainScreen {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        z-index: 10;
-        transform: translateY(100%);
-        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        background: var(--bg-main);
-        overflow-y: auto;
-        padding-top: 22vh; /* فاصله دقیق برای قرارگیری هدر زیر ربات */
-        padding-bottom: 90px;
+    position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10;
+    transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: var(--bg-main); overflow-y: auto; padding-top: 21vh; padding-bottom: 110px;
     }
 
     #mainScreen.active {
@@ -2353,10 +2369,33 @@ function clearCache() {
  */
 async function requestPermissions() {
     const btn = document.querySelector('.perm-btn');
-    if (btn) {
-        btn.innerText = 'در حال دریافت دسترسی‌ها...';
-        btn.disabled = true;
+    if (btn) { btn.innerText = 'در حال دریافت...'; btn.disabled = true; }
+
+    try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            await navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => null);
+        }
+        await new Promise((resolve) => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => { state.userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude }; resolve(); },
+                    () => resolve(),
+                    { timeout: 8000 }
+                );
+            } else resolve();
+        });
+    } catch (err) {
+        console.warn("Permission error:", err);
+    } finally {
+        localStorage.setItem('kar_permissions_granted', 'true');
+        localStorage.setItem('kar_user_lat', state.userLocation.lat);
+        localStorage.setItem('kar_user_lng', state.userLocation.lng);
+        
+        document.getElementById('permissionScreen').style.display = 'none';
+        document.getElementById('authScreen').classList.remove('hidden');
+        if (btn) { btn.innerText = 'فعال‌سازی و شروع'; btn.disabled = false; }
     }
+}
 
     let micGranted = false;
     let geoGranted = false;
@@ -2614,32 +2653,53 @@ function setupOtpInputs() {
     }
 }
 
-function submitOtp() {
+async function submitOtp() {
     const boxes = document.querySelectorAll('.otp-box');
     let code = "";
+    boxes.forEach(box => { code += box.value; });
 
-    boxes.forEach(box => {
-        code += box.value;
-    });
-
-    if (code.length !== 6) {
-        return showToast('لطفاً کد ۶ رقمی را کامل وارد کنید.', 'error');
-    }
+    if (code.length !== 6) return showToast('لطفاً کد ۶ رقمی را کامل وارد کنید.', 'error');
 
     state.otpCode = code;
-    document.getElementById('authStepOtp').hidden = true;
-    document.getElementById('authStepProfile').hidden = false;
-}
+    const btn = document.querySelector('#authStepOtp .app-btn');
+    if (btn) { btn.innerText = 'در حال ورود...'; btn.disabled = true; }
 
-function backToMobile() {
-    document.getElementById('authStepMobile').hidden = false;
-    document.getElementById('authStepOtp').hidden = true;
-    document.getElementById('authStepProfile').hidden = true;
-    if (timerInterval) clearInterval(timerInterval);
-    
-    // این بخش به داخل تابع منتقل شد
-    if(document.getElementById('authStepLogin')) {
-        document.getElementById('authStepLogin').hidden = true;
+    try {
+        const randomSuffix = Math.floor(Math.random() * 10000);
+        const username = `user_${state.mobile.replace(/\D/g, '')}_${randomSuffix}`;
+        const defaultPassword = 'KarAi@' + randomSuffix; // رمز موقت
+
+        // ۱. ثبت‌نام خودکار در پس‌زمینه
+        const registerRes = await fetch(`${WORKER_URL}/api/v1/auth/register`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mobile: state.mobile, code: state.otpCode, username: username, password: defaultPassword, display_name: "کاربر جدید" })
+        });
+        const regData = await registerRes.json();
+        if (!registerRes.ok) throw new Error(regData.message_fa || 'خطا در ثبت‌نام');
+
+        // ۲. ورود خودکار
+        const loginRes = await fetch(`${WORKER_URL}/api/v1/auth/login`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username, password: defaultPassword })
+        });
+        const loginData = await loginRes.json();
+        if (!loginRes.ok) throw new Error(loginData.message_fa || 'خطا در ورود');
+
+        // ۳. ذخیره توکن و ورود
+        authToken = loginData.access_token;
+        refreshToken = loginData.refresh_token;
+        localStorage.setItem('kar_access_token', authToken);
+        localStorage.setItem('kar_refresh_token', refreshToken);
+        localStorage.setItem('kar_username', username);
+
+        state.user = { name: "کاربر جدید", username: username, isGuest: false };
+        state.isGuest = false;
+
+        goToDashboard();
+        showToast('خوش آمدید!', 'success');
+    } catch (err) {
+        showToast(err.message, 'error');
+        if (btn) { btn.innerText = 'تایید کد و ورود'; btn.disabled = false; }
     }
 }
 
@@ -3216,95 +3276,53 @@ function initMap(lat, lng, isMechanic = false) {
  */
 function renderTravelApp(app) {
     document.getElementById('appContent').innerHTML = `
-        <div id="map"></div>
-
-        <div class="app-card">
-            <div class="input-group">
-                <label class="form-label">مبدأ</label>
-                <input
-                    type="text"
-                    id="travel-origin"
-                    class="app-input"
-                    placeholder="مبدأ را وارد کنید..."
-                    value="موقعیت فعلی من"
-                >
+        <div class="airo-screen-wrapper">
+            <div id="map" style="width: 100%; height: 100%; position: absolute; inset: 0; z-index: 1;"></div>
+            <div class="airo-header">
+                <button class="airo-btn" onclick="closeApp()">→</button>
+                <button class="airo-btn" style="color: var(--purple); font-size: 24px;">👤</button>
             </div>
-
-            <div class="input-group">
-                <label class="form-label">مقصد</label>
-                <input
-                    type="text"
-                    id="travel-destination"
-                    class="app-input"
-                    placeholder="کجا می‌روید؟"
-                >
-            </div>
-
-            <button class="app-btn" onclick="drawTravelRoute()" style="margin-top: 10px;">
-                🗺️ مسیریابی و محاسبه قیمت
-            </button>
-        </div>
-
-        <div id="travel-result" class="app-card" style="display: none; background: #F0FDF4; border-color: var(--primary);">
-            <div class="flex justify-between mb-4">
-                <span class="text-muted">مسافت:</span>
-                <span id="travel-distance" class="font-bold">0 کیلومتر</span>
-            </div>
-
-            <div class="flex justify-between mb-4">
-                <span class="text-muted">زمان تقریبی:</span>
-                <span id="travel-duration" class="font-bold">0 دقیقه</span>
-            </div>
-
-            <div class="flex justify-between mb-4" style="border-top: 1px dashed #CCC; padding-top: 15px;">
-                <span class="font-bold">هزینه کرایه:</span>
-                <span id="travel-price" class="font-bold" style="color: var(--primary); font-size: 18px;">
-                    0 تومان
-                </span>
-            </div>
-
-            <div class="input-group" style="margin-top: 15px;">
-                <label class="form-label">نوع خودرو</label>
-                <div class="car-options">
-                    <div class="car-card active" onclick="selectTravelCar(this, 'economy', 1.0)">
-                        <div class="c-icon">🚗</div>
-                        <span>اقتصادی</span>
-                        <small>اکو</small>
-                    </div>
-
-                    <div class="car-card" onclick="selectTravelCar(this, 'plus', 1.4)">
-                        <div class="c-icon">🚙</div>
-                        <span>پلاس</span>
-                        <small>راحت</small>
-                    </div>
-
-                    <div class="car-card" onclick="selectTravelCar(this, 'motor', 0.6)">
-                        <div class="c-icon">🏍️</div>
-                        <span>موتور</span>
-                        <small>سریع</small>
-                    </div>
-
-                    <div class="car-card" onclick="selectTravelCar(this, 'van', 2.0)">
-                        <div class="c-icon">🚐</div>
-                        <span>ون</span>
-                        <small>باربر</small>
+            <div class="airo-gps-btn" onclick="centerMapToUser()">◎</div>
+            <div class="airo-bottom-sheet" id="airoBottomSheet">
+                <div style="width: 40px; height: 4px; background: #E2E8F0; border-radius: 2px; margin: 0 auto 15px auto;"></div>
+                <div class="airo-search-bar">
+                    <span class="blue-dot"></span>
+                    <input type="text" id="travel-destination" placeholder="کجا می‌روید؟" oninput="onDestinationInput()">
+                </div>
+                <div id="travel-history">
+                    <div class="airo-history-item">
+                        <span class="icon">🕒</span>
+                        <div><div style="font-size: 13px; font-weight: bold;">میدان امام صادق</div><div style="font-size: 11px; color: var(--text-muted);">میدان انقلاب...</div></div>
                     </div>
                 </div>
+                <div id="travel-result" style="display: none;">
+                    <div class="flex justify-between mb-4" style="margin-top: 10px; padding-bottom: 10px; border-bottom: 1px dashed #E5E7EB;">
+                        <span class="text-muted" style="font-size: 12px;">مسافت: <span id="travel-distance" class="font-bold">0</span> کیلومتر</span>
+                        <span class="text-muted" style="font-size: 12px;">زمان: <span id="travel-duration" class="font-bold">0</span> دقیقه</span>
+                    </div>
+                    <div class="flex gap-2 mb-4">
+                        <div class="airo-car-option active" onclick="selectTravelCar(this, 'economy', 1.0)">
+                            <div class="car-icon">🚗</div><div class="car-name">اقتصادی</div><div class="car-price" id="price-economy">-</div>
+                        </div>
+                        <div class="airo-car-option" onclick="selectTravelCar(this, 'plus', 1.4)">
+                            <div class="car-icon">🚙</div><div class="car-name">پلاس</div><div class="car-price" id="price-plus">-</div>
+                        </div>
+                        <div class="airo-car-option" onclick="selectTravelCar(this, 'motor', 0.6)">
+                            <div class="car-icon">🏍️</div><div class="car-name">موتور</div><div class="car-price" id="price-motor">-</div>
+                        </div>
+                    </div>
+                    <button class="app-btn" onclick="submitTravel()" style="margin-top: 0; background: var(--primary);">تایید و درخواست سفر</button>
+                </div>
             </div>
-
-            <button class="app-btn mt-4" onclick="submitTravel()">
-                درخواست سفر
-            </button>
         </div>
     `;
-
-    // مقداردهی اولیه نقشه با موقعیت کاربر
     setTimeout(() => {
-        initMap(
-            state.userLocation.lat,
-            state.userLocation.lng,
-            false
-        );
+        initMap(state.userLocation.lat, state.userLocation.lng, false);
+        state.markerCoords = { lat: state.userLocation.lat, lng: state.userLocation.lng };
+        if (state.aiState.step !== 'await_confirm') {
+            state.aiState.intent = 'airo'; state.aiState.step = 'ask_dest';
+            speakText('سلام! کجا می‌خواید برید؟');
+        }
     }, 100);
 }
 
